@@ -8496,3 +8496,422 @@ runAppCheck,
 );
 
 </script>
+ <script>
+
+/* ========================================
+   REAL TEACHING ENGINE — PART 28
+======================================== */
+
+const LESSONS = {
+
+"Motion in a Straight Line": [
+
+{
+title:"What is Motion?",
+explain:"An object is said to be in motion when its position changes with time with respect to a reference point.",
+hinglish:"Simple language mein: agar koi object time ke saath apni position change kar raha hai, toh hum kehte hain ki object motion mein hai.",
+example:"Example: A car moving on a road changes its position with time, so the car is in motion.",
+check:"A student sitting in a moving bus is at rest or in motion with respect to the road?",
+answer:"The student is in motion with respect to the road because their position changes with time."
+},
+
+{
+title:"Reference Point",
+explain:"Motion and rest are relative to a reference point.",
+hinglish:"Kisi object ko motion mein hai ya rest mein, ye decide karne ke liye humein ek reference point chahiye.",
+example:"A passenger sitting inside a moving bus is at rest relative to another passenger, but in motion relative to a person standing on the road.",
+check:"Can the same object be at rest and in motion at the same time?",
+answer:"Yes. It depends on the reference point."
+},
+
+{
+title:"Distance",
+explain:"Distance is the total length of the actual path travelled by an object.",
+hinglish:"Object ne jitna total path cover kiya, uski total length distance hoti hai.",
+example:"If you walk 3 m forward and then 2 m backward, total distance = 3 + 2 = 5 m.",
+check:"Can distance ever be negative?",
+answer:"No. Distance is a scalar quantity and is always zero or positive."
+},
+
+{
+title:"Displacement",
+explain:"Displacement is the change in position of an object from its initial position to its final position.",
+hinglish:"Initial position se final position tak shortest straight-line change ko displacement kehte hain. Ismein direction bhi hoti hai.",
+example:"If you walk 3 m east and then 2 m west, your displacement is 1 m east.",
+check:"Can displacement be zero even when distance is not zero?",
+answer:"Yes. For example, after completing one full round and returning to the starting point, displacement is zero."
+},
+
+{
+title:"Speed",
+explain:"Speed tells us how quickly an object covers distance.",
+hinglish:"Object kitni fast distance cover kar raha hai, ye speed batati hai.",
+formula:"Average Speed = Total Distance / Total Time",
+example:"If a car covers 100 m in 20 s, its average speed is 5 m/s.",
+check:"What happens to average speed if the same distance is covered in less time?",
+answer:"Average speed increases."
+},
+
+{
+title:"Velocity",
+explain:"Velocity is the rate of change of displacement. It has both magnitude and direction.",
+hinglish:"Velocity basically speed with direction hai. Isliye velocity ek vector quantity hai.",
+formula:"Average Velocity = Total Displacement / Total Time",
+example:"A car moving at 20 m/s towards east has velocity 20 m/s east.",
+check:"Can velocity be negative?",
+answer:"Yes. Negative velocity can indicate motion in the direction chosen as negative."
+},
+
+{
+title:"Acceleration",
+explain:"Acceleration is the rate of change of velocity with time.",
+hinglish:"Velocity kitni rapidly change ho rahi hai, usko acceleration kehte hain.",
+formula:"Acceleration = Change in Velocity / Time",
+example:"If velocity changes from 10 m/s to 20 m/s in 5 s, acceleration = 2 m/s².",
+check:"Can an object have acceleration even when its speed is constant?",
+answer:"Yes. In circular motion, direction changes even when speed remains constant."
+},
+
+{
+title:"Equations of Motion",
+explain:"For motion with constant acceleration, we can use three important equations connecting initial velocity, final velocity, acceleration, time and displacement.",
+hinglish:"Jab acceleration constant ho, tab hum equations of motion use karke unknown quantity find kar sakte hain.",
+formula:"v = u + at",
+example:"If u = 5 m/s, a = 2 m/s² and t = 3 s, then v = 5 + (2)(3) = 11 m/s.",
+check:"Which equation directly connects final velocity, initial velocity, acceleration and time?",
+answer:"v = u + at."
+}
+
+]
+
+};
+
+
+/* ========================================
+   TEACHING STATE
+======================================== */
+
+let lessonIndex = 0;
+
+
+/* ========================================
+   OPEN REAL TEACHER
+======================================== */
+
+function startRealTeaching(){
+
+lessonIndex = 0;
+
+showScreen("teach");
+
+renderRealLesson();
+
+}
+
+
+/* ========================================
+   RENDER LESSON
+======================================== */
+
+function renderRealLesson(){
+
+const lessonList =
+LESSONS[currentChapter];
+
+if(!lessonList){
+
+alert(
+"Detailed teaching for this chapter will be added next."
+);
+
+return;
+
+}
+
+const lesson =
+lessonList[lessonIndex];
+
+
+const total =
+lessonList.length;
+
+
+const percent =
+Math.round(
+((lessonIndex + 1) / total) * 100
+);
+
+
+const box =
+document.getElementById(
+"teachContent"
+);
+
+if(!box) return;
+
+
+box.innerHTML = `
+
+<div class="card">
+
+<h2>
+🎓 ${lesson.title}
+</h2>
+
+<div class="progress">
+
+<div style="
+width:${percent}%;
+"></div>
+
+</div>
+
+<p>
+Lesson ${lessonIndex + 1} of ${total}
+</p>
+
+
+<div class="info">
+
+<h3>
+📖 Explanation
+</h3>
+
+<p>
+${lesson.explain}
+</p>
+
+</div>
+
+
+<div class="hinglish">
+
+<h3>
+🗣️ Simple Hinglish
+</h3>
+
+<p>
+${lesson.hinglish}
+</p>
+
+</div>
+
+
+${
+lesson.formula
+?
+`
+
+<div class="exam">
+
+<h3>
+📐 Formula
+</h3>
+
+<p>
+<b>${lesson.formula}</b>
+</p>
+
+</div>
+
+`
+:
+""
+}
+
+
+<div class="info">
+
+<h3>
+💡 Example
+</h3>
+
+<p>
+${lesson.example}
+</p>
+
+</div>
+
+
+<div class="exam">
+
+<h3>
+🧠 Check Your Understanding
+</h3>
+
+<p>
+<b>${lesson.check}</b>
+</p>
+
+<button
+id="showLessonAnswer">
+
+💡 SHOW ANSWER
+
+</button>
+
+<p
+id="lessonAnswer"
+style="display:none;">
+
+${lesson.answer}
+
+</p>
+
+</div>
+
+
+<div style="
+display:flex;
+gap:10px;
+margin-top:15px;
+">
+
+<button
+id="previousLesson"
+${lessonIndex === 0 ? "disabled" : ""}>
+
+← PREVIOUS
+
+</button>
+
+<button
+id="nextLesson">
+
+${
+lessonIndex === total - 1
+? "FINISH LESSON"
+: "NEXT →"
+}
+
+</button>
+
+</div>
+
+</div>
+
+`;
+
+}
+
+
+/* ========================================
+   ANSWER BUTTON
+======================================== */
+
+document.addEventListener(
+"click",
+function(event){
+
+if(
+event.target.id ===
+"showLessonAnswer"
+){
+
+const answer =
+document.getElementById(
+"lessonAnswer"
+);
+
+if(answer){
+
+answer.style.display =
+"block";
+
+}
+
+}
+
+});
+
+
+/* ========================================
+   PREVIOUS
+======================================== */
+
+document.addEventListener(
+"click",
+function(event){
+
+if(
+event.target.id ===
+"previousLesson"
+){
+
+if(lessonIndex > 0){
+
+lessonIndex--;
+
+renderRealLesson();
+
+}
+
+}
+
+});
+
+
+/* ========================================
+   NEXT
+======================================== */
+
+document.addEventListener(
+"click",
+function(event){
+
+if(
+event.target.id ===
+"nextLesson"
+){
+
+const lessons =
+LESSONS[currentChapter];
+
+if(
+lessonIndex <
+lessons.length - 1
+){
+
+lessonIndex++;
+
+renderRealLesson();
+
+}
+
+else{
+
+alert(
+"🎉 Chapter lesson completed! Now attempt the chapter test."
+);
+
+showScreen("chapter");
+
+}
+
+}
+
+});
+
+
+/* ========================================
+   CONNECT TEACH BUTTON
+======================================== */
+
+document.addEventListener(
+"click",
+function(event){
+
+const button =
+event.target.closest(
+'[data-action="teach"]'
+);
+
+if(button){
+
+startRealTeaching();
+
+}
+
+});
+
+ </script>
