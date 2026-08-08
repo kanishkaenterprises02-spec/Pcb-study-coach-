@@ -1,0 +1,1281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#5b5bd6">
+<title>PCB Study Coach</title>
+
+<style>
+*{box-sizing:border-box}
+
+body{
+  margin:0;
+  font-family:Arial,sans-serif;
+  background:#f5f6fb;
+  color:#202124;
+}
+
+header{
+  background:#5b5bd6;
+  color:white;
+  padding:22px 15px;
+  text-align:center;
+}
+
+header h1{margin:0;font-size:27px}
+header p{margin:7px 0 0}
+
+.container{
+  max-width:900px;
+  margin:auto;
+  padding:16px;
+}
+
+.screen{display:none}
+.active{display:block}
+
+.card{
+  background:white;
+  padding:20px;
+  margin:14px 0;
+  border-radius:18px;
+  box-shadow:0 4px 15px rgba(0,0,0,.08);
+}
+
+.grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+  gap:15px;
+}
+
+.subject{
+  text-align:center;
+}
+
+.icon{
+  font-size:50px;
+}
+
+button{
+  border:0;
+  border-radius:12px;
+  padding:13px 16px;
+  margin:5px 0;
+  background:#5b5bd6;
+  color:white;
+  font-size:15px;
+  font-weight:bold;
+  cursor:pointer;
+}
+
+.full{
+  width:100%;
+  text-align:left;
+}
+
+.light{
+  background:#eeeeff;
+  color:#333399;
+}
+
+.gray{
+  background:#777;
+}
+
+.green{
+  background:#29964b;
+}
+
+.red{
+  background:#d94c4c;
+}
+
+.small{
+  font-size:13px;
+  color:#777;
+}
+
+.badge{
+  display:inline-block;
+  padding:6px 10px;
+  background:#eeeeff;
+  color:#4444a5;
+  border-radius:20px;
+  font-size:12px;
+  font-weight:bold;
+}
+
+.note{
+  background:#f0f1ff;
+  border-left:5px solid #5b5bd6;
+  padding:15px;
+  margin:15px 0;
+  border-radius:8px;
+}
+
+.hinglish{
+  background:#fff7df;
+  border-left:5px solid #e0a400;
+  padding:15px;
+  margin:15px 0;
+  border-radius:8px;
+}
+
+.exam{
+  background:#eaf7ed;
+  border-left:5px solid #29964b;
+  padding:15px;
+  margin:15px 0;
+  border-radius:8px;
+}
+
+.warning{
+  background:#fff0f0;
+  border-left:5px solid #d94c4c;
+  padding:15px;
+  margin:15px 0;
+  border-radius:8px;
+}
+
+textarea,input{
+  width:100%;
+  padding:12px;
+  margin:8px 0;
+  border:1px solid #ccc;
+  border-radius:10px;
+  font-size:15px;
+}
+
+img{
+  max-width:100%;
+  border-radius:12px;
+  margin-top:10px;
+}
+
+.progress{
+  height:9px;
+  background:#ddd;
+  border-radius:20px;
+  overflow:hidden;
+  margin:15px 0;
+}
+
+.bar{
+  height:100%;
+  background:#5b5bd6;
+  width:0%;
+}
+
+.option{
+  display:block;
+  width:100%;
+  background:#eee;
+  color:#222;
+  text-align:left;
+}
+
+.correct{
+  background:#d5f3dc!important;
+}
+
+.wrong{
+  background:#ffdada!important;
+}
+
+.stat{
+  background:#fafaff;
+  border-radius:14px;
+  padding:15px;
+  text-align:center;
+}
+
+.stat h2{
+  margin:5px;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+<h1>🧠 PCB Study Coach</h1>
+<p>Class 11 • CBSE • NEET</p>
+</header>
+
+<div class="container">
+
+<!-- HOME -->
+
+<section id="home" class="screen active">
+
+<div class="card">
+<h2>Good Evening 👋</h2>
+<p>Your personal Physics, Chemistry & Biology study coach.</p>
+</div>
+
+<div class="grid">
+
+<div class="card subject">
+<div class="icon">⚡</div>
+<h2>Physics</h2>
+<p>Concepts • Numericals • Graphs • Tests</p>
+<button onclick="openSubject('physics')">
+OPEN PHYSICS →
+</button>
+</div>
+
+<div class="card subject">
+<div class="icon">⚗️</div>
+<h2>Chemistry</h2>
+<p>Concepts • Reactions • Numericals</p>
+<button onclick="openSubject('chemistry')">
+OPEN CHEMISTRY →
+</button>
+</div>
+
+<div class="card subject">
+<div class="icon">🧬</div>
+<h2>Biology</h2>
+<p>NCERT • Diagrams • NEET</p>
+<button onclick="openSubject('biology')">
+OPEN BIOLOGY →
+</button>
+</div>
+
+</div>
+
+<div class="card">
+
+<h2>📊 My Progress</h2>
+
+<div class="grid">
+
+<div class="stat">
+<h2 id="correct">0</h2>
+<p>Correct</p>
+</div>
+
+<div class="stat">
+<h2 id="mistakeCount">0</h2>
+<p>Mistakes</p>
+</div>
+
+<div class="stat">
+<h2 id="completed">0</h2>
+<p>Lessons</p>
+</div>
+
+</div>
+
+<button class="full light" onclick="show('photoScreen')">
+📷 TEACH ME FROM A PHOTO
+</button>
+
+<button class="full light" onclick="showMistakes()">
+❌ MY MISTAKE BOOK
+</button>
+
+</div>
+
+</section>
+
+
+<!-- SUBJECT -->
+
+<section id="subjectScreen" class="screen">
+
+<button class="gray" onclick="show('home')">← HOME</button>
+
+<div class="card">
+<span id="subjectBadge" class="badge"></span>
+<h1 id="subjectTitle"></h1>
+<p id="subjectDescription"></p>
+</div>
+
+<div class="card">
+<h2>📚 Chapters</h2>
+<div id="chapters"></div>
+</div>
+
+</section>
+
+
+<!-- CHAPTER -->
+
+<section id="chapterScreen" class="screen">
+
+<button class="gray" onclick="backSubject()">← SUBJECT</button>
+
+<div class="card">
+<span id="chapterBadge" class="badge"></span>
+<h1 id="chapterTitle"></h1>
+<p id="chapterDescription"></p>
+</div>
+
+<div class="card">
+
+<h2>Choose Study Mode</h2>
+
+<button class="full light" onclick="teach()">
+🟢 START FROM ZERO
+<br>
+<span class="small">Concept → Hinglish → Example → Notes → Exam Point</span>
+</button>
+
+<button class="full light" onclick="bookMode()">
+📖 BOOK / NCERT MODE
+<br>
+<span class="small">Explain textbook material in simple language.</span>
+</button>
+
+<button class="full light" onclick="numericalMode()">
+🧮 NUMERICAL MODE
+<br>
+<span class="small">Given → Find → Formula → Solution</span>
+</button>
+
+<button class="full light" onclick="testMode()">
+📝 TEST MODE
+<br>
+<span class="small">Check your understanding.</span>
+</button>
+
+<button class="full light" onclick="revisionMode()">
+🔄 QUICK REVISION
+<br>
+<span class="small">Rapid recall before an exam.</span>
+</button>
+
+</div>
+
+</section>
+
+
+<!-- TEACH -->
+
+<section id="teachScreen" class="screen">
+
+<button class="gray" onclick="backChapter()">← CHAPTER</button>
+
+<div class="card">
+
+<span class="badge">🧠 TEACH ME</span>
+
+<h1 id="teachTitle"></h1>
+
+<div class="progress">
+<div id="progressBar" class="bar"></div>
+</div>
+
+<div id="teachContent"></div>
+
+<button onclick="nextLesson()" id="next">
+CONTINUE →
+</button>
+
+</div>
+
+</section>
+
+
+<!-- BOOK -->
+
+<section id="bookScreen" class="screen">
+
+<button class="gray" onclick="backChapter()">← CHAPTER</button>
+
+<div class="card">
+
+<span class="badge">📖 BOOK / NCERT</span>
+
+<h1 id="bookTitle"></h1>
+
+<div class="note">
+<h2>📖 READ</h2>
+<p>Read the relevant textbook or NCERT section.</p>
+</div>
+
+<div class="hinglish">
+<h2>🇮🇳 HINGLISH EXPLANATION</h2>
+<p>
+Concept ko simple language mein break karo.
+Difficult scientific words ko English mein retain
+karke explanation ko easy Hinglish mein samjho.
+</p>
+</div>
+
+<div class="note">
+<h2>✏️ MARGIN NOTE</h2>
+<p>
+Write definitions, keywords, formulas, exceptions
+and important facts in the margin.
+</p>
+</div>
+
+<div class="exam">
+<h2>⭐ EXAM POINT</h2>
+<p>
+Focus on definitions, differences, diagrams,
+formulas, exceptions and frequently tested concepts.
+</p>
+</div>
+
+</div>
+
+</section>
+
+
+<!-- NUMERICAL -->
+
+<section id="numericalScreen" class="screen">
+
+<button class="gray" onclick="backChapter()">← CHAPTER</button>
+
+<div class="card">
+
+<span class="badge">🧮 NUMERICAL MODE</span>
+
+<h1 id="numericalTitle"></h1>
+
+<div class="note">
+
+<h2>1️⃣ GIVEN</h2>
+<p>Write every known value.</p>
+
+<h2>2️⃣ FIND</h2>
+<p>Write what the question asks.</p>
+
+<h2>3️⃣ FORMULA</h2>
+<p>Select the correct formula.</p>
+
+<h2>4️⃣ WHY?</h2>
+<p>Understand why this formula applies.</p>
+
+<h2>5️⃣ SUBSTITUTION</h2>
+<p>Put values into the formula.</p>
+
+<h2>6️⃣ CALCULATION</h2>
+<p>Solve carefully.</p>
+
+<h2>7️⃣ UNIT</h2>
+<p>Check the final unit.</p>
+
+<h2>8️⃣ FINAL ANSWER</h2>
+<p>Clearly state the answer.</p>
+
+</div>
+
+<div class="exam">
+
+<h2>Example — Physics</h2>
+
+<p>
+A body starts from rest and accelerates at
+2 m/s² for 5 seconds. Find final velocity.
+</p>
+
+<b>Given:</b><br>
+u = 0 m/s<br>
+a = 2 m/s²<br>
+t = 5 s
+
+<br><br>
+
+<b>Formula:</b><br>
+v = u + at
+
+<br><br>
+
+<b>Substitution:</b><br>
+v = 0 + (2 × 5)
+
+<br><br>
+
+<b>Answer:</b><br>
+<strong>v = 10 m/s</strong>
+
+</div>
+
+</div>
+
+</section>
+
+
+<!-- TEST -->
+
+<section id="testScreen" class="screen">
+
+<button class="gray" onclick="backChapter()">← CHAPTER</button>
+
+<div class="card">
+
+<span class="badge">📝 TEST</span>
+
+<h1 id="testTitle"></h1>
+
+<p>
+<b>Question:</b><br>
+What should you do first when learning a difficult
+concept?
+</p>
+
+<button class="option" onclick="answer(this,true)">
+A. Understand the basic concept
+</button>
+
+<button class="option" onclick="answer(this,false)">
+B. Memorise the answer immediately
+</button>
+
+<button class="option" onclick="answer(this,false)">
+C. Skip the difficult concept
+</button>
+
+<div id="testResult"></div>
+
+</div>
+
+</section>
+
+
+<!-- REVISION -->
+
+<section id="revisionScreen" class="screen">
+
+<button class="gray" onclick="backChapter()">← CHAPTER</button>
+
+<div class="card">
+
+<span class="badge">🔄 QUICK REVISION</span>
+
+<h1 id="revisionTitle"></h1>
+
+<div class="note">
+
+<h2>Remember:</h2>
+
+<ul>
+<li>Definitions</li>
+<li>Key concepts</li>
+<li>Important terms</li>
+<li>Formulas</li>
+<li>Units</li>
+<li>Graphs and diagrams</li>
+<li>Exceptions</li>
+<li>Common question types</li>
+</ul>
+
+</div>
+
+<div class="exam">
+
+<h3>⭐ Active Recall</h3>
+
+<p>
+Close your book and explain the topic in your
+own words without looking.
+</p>
+
+</div>
+
+</div>
+
+</section>
+
+
+<!-- PHOTO -->
+
+<section id="photoScreen" class="screen">
+
+<button class="gray" onclick="show('home')">← HOME</button>
+
+<div class="card">
+
+<span class="badge">📷 PHOTO TEACHER</span>
+
+<h1>Upload Any Study Page</h1>
+
+<p>
+Upload an NCERT page, textbook page, numerical,
+diagram, graph or handwritten note.
+</p>
+
+<input type="file" accept="image/*" onchange="preview(event)">
+
+<img id="previewImage" style="display:none">
+
+<div id="photoButtons" style="display:none">
+
+<h3>What should I do?</h3>
+
+<button class="full light" onclick="photoMessage('Explain everything')">
+🧠 Explain Everything
+</button>
+
+<button class="full light" onclick="photoMessage('Explain line-by-line')">
+📖 Explain Line-by-Line
+</button>
+
+<button class="full light" onclick="photoMessage('Explain in Hinglish')">
+🇮🇳 Explain in Hinglish
+</button>
+
+<button class="full light" onclick="photoMessage('Make margin notes')">
+✏️ Make Margin Notes
+</button>
+
+<button class="full light" onclick="photoMessage('Solve numerical')">
+🧮 Solve Numerical
+</button>
+
+<button class="full light" onclick="photoMessage('Explain diagram')">
+🧬 Explain Diagram
+</button>
+
+<button class="full light" onclick="photoMessage('Make questions')">
+❓ Make Questions
+</button>
+
+</div>
+
+<div id="photoResult"></div>
+
+</div>
+
+</section>
+
+
+<!-- MISTAKES -->
+
+<section id="mistakeScreen" class="screen">
+
+<button class="gray" onclick="show('home')">← HOME</button>
+
+<div class="card">
+
+<span class="badge">❌ MISTAKE BOOK</span>
+
+<h1>My Mistakes</h1>
+
+<div id="mistakes"></div>
+
+</div>
+
+</section>
+
+</div>
+
+
+<script>
+
+/* =========================
+SYLLABUS
+========================= */
+
+const data={
+
+physics:{
+title:"⚡ Physics",
+description:"Concepts, graphs, derivations and numericals.",
+chapters:[
+"Units and Measurements",
+"Motion in a Straight Line",
+"Motion in a Plane",
+"Laws of Motion",
+"Work, Energy and Power",
+"System of Particles and Rotational Motion",
+"Gravitation",
+"Mechanical Properties of Solids",
+"Mechanical Properties of Fluids",
+"Thermal Properties of Matter",
+"Thermodynamics",
+"Kinetic Theory",
+"Oscillations",
+"Waves"
+]
+},
+
+chemistry:{
+title:"⚗️ Chemistry",
+description:"Concepts, calculations, periodicity, bonding and reactions.",
+chapters:[
+"Some Basic Concepts of Chemistry",
+"Structure of Atom",
+"Classification of Elements and Periodicity in Properties",
+"Chemical Bonding and Molecular Structure",
+"Thermodynamics",
+"Equilibrium",
+"Redox Reactions",
+"Organic Chemistry – Some Basic Principles and Techniques",
+"Hydrocarbons"
+]
+},
+
+biology:{
+title:"🧬 Biology",
+description:"NCERT concepts, diagrams, facts and NEET practice.",
+chapters:[
+"The Living World",
+"Biological Classification",
+"Plant Kingdom",
+"Animal Kingdom",
+"Morphology of Flowering Plants",
+"Anatomy of Flowering Plants",
+"Structural Organisation in Animals",
+"Cell: The Unit of Life",
+"Biomolecules",
+"Cell Cycle and Cell Division",
+"Photosynthesis in Plants",
+"Respiration in Plants",
+"Plant Growth and Development",
+"Breathing and Exchange of Gases",
+"Body Fluids and Circulation",
+"Excretory Products and their Elimination",
+"Locomotion and Movement",
+"Neural Control and Coordination",
+"Chemical Coordination and Integration"
+]
+}
+
+};
+
+
+/* =========================
+VARIABLES
+========================= */
+
+let subject="";
+let chapter="";
+let lesson=0;
+
+let correct=
+Number(localStorage.getItem("correct")||0);
+
+let completed=
+Number(localStorage.getItem("completed")||0);
+
+let mistakes=
+JSON.parse(localStorage.getItem("mistakes")||"[]");
+
+
+/* =========================
+SCREEN
+========================= */
+
+function show(id){
+
+document.querySelectorAll(".screen")
+.forEach(x=>x.classList.remove("active"));
+
+document.getElementById(id)
+.classList.add("active");
+
+window.scrollTo(0,0);
+
+update();
+
+}
+
+
+/* =========================
+SUBJECT
+========================= */
+
+function openSubject(s){
+
+subject=s;
+
+document.getElementById("subjectBadge")
+.innerText=data[s].title;
+
+document.getElementById("subjectTitle")
+.innerText=data[s].title;
+
+document.getElementById("subjectDescription")
+.innerText=data[s].description;
+
+let box=document.getElementById("chapters");
+
+box.innerHTML="";
+
+data[s].chapters.forEach((name,i)=>{
+
+let button=document.createElement("button");
+
+button.className="full light";
+
+button.innerHTML=
+"📖 "+(i+1)+". "+name;
+
+button.onclick=function(){
+openChapter(name);
+};
+
+box.appendChild(button);
+
+});
+
+show("subjectScreen");
+
+}
+
+
+/* =========================
+CHAPTER
+========================= */
+
+function openChapter(name){
+
+chapter=name;
+
+document.getElementById("chapterBadge")
+.innerText=data[subject].title;
+
+document.getElementById("chapterTitle")
+.innerText=name;
+
+document.getElementById("chapterDescription")
+.innerText=
+"Learn "+name+
+" using concepts, examples, notes, practice and revision.";
+
+show("chapterScreen");
+
+}
+
+
+function backSubject(){
+openSubject(subject);
+}
+
+function backChapter(){
+openChapter(chapter);
+}
+
+
+/* =========================
+TEACH
+========================= */
+
+function teach(){
+
+lesson=0;
+renderLesson();
+show("teachScreen");
+
+}
+
+
+function renderLesson(){
+
+let title=document.getElementById("teachTitle");
+let content=document.getElementById("teachContent");
+let bar=document.getElementById("progressBar");
+let next=document.getElementById("next");
+
+title.innerText=chapter;
+
+bar.style.width=((lesson+1)/6*100)+"%";
+
+
+let lessons=[
+
+`
+<h2>🧠 Think First</h2>
+
+<p>
+Before studying <b>${chapter}</b>, think about what
+you already know.
+</p>
+
+<textarea placeholder="Write your thoughts here..."></textarea>
+
+<div class="note">
+There is no penalty for being wrong.
+We are activating your prior knowledge.
+</div>
+`,
+
+`
+<h2>📖 Understand the Concept</h2>
+
+<p>
+Start from the basic idea. Do not memorise the final
+answer before understanding what the concept means.
+</p>
+
+<div class="hinglish">
+
+<h3>🇮🇳 Hinglish</h3>
+
+<p>
+Pehle concept ko bilkul basic level se samjho.
+Jab understanding clear ho jaati hai, formulas aur
+questions automatically easier lagte hain.
+</p>
+
+</div>
+`,
+
+`
+<h2>💡 Example</h2>
+
+<p>
+Connect the concept with a simple real-life situation.
+This helps your brain understand instead of simply
+memorising.
+</p>
+
+<div class="note">
+<b>Study Rule:</b>
+Concept → Example → Practice → Recall
+</div>
+`,
+
+`
+<h2>✏️ Notebook Notes</h2>
+
+<div class="note">
+
+<b>WRITE THIS IN YOUR NOTEBOOK</b>
+
+<p>
+• Definition / basic idea<br>
+• Important terminology<br>
+• Key relationship<br>
+• Formula if applicable<br>
+• Important exception
+</p>
+
+</div>
+`,
+
+`
+<h2>⭐ Exam Point</h2>
+
+<div class="exam">
+
+<b>EXAM FOCUS</b>
+
+<p>
+Pay attention to definitions, formulas, units,
+diagrams, graphs, exceptions and conceptual traps.
+</p>
+
+</div>
+
+<div class="warning">
+
+<b>Common Mistake</b>
+
+<p>
+Never memorise a formula without knowing what each
+quantity represents.
+</p>
+
+</div>
+`,
+
+`
+<h2>❓ Check Your Understanding</h2>
+
+<p>
+What should you do when a concept is difficult?
+</p>
+
+<button class="option" onclick="lessonAnswer(this,true)">
+A. Break it into smaller ideas and understand it
+</button>
+
+<button class="option" onclick="lessonAnswer(this,false)">
+B. Memorise everything immediately
+</button>
+
+<button class="option" onclick="lessonAnswer(this,false)">
+C. Skip it completely
+</button>
+
+<div id="lessonFeedback"></div>
+`
+
+];
+
+content.innerHTML=lessons[lesson];
+
+next.innerText=
+lesson===5 ? "FINISH LESSON ✓" : "CONTINUE →";
+
+}
+
+
+function nextLesson(){
+
+if(lesson===5){
+
+completed++;
+
+localStorage.setItem("completed",completed);
+
+alert("🎉 Lesson completed!");
+
+show("chapterScreen");
+
+return;
+
+}
+
+lesson++;
+
+renderLesson();
+
+}
+
+
+function lessonAnswer(button,good){
+
+document.querySelectorAll(".option")
+.forEach(x=>x.disabled=true);
+
+let f=document.getElementById("lessonFeedback");
+
+if(good){
+
+button.classList.add("correct");
+
+correct++;
+
+localStorage.setItem("correct",correct);
+
+f.innerHTML=
+"<div class='exam'>✅ Correct! Understanding comes first.</div>";
+
+}else{
+
+button.classList.add("wrong");
+
+addMistake(
+chapter+" — understanding before memorisation"
+);
+
+f.innerHTML=
+"<div class='warning'>❌ Not quite. Break the concept down and understand it first.</div>";
+
+}
+
+update();
+
+}
+
+
+/* =========================
+BOOK
+========================= */
+
+function bookMode(){
+
+document.getElementById("bookTitle")
+.innerText=chapter;
+
+show("bookScreen");
+
+}
+
+
+/* =========================
+NUMERICAL
+========================= */
+
+function numericalMode(){
+
+document.getElementById("numericalTitle")
+.innerText=chapter;
+
+show("numericalScreen");
+
+}
+
+
+/* =========================
+TEST
+========================= */
+
+function testMode(){
+
+document.getElementById("testTitle")
+.innerText=chapter;
+
+document.getElementById("testResult")
+.innerHTML="";
+
+document.querySelectorAll("#testScreen .option")
+.forEach(x=>x.disabled=false);
+
+show("testScreen");
+
+}
+
+
+function answer(button,good){
+
+document.querySelectorAll("#testScreen .option")
+.forEach(x=>x.disabled=true);
+
+let result=document.getElementById("testResult");
+
+if(good){
+
+button.classList.add("correct");
+
+correct++;
+
+localStorage.setItem("correct",correct);
+
+result.innerHTML=
+"<div class='exam'>✅ Correct!</div>";
+
+}else{
+
+button.classList.add("wrong");
+
+addMistake(chapter+" — test question");
+
+result.innerHTML=
+"<div class='warning'>❌ Incorrect. Review the concept.</div>";
+
+}
+
+update();
+
+}
+
+
+/* =========================
+REVISION
+========================= */
+
+function revisionMode(){
+
+document.getElementById("revisionTitle")
+.innerText=chapter;
+
+show("revisionScreen");
+
+}
+
+
+/* =========================
+PHOTO
+========================= */
+
+function preview(event){
+
+let file=event.target.files[0];
+
+if(!file)return;
+
+let img=document.getElementById("previewImage");
+
+img.src=URL.createObjectURL(file);
+
+img.style.display="block";
+
+document.getElementById("photoButtons")
+.style.display="block";
+
+}
+
+
+function photoMessage(action){
+
+document.getElementById("photoResult")
+.innerHTML=
+
+`<div class="note">
+
+<h3>${action}</h3>
+
+<p>
+Your page has been selected for <b>${action}</b>.
+</p>
+
+<p>
+The AI image-teaching connection is the next technical
+part required for the app to actually read and explain
+the uploaded picture.
+</p>
+
+</div>`;
+
+}
+
+
+/* =========================
+MISTAKES
+========================= */
+
+function addMistake(text){
+
+if(!mistakes.includes(text)){
+
+mistakes.push(text);
+
+localStorage.setItem(
+"mistakes",
+JSON.stringify(mistakes)
+);
+
+}
+
+}
+
+
+function showMistakes(){
+
+let box=document.getElementById("mistakes");
+
+if(mistakes.length===0){
+
+box.innerHTML=
+"<p>🎉 No mistakes saved yet!</p>";
+
+}else{
+
+box.innerHTML=mistakes.map((x,i)=>
+`
+<div class="warning">
+<b>${i+1}.</b> ${x}
+</div>
+`
+).join("");
+
+}
+
+show("mistakeScreen");
+
+}
+
+
+/* =========================
+DASHBOARD
+========================= */
+
+function update(){
+
+document.getElementById("correct")
+.innerText=correct;
+
+document.getElementById("mistakeCount")
+.innerText=mistakes.length;
+
+document.getElementById("completed")
+.innerText=completed;
+
+}
+
+update();
+
+</script>
+
+</body>
+  </html>
