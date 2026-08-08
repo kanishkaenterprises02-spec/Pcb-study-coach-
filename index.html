@@ -2,313 +2,438 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="theme-color" content="#5b55d9">
+
+<meta name="viewport"
+content="width=device-width, initial-scale=1.0">
+
+<meta name="theme-color"
+content="#5146d8">
+
 <title>PCB Mystery Coach</title>
 
 <style>
-*{box-sizing:border-box}
+
+*{
+box-sizing:border-box;
+}
+
 body{
- margin:0;
- font-family:Arial,sans-serif;
- background:#f5f6fb;
- color:#202124
+margin:0;
+font-family:Arial,sans-serif;
+background:#f4f5fa;
+color:#202124;
 }
+
 header{
- background:linear-gradient(135deg,#5b55d9,#756ff0);
- color:white;
- padding:25px 16px;
- text-align:center
+background:#5146d8;
+color:white;
+padding:22px;
+text-align:center;
 }
-header h1{margin:0;font-size:28px}
-header p{margin:7px 0 0}
-main{max-width:900px;margin:auto;padding:15px}
-.page{display:none}
-.page.active{display:block}
+
+header h1{
+margin:0;
+font-size:26px;
+}
+
+header p{
+margin:6px 0 0;
+}
+
+main{
+max-width:900px;
+margin:auto;
+padding:15px;
+}
+
+.screen{
+display:none;
+}
+
+.screen.active{
+display:block;
+}
+
 .card{
- background:white;
- border-radius:18px;
- padding:18px;
- margin:14px 0;
- box-shadow:0 4px 15px #00000012
+background:white;
+border-radius:18px;
+padding:18px;
+margin:14px 0;
+box-shadow:0 3px 12px rgba(0,0,0,.08);
 }
+
 .grid{
- display:grid;
- grid-template-columns:repeat(auto-fit,minmax(170px,1fr));
- gap:14px
+display:grid;
+grid-template-columns:
+repeat(auto-fit,minmax(180px,1fr));
+gap:14px;
 }
-.subject{text-align:center}
-.icon{font-size:48px}
+
+.subject{
+text-align:center;
+}
+
+.icon{
+font-size:45px;
+}
+
 button{
- width:100%;
- border:0;
- border-radius:12px;
- padding:14px;
- margin:6px 0;
- background:#5b55d9;
- color:white;
- font-weight:bold;
- font-size:15px;
- cursor:pointer
+width:100%;
+border:0;
+border-radius:12px;
+padding:14px;
+margin:6px 0;
+font-size:15px;
+font-weight:bold;
+background:#5146d8;
+color:white;
+cursor:pointer;
 }
+
 button.secondary{
- background:#eeeeff;
- color:#4440a8
+background:#eeeeff;
+color:#4036a4;
 }
-button.back{background:#777}
-button.success{background:#298c4b}
-button.danger{background:#c94343}
-button:disabled{opacity:.7}
+
+button.back{
+background:#777;
+}
+
 .badge{
- display:inline-block;
- padding:6px 10px;
- border-radius:20px;
- background:#eeeeff;
- color:#4843a7;
- font-size:12px;
- font-weight:bold
+display:inline-block;
+background:#eeeeff;
+color:#4036a4;
+padding:6px 10px;
+border-radius:20px;
+font-size:12px;
+font-weight:bold;
 }
+
 .info{
- background:#f0f1ff;
- border-left:5px solid #5b55d9;
- padding:14px;
- border-radius:8px;
- margin:12px 0
+background:#f0f1ff;
+border-left:5px solid #5146d8;
+padding:14px;
+border-radius:8px;
+margin:12px 0;
 }
+
 .hinglish{
- background:#fff7df;
- border-left:5px solid #e2a900;
- padding:14px;
- border-radius:8px;
- margin:12px 0
+background:#fff7df;
+border-left:5px solid #e0a300;
+padding:14px;
+border-radius:8px;
+margin:12px 0;
 }
+
 .exam{
- background:#eaf7ed;
- border-left:5px solid #29914a;
- padding:14px;
- border-radius:8px;
- margin:12px 0
+background:#eaf7ed;
+border-left:5px solid #278b49;
+padding:14px;
+border-radius:8px;
+margin:12px 0;
 }
-.warning{
- background:#fff0f0;
- border-left:5px solid #d94d4d;
- padding:14px;
- border-radius:8px;
- margin:12px 0
-}
-.progress{
- height:9px;
- background:#ddd;
- border-radius:20px;
- overflow:hidden;
- margin:15px 0
-}
-.progress div{
- height:100%;
- width:0;
- background:#5b55d9;
- transition:.3s
-}
+
 .stats{
- display:grid;
- grid-template-columns:repeat(3,1fr);
- gap:10px
+display:grid;
+grid-template-columns:
+repeat(3,1fr);
+gap:10px;
 }
+
 .stat{
- background:#f7f7ff;
- border-radius:14px;
- text-align:center;
- padding:14px
+background:#f7f7ff;
+text-align:center;
+padding:13px;
+border-radius:12px;
 }
+
 .stat strong{
- display:block;
- font-size:25px
+display:block;
+font-size:25px;
 }
+
+.progress{
+height:9px;
+background:#ddd;
+border-radius:20px;
+overflow:hidden;
+margin:14px 0;
+}
+
+.progress div{
+height:100%;
+width:0;
+background:#5146d8;
+transition:.3s;
+}
+
 .option{
- background:#eee;
- color:#222;
- text-align:left
+background:#eeeeee;
+color:#222;
+text-align:left;
 }
+
 .option.correct{
- background:#ccefd5!important;
- color:#155c27!important
+background:#ccefd5;
+color:#145b28;
 }
+
 .option.wrong{
- background:#ffd5d5!important;
- color:#7b1515!important
+background:#ffd5d5;
+color:#7a1616;
 }
+
 .big{
- text-align:center;
- font-size:48px;
- font-weight:bold
+text-align:center;
+font-size:46px;
+font-weight:bold;
 }
-.barline{
- display:flex;
- justify-content:space-between;
- padding:10px 0;
- border-bottom:1px solid #eee
+
+.good{
+background:#eaf7ed;
+padding:12px;
+border-radius:10px;
+margin:7px 0;
 }
-.good{color:#18843e}
-.bad{color:#c33131}
-textarea{
- width:100%;
- min-height:110px;
- border:1px solid #ccc;
- border-radius:10px;
- padding:12px;
- font-family:inherit
+
+.weak{
+background:#fff0f0;
+padding:12px;
+border-radius:10px;
+margin:7px 0;
 }
-input[type=file]{
- width:100%;
- padding:12px;
- border:1px solid #ddd;
- border-radius:10px
-}
-img.preview{
- max-width:100%;
- margin-top:12px;
- border-radius:12px
-}
+
 footer{
- text-align:center;
- padding:25px;
- color:#777
+text-align:center;
+padding:25px;
+color:#777;
 }
+
 </style>
 </head>
 
 <body>
 
 <header>
+
 <h1>🧠 PCB Mystery Coach</h1>
+
 <p>Class 11 • CBSE • NEET</p>
+
 </header>
 
 <main>
 
-<!-- HOME -->
-<section id="home" class="page active">
+<section id="home"
+class="screen active">
 
 <div class="card">
+
 <h2>Welcome 👋</h2>
-<p>Your personal Physics, Chemistry and Biology study coach.</p>
+
+<p>
+Your Class 11 PCB Study Coach.
+</p>
 
 <div class="info">
-<b>Study Cycle</b><br>
-Learn → Understand → Practice → Test → Analyse → Revise
+
+<b>Study Cycle</b>
+
+<p>
+Learn → Practice → Test → Analyse → Revise
+</p>
+
 </div>
+
 </div>
 
 <div class="grid">
 
 <div class="card subject">
+
 <div class="icon">⚡</div>
+
 <h2>Physics</h2>
-<p>Concepts • Derivations • Numericals</p>
-<button onclick="openSubject('physics')">OPEN PHYSICS</button>
+
+<p>
+Concepts • Graphs • Numericals
+</p>
+
+<button
+data-action="subject"
+data-subject="physics">
+
+OPEN PHYSICS
+
+</button>
+
 </div>
 
 <div class="card subject">
+
 <div class="icon">⚗️</div>
+
 <h2>Chemistry</h2>
-<p>Concepts • Reactions • Numericals</p>
-<button onclick="openSubject('chemistry')">OPEN CHEMISTRY</button>
+
+<p>
+Concepts • Calculations • Reactions
+</p>
+
+<button
+data-action="subject"
+data-subject="chemistry">
+
+OPEN CHEMISTRY
+
+</button>
+
 </div>
 
 <div class="card subject">
+
 <div class="icon">🧬</div>
+
 <h2>Biology</h2>
-<p>NCERT • Diagrams • Concepts</p>
-<button onclick="openSubject('biology')">OPEN BIOLOGY</button>
+
+<p>
+NCERT • Diagrams • Concepts
+</p>
+
+<button
+data-action="subject"
+data-subject="biology">
+
+OPEN BIOLOGY
+
+</button>
+
 </div>
 
 </div>
 
 <div class="card">
-<h2>📊 Overall Performance</h2>
+
+<h2>📊 My Performance</h2>
 
 <div class="stats">
+
 <div class="stat">
-<strong id="statTests">0</strong>
+<strong id="homeTests">0</strong>
 Tests
 </div>
 
 <div class="stat">
-<strong id="statQuestions">0</strong>
+<strong id="homeQuestions">0</strong>
 Questions
 </div>
 
 <div class="stat">
-<strong id="statAverage">0%</strong>
+<strong id="homeAverage">0%</strong>
 Average
 </div>
+
 </div>
 
-<button onclick="showAnalysis()">
+<button data-action="analysis">
 📊 TEST ANALYSIS
 </button>
 
-<button class="secondary" onclick="openPhoto()">
-📷 STUDY FROM PHOTO
-</button>
 </div>
 
 </section>
+<section id="subject" class="screen">
 
-
-<!-- SUBJECT -->
-<section id="subject" class="page">
-
-<button class="back" onclick="goHome()">← HOME</button>
+<button class="back"
+data-action="home">
+← HOME
+</button>
 
 <div class="card">
-<span id="subjectBadge" class="badge"></span>
+
+<span id="subjectBadge"
+class="badge"></span>
+
 <h1 id="subjectTitle"></h1>
+
 <p id="subjectDescription"></p>
+
 </div>
 
 <div class="card">
+
 <h2>📚 Chapters</h2>
-<div id="chapterButtons"></div>
+
+<div id="chapterList"></div>
+
 </div>
 
 </section>
 
 
-<!-- CHAPTER -->
-<section id="chapter" class="page">
+<section id="chapter" class="screen">
 
-<button class="back" onclick="openSubject(currentSubject)">← SUBJECT</button>
+<button class="back"
+data-action="subjectBack">
+← SUBJECT
+</button>
 
 <div class="card">
-<span class="badge">CURRENT CHAPTER</span>
+
+<span class="badge">
+CURRENT CHAPTER
+</span>
+
 <h1 id="chapterTitle"></h1>
+
 </div>
 
 <div class="card">
 
-<button class="secondary" onclick="openTeach()">
+<button
+class="secondary"
+data-action="teach">
+
 🧠 TEACH ME FROM ZERO
+
 </button>
 
-<button class="secondary" onclick="openNCERT()">
+<button
+class="secondary"
+data-action="ncert">
+
 📖 NCERT / TEXTBOOK MODE
+
 </button>
 
-<button class="secondary" onclick="openNumericals()">
+<button
+class="secondary"
+data-action="numerical">
+
 🧮 NUMERICAL PRACTICE
+
 </button>
 
-<button class="secondary" onclick="openRevision()">
+<button
+class="secondary"
+data-action="revision">
+
 🔄 QUICK REVISION
+
 </button>
 
-<button onclick="startTest()">
+<button
+data-action="test">
+
 📝 TAKE CHAPTER TEST
+
 </button>
 
-<button class="secondary" onclick="chapterAnalysis()">
-📊 THIS CHAPTER'S ANALYSIS
+<button
+class="secondary"
+data-action="chapterAnalysis">
+
+📊 CHAPTER ANALYSIS
+
 </button>
 
 </div>
@@ -316,273 +441,342 @@ Average
 </section>
 
 
-<!-- TEACH -->
-<section id="teach" class="page">
+<section id="teach"
+class="screen">
 
-<button class="back" onclick="openChapter(currentChapter)">← CHAPTER</button>
+<button
+class="back"
+data-action="chapter">
+
+← CHAPTER
+
+</button>
 
 <div class="card">
-<span class="badge">🧠 TEACHING MODE</span>
+
+<span class="badge">
+🧠 TEACHING MODE
+</span>
+
 <h1 id="teachTitle"></h1>
 
 <div class="progress">
-<div id="teachProgress"></div>
+
+<div id="teachBar"></div>
+
 </div>
 
 <div id="teachContent"></div>
 
-<button id="teachNext" onclick="nextTeach()">
+<button id="teachNext">
+
 CONTINUE →
+
 </button>
+
 </div>
 
 </section>
 
 
-<!-- NCERT -->
-<section id="ncert" class="page">
+<section id="ncert"
+class="screen">
 
-<button class="back" onclick="openChapter(currentChapter)">← CHAPTER</button>
+<button
+class="back"
+data-action="chapter">
+
+← CHAPTER
+
+</button>
 
 <div class="card">
-<span class="badge">📖 NCERT MODE</span>
+
+<span class="badge">
+📖 NCERT MODE
+</span>
+
 <h1 id="ncertTitle"></h1>
 
 <div class="info">
-<h3>① Read</h3>
-<p>Read the corresponding NCERT paragraph carefully.</p>
+
+<h3>1. Read</h3>
+
+<p>
+Read the corresponding section
+from your NCERT textbook.
+</p>
+
 </div>
 
 <div class="hinglish">
-<h3>② Understand in Hinglish</h3>
-<p>Technical terms English mein rakho, lekin concept ka meaning simple Hinglish mein samjho.</p>
+
+<h3>2. Understand</h3>
+
+<p>
+Technical terms English mein rakho,
+lekin concept ko simple Hinglish mein
+samjho.
+</p>
+
 </div>
 
 <div class="info">
-<h3>③ Margin Notes ✏️</h3>
+
+<h3>3. Margin Notes ✏️</h3>
+
 <ul>
+
 <li>Definition</li>
-<li>Keywords</li>
-<li>Formula / relation</li>
-<li>Cause and effect</li>
+<li>Keyword</li>
+<li>Formula</li>
+<li>Diagram</li>
 <li>Example</li>
 <li>Exception</li>
+
 </ul>
+
 </div>
 
 <div class="exam">
-<h3>④ Exam Points ⭐</h3>
-<p>Focus on definitions, diagrams, graphs, formulas, examples and exceptions.</p>
+
+<h3>4. Exam Focus ⭐</h3>
+
+<p>
+Focus on definitions, diagrams,
+graphs, formulas and examples.
+</p>
+
 </div>
 
-<div class="warning">
-<b>Important:</b>
-<p>This mode does not reproduce the NCERT textbook. Use it alongside your own NCERT book.</p>
-</div>
 </div>
 
 </section>
 
 
-<!-- NUMERICAL -->
-<section id="numerical" class="page">
+<section id="numerical"
+class="screen">
 
-<button class="back" onclick="openChapter(currentChapter)">← CHAPTER</button>
+<button
+class="back"
+data-action="chapter">
+
+← CHAPTER
+
+</button>
 
 <div class="card">
-<span class="badge">🧮 NUMERICAL MODE</span>
+
+<span class="badge">
+🧮 NUMERICAL PRACTICE
+</span>
+
 <h1 id="numericalTitle"></h1>
 
 <div class="info">
+
 <h3>1. GIVEN</h3>
-<p>Write every known value with its unit.</p>
+
+<p>
+Write the known values with units.
+</p>
 
 <h3>2. FIND</h3>
-<p>Write exactly what the question asks.</p>
+
+<p>
+Write what the question asks.
+</p>
 
 <h3>3. FORMULA</h3>
-<p>Choose the appropriate formula.</p>
+
+<p>
+Choose the correct formula.
+</p>
 
 <h3>4. SUBSTITUTION</h3>
-<p>Put the values into the formula.</p>
+
+<p>
+Put the values into the formula.
+</p>
 
 <h3>5. CALCULATION</h3>
-<p>Solve carefully and keep units.</p>
 
-<h3>6. CHECK</h3>
-<p>Check signs, units and reasonable magnitude.</p>
+<p>
+Solve step-by-step.
+</p>
+
+<h3>6. UNIT CHECK</h3>
+
+<p>
+Check the final unit.
+</p>
 
 <h3>7. FINAL ANSWER</h3>
-<p>Write the final answer clearly.</p>
+
+<p>
+Write the answer clearly.
+</p>
+
 </div>
+
 </div>
 
 </section>
 
 
-<!-- REVISION -->
-<section id="revision" class="page">
+<section id="revision"
+class="screen">
 
-<button class="back" onclick="openChapter(currentChapter)">← CHAPTER</button>
+<button
+class="back"
+data-action="chapter">
+
+← CHAPTER
+</button>
 
 <div class="card">
-<span class="badge">🔄 QUICK REVISION</span>
+
+<span class="badge">
+🔄 QUICK REVISION
+</span>
+
 <h1 id="revisionTitle"></h1>
 
 <div class="info">
-<h3>Recall without the book</h3>
+
+<h3>Active Recall Checklist</h3>
+
 <ul>
-<li>What is the main concept?</li>
-<li>Important definitions?</li>
-<li>Important formulas?</li>
+
+<li>Definition?</li>
+<li>Main concept?</li>
+<li>Formula?</li>
 <li>Units?</li>
-<li>Diagrams?</li>
-<li>Graphs?</li>
+<li>Diagram?</li>
+<li>Graph?</li>
 <li>Exceptions?</li>
 <li>Applications?</li>
+
 </ul>
+
 </div>
 
 <div class="hinglish">
-<b>Active Recall:</b>
-<p>Book band karo aur chapter ko apne words mein explain karo.</p>
+
+<b>Book band karo.</b>
+
+<p>
+Ab chapter ko apne words mein explain karo.
+</p>
+
 </div>
+
 </div>
 
 </section>
+<section id="test" class="screen">
 
+<button
+class="back"
+data-action="chapter">
 
-<!-- TEST -->
-<section id="test" class="page">
-
-<button class="back" onclick="openChapter(currentChapter)">← CHAPTER</button>
+← CHAPTER
+</button>
 
 <div class="card">
-<span class="badge">📝 CHAPTER TEST</span>
+
+<span class="badge">
+📝 CHAPTER TEST
+</span>
+
 <h1 id="testTitle"></h1>
 
 <div class="progress">
-<div id="testProgress"></div>
+
+<div id="testBar"></div>
+
 </div>
 
-<div id="questionArea"></div>
+<div id="questionBox"></div>
+
 </div>
 
 </section>
 
 
-<!-- RESULT -->
-<section id="result" class="page">
+<section id="result" class="screen">
 
 <div class="card">
-<span class="badge">🎉 TEST COMPLETE</span>
+
+<span class="badge">
+🎉 TEST COMPLETE
+</span>
+
 <h1>Test Result</h1>
 
-<div id="resultContent"></div>
+<div id="resultBox"></div>
 
-<button onclick="showCurrentTestAnalysis()">
+<button
+data-action="currentAnalysis">
+
 📊 VIEW TEST ANALYSIS
+
 </button>
 
-<button class="secondary" onclick="openChapter(currentChapter)">
+<button
+class="secondary"
+data-action="chapter">
+
 ← BACK TO CHAPTER
+
 </button>
+
 </div>
 
 </section>
 
 
-<!-- ANALYSIS -->
-<section id="analysis" class="page">
+<section id="analysis" class="screen">
 
-<button class="back" onclick="goHome()">← HOME</button>
+<button
+class="back"
+data-action="home">
+
+← HOME
+</button>
 
 <div class="card">
-<span class="badge">📊 TEST ANALYSIS</span>
+
+<span class="badge">
+📊 TEST ANALYSIS
+</span>
+
 <h1>Performance Analysis</h1>
 
-<div id="analysisContent"></div>
-</div>
-
-</section>
-
-
-<!-- PHOTO -->
-<section id="photo" class="page">
-
-<button class="back" onclick="goHome()">← HOME</button>
-
-<div class="card">
-
-<span class="badge">📷 PHOTO STUDY</span>
-<h1>Study From a Photo</h1>
-
-<p>Upload a page, diagram, graph or numerical.</p>
-
-<input type="file" accept="image/*" onchange="previewPhoto(event)">
-
-<img id="photoPreview" class="preview" style="display:none">
-
-<div id="photoTools" style="display:none">
-
-<h2>Choose what you want to do</h2>
-
-<button class="secondary" onclick="photoHelp('Explain the whole page')">
-🧠 Explain Whole Page
-</button>
-
-<button class="secondary" onclick="photoHelp('Explain line by line')">
-📖 Line-by-Line Explanation
-</button>
-
-<button class="secondary" onclick="photoHelp('Explain in Hinglish')">
-🇮🇳 Hinglish Explanation
-</button>
-
-<button class="secondary" onclick="photoHelp('Make margin notes')">
-✏️ Margin Notes
-</button>
-
-<button class="secondary" onclick="photoHelp('Explain diagram')">
-🧬 Explain Diagram
-</button>
-
-<button class="secondary" onclick="photoHelp('Solve numerical')">
-🧮 Solve Numerical
-</button>
-
-<div id="photoResponse"></div>
-
-</div>
-
-<div class="warning">
-<b>Photo note:</b>
-<p>The browser can preview your image, but automatic AI reading of the image requires an AI service connection. This single-file version does not pretend that it can read the image when it cannot.</p>
-</div>
+<div id="analysisBox"></div>
 
 </div>
 
 </section>
+
 
 </main>
 
 <footer>
-PCB Mystery Coach • Class 11 • CBSE • NEET
+
+PCB Mystery Coach
+<br>
+Class 11 • CBSE • NEET
+
 </footer>
-
-
 <script>
 
-/* =========================
-   COMPLETE APP DATA
-========================= */
+const DATA = {
 
-const APP={
-
-physics:{
-name:"⚡ Physics",
-description:"Class 11 Physics — concepts, derivations, graphs and numericals.",
-chapters:[
+physics: {
+name: "⚡ Physics",
+description: "Class 11 Physics — Concepts, Graphs and Numericals.",
+chapters: [
 "Units and Measurements",
 "Motion in a Straight Line",
 "Motion in a Plane",
@@ -600,10 +794,10 @@ chapters:[
 ]
 },
 
-chemistry:{
-name:"⚗️ Chemistry",
-description:"Class 11 Chemistry — concepts, calculations, bonding and reactions.",
-chapters:[
+chemistry: {
+name: "⚗️ Chemistry",
+description: "Class 11 Chemistry — Concepts, Calculations and Reactions.",
+chapters: [
 "Some Basic Concepts of Chemistry",
 "Structure of Atom",
 "Classification of Elements and Periodicity in Properties",
@@ -616,10 +810,10 @@ chapters:[
 ]
 },
 
-biology:{
-name:"🧬 Biology",
-description:"Class 11 Biology — NCERT concepts, diagrams and NEET preparation.",
-chapters:[
+biology: {
+name: "🧬 Biology",
+description: "Class 11 Biology — NCERT Concepts and Diagrams.",
+chapters: [
 "The Living World",
 "Biological Classification",
 "Plant Kingdom",
@@ -645,479 +839,218 @@ chapters:[
 };
 
 
-/* =========================
-   APP STATE
-========================= */
-
-let currentSubject="";
-let currentChapter="";
-
-let teachIndex=0;
-
-let testQuestions=[];
-let testIndex=0;
-let testScore=0;
-let testAnswers=[];
+let currentSubject = "";
+let currentChapter = "";
 
 
-/* =========================
-   PAGE SYSTEM
-========================= */
+function showScreen(id) {
 
-function page(id){
+document.querySelectorAll(".screen")
+.forEach(function(screen) {
 
-document.querySelectorAll(".page").forEach(function(p){
-p.classList.remove("active");
+screen.classList.remove("active");
+
 });
 
-const target=document.getElementById(id);
+const screen = document.getElementById(id);
 
-if(target){
-target.classList.add("active");
+if (screen) {
+
+screen.classList.add("active");
+
 }
 
 window.scrollTo(0,0);
 
-updateDashboard();
 }
 
 
-function goHome(){
-page("home");
-}
+function openSubject(subject) {
+
+currentSubject = subject;
+
+const data = DATA[subject];
+
+document.getElementById("subjectBadge")
+.textContent = data.name;
+
+document.getElementById("subjectTitle")
+.textContent = data.name;
+
+document.getElementById("subjectDescription")
+.textContent = data.description;
 
 
-/* =========================
-   SUBJECTS
-========================= */
+const list =
+document.getElementById("chapterList");
 
-function openSubject(subject){
+list.innerHTML = "";
 
-currentSubject=subject;
 
-const d=APP[subject];
+data.chapters.forEach(function(chapter,index) {
 
-document.getElementById("subjectBadge").textContent=d.name;
-document.getElementById("subjectTitle").textContent=d.name;
-document.getElementById("subjectDescription").textContent=d.description;
+const button =
+document.createElement("button");
 
-const box=document.getElementById("chapterButtons");
+button.className = "secondary";
 
-box.innerHTML="";
+button.textContent =
+(index + 1) + ". " + chapter;
 
-d.chapters.forEach(function(chapter,index){
 
-const button=document.createElement("button");
+button.addEventListener("click",function() {
 
-button.className="secondary";
-button.textContent=(index+1)+". "+chapter;
-
-button.addEventListener("click",function(){
 openChapter(chapter);
-});
-
-box.appendChild(button);
 
 });
 
-page("subject");
+
+list.appendChild(button);
+
+});
+
+
+showScreen("subject");
+
 }
 
 
-function openChapter(chapter){
+function openChapter(chapterName) {
 
-currentChapter=chapter;
+currentChapter = chapterName;
 
-document.getElementById("chapterTitle").textContent=chapter;
+document.getElementById("chapterTitle")
+.textContent = chapterName;
 
-page("chapter");
+showScreen("chapter");
+
 }
 
 
-/* =========================
-   TEACHING MODE
-========================= */
+function goHome() {
 
-function openTeach(){
+showScreen("home");
 
-teachIndex=0;
-
-document.getElementById("teachTitle").textContent=currentChapter;
-
-renderTeach();
-
-page("teach");
 }
 
 
-function renderTeach(){
+function goBackToSubject() {
 
-const lessons=[
+openSubject(currentSubject);
 
-{
-title:"Start From Zero",
-html:`
-<div class="hinglish">
-<h3>🇮🇳 Basic Idea</h3>
-<p>First understand what <b>${currentChapter}</b> is about.</p>
-<p>Start with three questions:</p>
-<ol>
-<li>What is it?</li>
-<li>Why is it important?</li>
-<li>How is it used?</li>
-</ol>
-</div>`
-},
-
-{
-title:"Break the Concept",
-html:`
-<div class="info">
-<h3>Concept Breakdown</h3>
-<p>Don't try to memorise the whole chapter at once.</p>
-<ul>
-<li>Identify the main idea.</li>
-<li>Break it into smaller concepts.</li>
-<li>Connect each concept to the previous one.</li>
-</ul>
-</div>`
-},
-
-{
-title:"Hinglish Explanation",
-html:`
-<div class="hinglish">
-<h3>Simple Hinglish</h3>
-<p>Technical words ko English mein exactly learn karo, but unka meaning simple Hinglish mein samjho.</p>
-</div>`
-},
-
-{
-title:"Application",
-html:`
-<div class="info">
-<h3>Apply It</h3>
-<p>Ask yourself how the concept can appear in:</p>
-<ul>
-<li>MCQ</li>
-<li>Numerical</li>
-<li>Diagram</li>
-<li>Graph</li>
-<li>Assertion-reason question</li>
-</ul>
-</div>`
-},
-
-{
-title:"Notebook Notes",
-html:`
-<div class="info">
-<h3>✏️ Write These</h3>
-<ul>
-<li>Definition</li>
-<li>Keywords</li>
-<li>Formula / relation</li>
-<li>Units</li>
-<li>Important example</li>
-<li>Exception</li>
-</ul>
-</div>`
-},
-
-{
-title:"Margin Notes",
-html:`
-<div class="hinglish">
-<h3>Margin Recall</h3>
-<p>Book ke margin mein short trigger words likho jo poora concept yaad dila saken.</p>
-</div>`
-},
-
-{
-title:"Exam Check",
-html:`
-<div class="exam">
-<h3>⭐ Can you do these?</h3>
-<ul>
-<li>Define the concept?</li>
-<li>Explain it?</li>
-<li>Apply it?</li>
-<li>Solve a question?</li>
-<li>Draw the relevant diagram/graph?</li>
-</ul>
-</div>`
-},
-
-{
-title:"Active Recall",
-html:`
-<div class="hinglish">
-<h3>🔄 Final Recall</h3>
-<p><b>Book band karo.</b></p>
-<p>Ab ${currentChapter} ko apne words mein explain karo.</p>
-</div>`
-}
-
-];
-
-const lesson=lessons[teachIndex];
-
-document.getElementById("teachContent").innerHTML=
-"<h2>"+lesson.title+"</h2>"+lesson.html;
-
-document.getElementById("teachProgress").style.width=
-((teachIndex+1)/lessons.length*100)+"%";
-
-document.getElementById("teachNext").textContent=
-teachIndex===lessons.length-1
-?"FINISH ✓"
-:"CONTINUE →";
 }
 
 
-function nextTeach(){
+function openTeaching() {
 
-if(teachIndex<7){
+document.getElementById("teachTitle")
+.textContent = currentChapter;
 
-teachIndex++;
-renderTeach();
+showScreen("teach");
 
-}else{
+}
+
+
+function openNCERT() {
+
+document.getElementById("ncertTitle")
+.textContent = currentChapter;
+
+showScreen("ncert");
+
+}
+
+
+function openNumerical() {
+
+document.getElementById("numericalTitle")
+.textContent = currentChapter;
+
+showScreen("numerical");
+
+}
+
+
+function openRevision() {
+
+document.getElementById("revisionTitle")
+.textContent = currentChapter;
+
+showScreen("revision");
+
+}
+
+
+document.addEventListener("click",function(event) {
+
+const button =
+event.target.closest("[data-action]");
+
+
+if (!button) return;
+
+
+const action =
+button.getAttribute("data-action");
+
+
+if (action === "home") {
+
+goHome();
+
+}
+
+
+else if (action === "subject") {
+
+openSubject(
+button.getAttribute("data-subject")
+);
+
+}
+
+
+else if (action === "subjectBack") {
+
+goBackToSubject();
+
+}
+
+
+else if (action === "chapter") {
 
 openChapter(currentChapter);
 
 }
 
-}
 
+else if (action === "teach") {
 
-/* =========================
-   OTHER MODES
-========================= */
-
-function openNCERT(){
-
-document.getElementById("ncertTitle").textContent=currentChapter;
-
-page("ncert");
-}
-
-
-function openNumericals(){
-
-document.getElementById("numericalTitle").textContent=currentChapter;
-
-page("numerical");
-}
-
-
-function openRevision(){
-
-document.getElementById("revisionTitle").textContent=currentChapter;
-
-page("revision");
-}
-
-
-/* =========================
-   TEST QUESTION BANK
-========================= */
-
-/*
- These are original practice questions.
- They are deliberately not labelled as official PYQs.
-*/
-
-function buildTest(){
-
-return [
-
-{
-question:"What is the best first step when learning a new chapter?",
-options:[
-"Memorise every line immediately",
-"Understand the main concept",
-"Skip difficult parts",
-"Only solve the hardest questions"
-],
-answer:1,
-topic:"Concept Understanding"
-},
-
-{
-question:"Which method is most useful for checking whether you actually remember something?",
-options:[
-"Active recall",
-"Only highlighting",
-"Reading the same page repeatedly",
-"Looking at the answer while studying"
-],
-answer:0,
-topic:"Active Recall"
-},
-
-{
-question:"When solving a numerical, what should normally be written first?",
-options:[
-"Final answer",
-"Given information",
-"Random formula",
-"Only the unit"
-],
-answer:1,
-topic:"Problem Solving"
-},
-
-{
-question:"Which is most useful for quick revision?",
-options:[
-"Copying the entire chapter",
-"Short recall points and formulas",
-"Reading without recalling",
-"Skipping mistakes"
-],
-answer:1,
-topic:"Revision"
-},
-
-{
-question:"What should you do after getting a question wrong?",
-options:[
-"Ignore it",
-"Memorise the option",
-"Find the concept causing the mistake",
-"Stop attempting questions"
-],
-answer:2,
-topic:"Mistake Analysis"
-},
-
-{
-question:"What is the purpose of a chapter test?",
-options:[
-"Only to get a score",
-"To identify understanding and weak areas",
-"To replace studying",
-"To avoid revision"
-],
-answer:1,
-topic:"Testing"
-},
-
-{
-question:"Which strategy gives stronger long-term learning?",
-options:[
-"Passive rereading only",
-"Understanding + active recall + practice",
-"Memorising answers without concepts",
-"Skipping revision"
-],
-answer:1,
-topic:"Learning Strategy"
-},
-
-{
-question:"If your test accuracy is low in one topic, what should you do?",
-options:[
-"Ignore the topic",
-"Revise that concept and practise it",
-"Only study strong topics",
-"Delete the result"
-],
-answer:1,
-topic:"Improvement"
-}
-
-];
+openTeaching();
 
 }
 
 
-/* =========================
-   TEST ENGINE
-========================= */
+else if (action === "ncert") {
 
-function startTest(){
+openNCERT();
 
-testQuestions=buildTest();
-
-testIndex=0;
-testScore=0;
-testAnswers=[];
-
-document.getElementById("testTitle").textContent=
-currentChapter+" — Chapter Test";
-
-page("test");
-
-renderQuestion();
 }
 
 
-function renderQuestion(){
+else if (action === "numerical") {
 
-const q=testQuestions[testIndex];
+openNumerical();
 
-document.getElementById("testProgress").style.width=
-(testIndex/testQuestions.length*100)+"%";
+}
 
-let html="";
 
-html+=
-"<h2>Question "+
-(testIndex+1)+
-" of "+
-testQuestions.length+
-"</h2>";
+else if (action === "revision") {
 
-html+="<h3>"+q.question+"</h3>";
+openRevision();
 
-q.options.forEach(function(option,index){
-
-html+=`
-<button class="option"
-onclick="selectAnswer(${index})">
-${String.fromCharCode(65+index)}. ${option}
-</button>
-`;
+}
 
 });
 
-document.getElementById("questionArea").innerHTML=html;
-}
-
-
-function selectAnswer(selected){
-
-const q=testQuestions[testIndex];
-
-const buttons=document.querySelectorAll("#questionArea .option");
-
-buttons.forEach(function(button){
-button.disabled=true;
-});
-
-const correct=selected===q.answer;
-
-if(correct){
-
-testScore++;
-
-buttons[selected].classList.add("correct");
-
-}else{
-
-buttons[selected].classList.add("wrong");
-buttons[q.answer].classList.add("correct");
-
-}
-
-testAnswers.push({
-question:q.question,
-topic:q.topic,
-corr
- </script>
-
-</body>
-</html>
-
+</script>
