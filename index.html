@@ -9980,3 +9980,146 @@ document.addEventListener(
 );
 
 </script>
+<script>
+
+/* ========================================
+   PART 33 — FIX PAGE TEACHER BUTTON
+======================================== */
+
+document.addEventListener(
+    "click",
+    function(event){
+
+        const button =
+        event.target.closest(
+            "#teachFromPageButton"
+        );
+
+        if(!button) return;
+
+
+        /* Create uploader directly */
+
+        let uploader =
+        document.getElementById(
+            "simplePageUploader"
+        );
+
+
+        if(uploader){
+
+            uploader.scrollIntoView({
+                behavior:"smooth"
+            });
+
+            return;
+
+        }
+
+
+        uploader =
+        document.createElement(
+            "div"
+        );
+
+
+        uploader.id =
+        "simplePageUploader";
+
+
+        uploader.className =
+        "card";
+
+
+        uploader.innerHTML = `
+
+            <h2>
+                📸 Teach Me From My NCERT Page
+            </h2>
+
+            <p>
+                Choose an NCERT page image.
+            </p>
+
+            <input
+                id="simpleNCERTFile"
+                type="file"
+                accept="image/*"
+            >
+
+            <div
+                id="simplePreview"
+                style="margin-top:15px;">
+            </div>
+
+        `;
+
+
+        document.body.appendChild(
+            uploader
+        );
+
+
+        uploader.scrollIntoView({
+            behavior:"smooth"
+        });
+
+
+        const input =
+        document.getElementById(
+            "simpleNCERTFile"
+        );
+
+
+        input.addEventListener(
+            "change",
+            function(){
+
+                const file =
+                input.files[0];
+
+                if(!file) return;
+
+
+                const reader =
+                new FileReader();
+
+
+                reader.onload =
+                function(e){
+
+                    document.getElementById(
+                        "simplePreview"
+                    ).innerHTML = `
+
+                        <img
+                            src="${e.target.result}"
+                            style="
+                            width:100%;
+                            max-height:500px;
+                            object-fit:contain;
+                            border-radius:12px;
+                            "
+                        >
+
+                        <p>
+                        ✅ Page selected successfully.
+                        </p>
+
+                    `;
+
+                };
+
+
+                reader.readAsDataURL(
+                    file
+                );
+
+            }
+        );
+
+    }
+
+);
+
+</script>
