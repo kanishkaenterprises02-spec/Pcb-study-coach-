@@ -1054,3 +1054,280 @@ openRevision();
 });
 
 </script>
+ <script>
+
+let teachStep = 0;
+
+
+const teachingLessons = [
+
+{
+title: "1️⃣ Start From Zero",
+
+content: `
+<div class="info">
+
+<h3>What is this chapter about?</h3>
+
+<p>
+First understand the basic idea of
+the chapter before memorising formulas
+or details.
+</p>
+
+<p>
+Ask yourself:
+</p>
+
+<ul>
+<li>What is the main concept?</li>
+<li>Why do we study it?</li>
+<li>Where is it used?</li>
+</ul>
+
+</div>
+`
+},
+
+{
+title: "2️⃣ Understand the Concept",
+
+content: `
+<div class="hinglish">
+
+<h3>Simple Hinglish Method 🇮🇳</h3>
+
+<p>
+Concept ko ratne ke bajay pehle
+samjho ki actually ho kya raha hai.
+</p>
+
+<p>
+Technical terms English mein rakho,
+lekin explanation apni simple language
+mein karo.
+</p>
+
+</div>
+`
+},
+
+{
+title: "3️⃣ Important Points",
+
+content: `
+<div class="info">
+
+<h3>Make these notes ✏️</h3>
+
+<ul>
+
+<li>Definitions</li>
+
+<li>Important terms</li>
+
+<li>Formulas</li>
+
+<li>Units</li>
+
+<li>Graphs</li>
+
+<li>Diagrams</li>
+
+<li>Examples</li>
+
+<li>Exceptions</li>
+
+</ul>
+
+</div>
+`
+},
+
+{
+title: "4️⃣ Exam Connection ⭐",
+
+content: `
+<div class="exam">
+
+<h3>How questions can appear</h3>
+
+<ul>
+
+<li>MCQ</li>
+
+<li>Assertion-Reason</li>
+
+<li>Numerical</li>
+
+<li>Diagram based question</li>
+
+<li>Graph based question</li>
+
+<li>Conceptual question</li>
+
+</ul>
+
+</div>
+`
+},
+
+{
+title: "5️⃣ Active Recall 🔄",
+
+content: `
+<div class="hinglish">
+
+<h3>Close the book!</h3>
+
+<p>
+Ab bina book dekhe chapter ko
+apne words mein explain karo.
+</p>
+
+<p>
+Agar explain nahi kar pa rahe ho,
+toh wahi topic dobara padho.
+</p>
+
+</div>
+`
+},
+
+{
+title: "6️⃣ Final Check ✅",
+
+content: `
+<div class="info">
+
+<h3>Can you do these?</h3>
+
+<ul>
+
+<li>Explain the main concept?</li>
+
+<li>Remember important definitions?</li>
+
+<li>Use the formula?</li>
+
+<li>Solve a basic question?</li>
+
+<li>Draw the important diagram?</li>
+
+<li>Explain the topic without looking?</li>
+
+</ul>
+
+</div>
+`
+}
+
+];
+
+
+function startTeaching() {
+
+teachStep = 0;
+
+renderTeaching();
+
+showScreen("teach");
+
+}
+
+
+function renderTeaching() {
+
+const lesson =
+teachingLessons[teachStep];
+
+
+document.getElementById("teachTitle")
+.textContent =
+currentChapter;
+
+
+document.getElementById("teachContent")
+.innerHTML = `
+
+<h2>${lesson.title}</h2>
+
+${lesson.content}
+
+`;
+
+
+const percentage =
+((teachStep + 1) /
+teachingLessons.length) * 100;
+
+
+document.getElementById("teachBar")
+.style.width =
+percentage + "%";
+
+
+const nextButton =
+document.getElementById("teachNext");
+
+
+if (teachStep ===
+teachingLessons.length - 1) {
+
+nextButton.textContent =
+"FINISH ✓";
+
+} else {
+
+nextButton.textContent =
+"CONTINUE →";
+
+}
+
+}
+
+
+function nextTeaching() {
+
+if (teachStep <
+teachingLessons.length - 1) {
+
+teachStep++;
+
+renderTeaching();
+
+} else {
+
+openChapter(currentChapter);
+
+}
+
+}
+
+
+document.getElementById("teachNext")
+.addEventListener(
+"click",
+nextTeaching
+);
+
+
+document.addEventListener(
+"click",
+function(event) {
+
+const button =
+event.target.closest(
+'[data-action="teach"]'
+);
+
+if (button) {
+
+startTeaching();
+
+}
+
+}
+);
+
+  </script> 
