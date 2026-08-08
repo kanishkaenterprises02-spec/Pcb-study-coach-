@@ -1331,3 +1331,7168 @@ startTeaching();
 );
 
   </script> 
+<script>
+
+let questions = [];
+let questionIndex = 0;
+let testScore = 0;
+let testAnswers = [];
+
+
+function createTestQuestions() {
+
+return [
+
+{
+question:
+"What is the best first step when studying a new chapter?",
+
+options: [
+"Memorise everything",
+"Understand the basic concept",
+"Skip the difficult topics",
+"Only solve questions"
+],
+
+answer: 1,
+
+topic: "Concept Understanding"
+},
+
+
+{
+question:
+"Which method is useful for checking whether you actually remember a concept?",
+
+options: [
+"Active recall",
+"Only highlighting",
+"Reading the same page repeatedly",
+"Looking at the answer"
+],
+
+answer: 0,
+
+topic: "Active Recall"
+},
+
+
+{
+question:
+"What should normally come first in a numerical solution?",
+
+options: [
+"Final answer",
+"Given information",
+"Random formula",
+"Only the unit"
+],
+
+answer: 1,
+
+topic: "Numericals"
+},
+
+
+{
+question:
+"What is a useful way to revise a chapter quickly?",
+
+options: [
+"Copy the entire chapter",
+"Use short recall points",
+"Skip important formulas",
+"Only read the headings"
+],
+
+answer: 1,
+
+topic: "Revision"
+},
+
+
+{
+question:
+"What should you do after getting a question wrong?",
+
+options: [
+"Ignore it",
+"Memorise the option",
+"Analyse the mistake",
+"Stop practising"
+],
+
+answer: 2,
+
+topic: "Mistake Analysis"
+},
+
+
+{
+question:
+"Why is a chapter test useful?",
+
+options: [
+"Only to get marks",
+"To identify strengths and weaknesses",
+"To replace studying",
+"To avoid revision"
+],
+
+answer: 1,
+
+topic: "Testing"
+},
+
+
+{
+question:
+"Which combination generally gives better learning?",
+
+options: [
+"Passive reading only",
+"Understanding + recall + practice",
+"Memorising answers only",
+"Skipping revision"
+],
+
+answer: 1,
+
+topic: "Learning Strategy"
+},
+
+
+{
+question:
+"What should you do with a weak topic?",
+
+options: [
+"Ignore it",
+"Revise and practise it",
+"Only study strong topics",
+"Delete the test result"
+],
+
+answer: 1,
+
+topic: "Improvement"
+}
+
+];
+
+}
+
+
+function startTest() {
+
+questions =
+createTestQuestions();
+
+questionIndex = 0;
+
+testScore = 0;
+
+testAnswers = [];
+
+document.getElementById("testTitle")
+.textContent =
+currentChapter + " — Chapter Test";
+
+showScreen("test");
+
+renderQuestion();
+
+}
+
+
+function renderQuestion() {
+
+const q =
+questions[questionIndex];
+
+
+const progress =
+(questionIndex /
+questions.length) * 100;
+
+
+document.getElementById("testBar")
+.style.width =
+progress + "%";
+
+
+const box =
+document.getElementById(
+"questionBox"
+);
+
+
+box.innerHTML = "";
+
+
+const heading =
+document.createElement("h2");
+
+
+heading.textContent =
+"Question " +
+(questionIndex + 1) +
+" of " +
+questions.length;
+
+
+box.appendChild(heading);
+
+
+const question =
+document.createElement("h3");
+
+
+question.textContent =
+q.question;
+
+
+box.appendChild(question);
+
+
+q.options.forEach(
+function(option,index) {
+
+const button =
+document.createElement("button");
+
+
+button.className =
+"option";
+
+
+button.textContent =
+String.fromCharCode(65 + index)
++ ". "
++ option;
+
+
+button.addEventListener(
+"click",
+function() {
+
+checkAnswer(index,button);
+
+}
+);
+
+
+box.appendChild(button);
+
+});
+
+}
+
+
+function checkAnswer(
+selected,
+button
+) {
+
+const q =
+questions[questionIndex];
+
+
+const options =
+document.querySelectorAll(
+"#questionBox .option"
+);
+
+
+options.forEach(
+function(option) {
+
+option.disabled = true;
+
+}
+);
+
+
+const correct =
+selected === q.answer;
+
+
+if (correct) {
+
+testScore++;
+
+button.classList.add(
+"correct"
+);
+
+} else {
+
+button.classList.add(
+"wrong"
+);
+
+options[q.answer]
+.classList.add("correct");
+
+}
+
+
+testAnswers.push({
+
+question: q.question,
+
+topic: q.topic,
+
+correct: correct
+
+});
+
+
+setTimeout(
+function() {
+
+questionIndex++;
+
+
+if (
+questionIndex <
+questions.length
+) {
+
+renderQuestion();
+
+} else {
+
+finishTest();
+
+}
+
+},
+700
+);
+
+}
+
+
+function finishTest() {
+
+const total =
+questions.length;
+
+
+const percentage =
+Math.round(
+(testScore / total) * 100
+);
+
+
+saveTestResult();
+
+
+document.getElementById(
+"resultBox"
+).innerHTML = `
+
+<div class="big">
+${testScore}/${total}
+</div>
+
+<div class="exam">
+
+<h2>${percentage}%</h2>
+
+<p>
+${getScoreMessage(percentage)}
+</p>
+
+</div>
+
+<div class="stats">
+
+<div class="stat">
+
+<strong>
+${testScore}
+</strong>
+
+Correct
+
+</div>
+
+
+<div class="stat">
+
+<strong>
+${total - testScore}
+</strong>
+
+Wrong
+
+</div>
+
+
+<div class="stat">
+
+<strong>
+${total}
+</strong>
+
+Total
+
+</div>
+
+</div>
+
+`;
+
+showScreen("result");
+
+}
+
+
+function getScoreMessage(
+percentage
+) {
+
+if (percentage >= 90) {
+
+return "🔥 Excellent!";
+
+}
+
+if (percentage >= 75) {
+
+return "🌟 Good work! Revise your mistakes.";
+
+}
+
+if (percentage >= 50) {
+
+return "📚 Good start. Practise the weak areas.";
+
+}
+
+return "💪 Keep going. Analyse your mistakes and try again.";
+
+}
+
+
+function saveTestResult() {
+
+let results =
+JSON.parse(
+localStorage.getItem(
+"pcbTestResults"
+) || "[]"
+);
+
+
+results.push({
+
+subject:
+currentSubject,
+
+chapter:
+currentChapter,
+
+score:
+testScore,
+
+total:
+questions.length,
+
+percentage:
+Math.round(
+(testScore / questions.length) * 100
+),
+
+answers:
+testAnswers,
+
+date:
+new Date().toISOString()
+
+});
+
+
+localStorage.setItem(
+"pcbTestResults",
+JSON.stringify(results)
+);
+
+}
+
+
+document.addEventListener(
+"click",
+function(event) {
+
+const button =
+event.target.closest(
+'[data-action="test"]'
+);
+
+if (button) {
+
+startTest();
+
+}
+
+}
+);
+
+</script>
+<script>
+
+function showCurrentAnalysis() {
+
+const total =
+questions.length;
+
+const percentage =
+Math.round(
+(testScore / total) * 100
+);
+
+
+let topics = {};
+
+
+testAnswers.forEach(
+function(item) {
+
+if (!topics[item.topic]) {
+
+topics[item.topic] = {
+
+correct: 0,
+
+total: 0
+
+};
+
+}
+
+
+topics[item.topic].total++;
+
+
+if (item.correct) {
+
+topics[item.topic].correct++;
+
+}
+
+});
+
+
+let topicHTML = "";
+
+
+Object.keys(topics).forEach(
+function(topic) {
+
+const data =
+topics[topic];
+
+
+const percent =
+Math.round(
+(data.correct /
+data.total) * 100
+);
+
+
+if (percent >= 80) {
+
+topicHTML += `
+
+<div class="good">
+
+<b>✅ ${topic}</b>
+
+<p>
+${data.correct}/${data.total}
+correct — ${percent}%
+</p>
+
+</div>
+
+`;
+
+} else {
+
+topicHTML += `
+
+<div class="weak">
+
+<b>⚠️ ${topic}</b>
+
+<p>
+${data.correct}/${data.total}
+correct — ${percent}%
+</p>
+
+<p>
+Revise this topic and practise
+similar questions.
+</p>
+
+</div>
+
+`;
+
+}
+
+});
+
+
+let mistakesHTML = "";
+
+
+testAnswers.forEach(
+function(item,index) {
+
+if (!item.correct) {
+
+mistakesHTML += `
+
+<div class="weak">
+
+<b>
+Mistake ${index + 1}
+</b>
+
+<p>
+${item.question}
+</p>
+
+<p>
+Topic:
+${item.topic}
+</p>
+
+</div>
+
+`;
+
+}
+
+});
+
+
+if (mistakesHTML === "") {
+
+mistakesHTML = `
+
+<div class="good">
+
+🔥 Excellent!
+
+<p>
+You didn't make any mistakes
+in this test.
+</p>
+
+</div>
+
+`;
+
+}
+
+
+document.getElementById(
+"analysisBox"
+).innerHTML = `
+
+<h2>
+${currentChapter}
+</h2>
+
+
+<div class="big">
+
+${percentage}%
+
+</div>
+
+
+<div class="exam">
+
+<h3>
+Performance
+</h3>
+
+<p>
+You scored
+${testScore}/${total}.
+</p>
+
+<p>
+${getScoreMessage(percentage)}
+</p>
+
+</div>
+
+
+<h2>
+📈 Topic Performance
+</h2>
+
+${topicHTML}
+
+
+<h2>
+❌ Mistakes to Review
+</h2>
+
+${mistakesHTML}
+
+
+<h2>
+🎯 Your Next Step
+</h2>
+
+<div class="hinglish">
+
+<p>
+<b>1.</b>
+Revise the weak topics.
+</p>
+
+<p>
+<b>2.</b>
+Solve more questions from those topics.
+</p>
+
+<p>
+<b>3.</b>
+Retake the chapter test.
+</p>
+
+<p>
+<b>4.</b>
+Compare your new score.
+</p>
+
+</div>
+
+`;
+
+
+showScreen("analysis");
+
+}
+
+
+document.addEventListener(
+"click",
+function(event) {
+
+const button =
+event.target.closest(
+'[data-action="currentAnalysis"]'
+);
+
+if (button) {
+
+showCurrentAnalysis();
+
+}
+
+});
+
+
+</script>
+<script>
+
+function showOverallAnalysis() {
+
+const results = JSON.parse(
+localStorage.getItem("pcbTestResults") || "[]"
+);
+
+const box =
+document.getElementById("analysisBox");
+
+
+if (results.length === 0) {
+
+box.innerHTML = `
+
+<div class="info">
+
+<h2>📊 No Tests Yet</h2>
+
+<p>
+Take your first chapter test and your
+performance analysis will appear here.
+</p>
+
+</div>
+
+`;
+
+showScreen("analysis");
+
+return;
+
+}
+
+
+let totalQuestions = 0;
+
+let totalCorrect = 0;
+
+
+results.forEach(
+function(result) {
+
+totalQuestions += result.total;
+
+totalCorrect += result.score;
+
+});
+
+
+const average = Math.round(
+(totalCorrect / totalQuestions) * 100
+);
+
+
+let historyHTML = "";
+
+
+results.slice().reverse().forEach(
+function(result,index) {
+
+let className = "weak";
+
+if (result.percentage >= 80) {
+
+className = "good";
+
+}
+
+
+historyHTML += `
+
+<div class="${className}">
+
+<b>
+${result.subject}
+</b>
+
+<p>
+${result.chapter}
+</p>
+
+<p>
+
+Score:
+${result.score}/${result.total}
+
+<br>
+
+Percentage:
+${result.percentage}%
+
+</p>
+
+</div>
+
+`;
+
+});
+
+
+box.innerHTML = `
+
+<h2>
+📈 Overall Performance
+</h2>
+
+
+<div class="big">
+
+${average}%
+
+</div>
+
+
+<div class="stats">
+
+
+<div class="stat">
+
+<strong>
+${results.length}
+</strong>
+
+Tests
+
+</div>
+
+
+<div class="stat">
+
+<strong>
+${totalQuestions}
+</strong>
+
+Questions
+
+</div>
+
+
+<div class="stat">
+
+<strong>
+${totalCorrect}
+</strong>
+
+Correct
+
+</div>
+
+
+</div>
+
+
+<div class="exam">
+
+<h3>
+🎯 Overall Status
+</h3>
+
+<p>
+
+${getOverallMessage(average)}
+
+</p>
+
+</div>
+
+
+<h2>
+📚 Test History
+</h2>
+
+${historyHTML}
+
+`;
+
+
+showScreen("analysis");
+
+}
+
+
+function getOverallMessage(
+average
+) {
+
+if (average >= 90) {
+
+return "🔥 Excellent performance! Keep maintaining this level.";
+
+}
+
+if (average >= 75) {
+
+return "🌟 Good performance. Focus on your weaker chapters.";
+
+}
+
+if (average >= 60) {
+
+return "📚 You're progressing. Increase practice and revision.";
+
+}
+
+return "💪 Keep practising. Use the analysis after every test.";
+
+}
+
+
+/* Home Analysis button */
+
+document.addEventListener(
+"click",
+function(event) {
+
+const button =
+event.target.closest(
+'[data-action="analysis"]'
+);
+
+if (button) {
+
+showOverallAnalysis();
+
+}
+
+});
+
+
+/* Update home statistics */
+
+function updateHomeStats() {
+
+const results = JSON.parse(
+localStorage.getItem("pcbTestResults")
+|| "[]"
+);
+
+
+let questions = 0;
+
+let correct = 0;
+
+
+results.forEach(
+function(result) {
+
+questions += result.total;
+
+correct += result.score;
+
+});
+
+
+let average = 0;
+
+
+if (questions > 0) {
+
+average =
+Math.round(
+(correct / questions) * 100
+);
+
+}
+
+
+const testsElement =
+document.getElementById("homeTests");
+
+
+const questionsElement =
+document.getElementById("homeQuestions");
+
+
+const averageElement =
+document.getElementById("homeAverage");
+
+
+if (testsElement) {
+
+testsElement.textContent =
+results.length;
+
+}
+
+
+if (questionsElement) {
+
+questionsElement.textContent =
+questions;
+
+}
+
+
+if (averageElement) {
+
+averageElement.textContent =
+average + "%";
+
+}
+
+}
+
+
+updateHomeStats();
+
+</script>
+<script>
+
+/*
+========================================
+PCB QUESTION BANK
+========================================
+*/
+
+const QUESTION_BANK = {
+
+physics: {
+
+"Units and Measurements": [
+
+{
+q:"Which physical quantity has the SI unit metre?",
+o:["Mass","Length","Time","Temperature"],
+a:1,
+topic:"Units"
+},
+
+{
+q:"The dimensional formula of velocity is:",
+o:["[LT⁻¹]","[LT⁻²]","[MLT⁻¹]","[ML²T⁻²]"],
+a:0,
+topic:"Dimensions"
+},
+
+{
+q:"Which instrument is commonly used to measure very small lengths accurately?",
+o:["Metre scale","Vernier calipers","Stopwatch","Thermometer"],
+a:1,
+topic:"Measurement"
+}
+
+],
+
+"Motion in a Straight Line": [
+
+{
+q:"The slope of a position-time graph represents:",
+o:["Acceleration","Velocity","Force","Distance"],
+a:1,
+topic:"Graphs"
+},
+
+{
+q:"The SI unit of acceleration is:",
+o:["m/s","m/s²","km/h","N"],
+a:1,
+topic:"Acceleration"
+},
+
+{
+q:"If an object moves with constant velocity, its acceleration is:",
+o:["Zero","One","Constant but non-zero","Infinite"],
+a:0,
+topic:"Motion"
+}
+
+],
+
+"Motion in a Plane": [
+
+{
+q:"A quantity having both magnitude and direction is called:",
+o:["Scalar","Vector","Constant","Unit"],
+a:1,
+topic:"Vectors"
+},
+
+{
+q:"Which of the following is a scalar quantity?",
+o:["Velocity","Displacement","Speed","Acceleration"],
+a:2,
+topic:"Scalars"
+},
+
+{
+q:"Projectile motion is an example of:",
+o:["One-dimensional motion","Two-dimensional motion","Circular motion only","Rotational motion"],
+a:1,
+topic:"Projectile Motion"
+}
+
+],
+
+"Laws of Motion": [
+
+{
+q:"Newton's first law is also known as the law of:",
+o:["Acceleration","Inertia","Action","Gravitation"],
+a:1,
+topic:"Newton's Laws"
+},
+
+{
+q:"The SI unit of force is:",
+o:["Joule","Watt","Newton","Pascal"],
+a:2,
+topic:"Force"
+},
+
+{
+q:"According to Newton's third law, action and reaction:",
+o:["Act on the same body","Act on different bodies","Are always unequal","Cancel each other on the same body"],
+a:1,
+topic:"Newton's Laws"
+}
+
+],
+
+"Work, Energy and Power": [
+
+{
+q:"The SI unit of work is:",
+o:["Newton","Joule","Watt","Pascal"],
+a:1,
+topic:"Work"
+},
+
+{
+q:"Kinetic energy depends on:",
+o:["Mass only","Velocity only","Mass and square of velocity","Height only"],
+a:2,
+topic:"Kinetic Energy"
+},
+
+{
+q:"The SI unit of power is:",
+o:["Joule","Newton","Watt","Pascal"],
+a:2,
+topic:"Power"
+}
+
+]
+
+},
+
+
+chemistry: {
+
+"Some Basic Concepts of Chemistry": [
+
+{
+q:"The number of particles present in one mole is approximately:",
+o:["6.022 × 10²³","3.011 × 10²³","9.8 × 10²³","1.602 × 10⁻¹⁹"],
+a:0,
+topic:"Mole Concept"
+},
+
+{
+q:"Molar mass is expressed in:",
+o:["g mol⁻¹","mol g⁻¹","kg only","L mol⁻¹"],
+a:0,
+topic:"Molar Mass"
+},
+
+{
+q:"Molarity is defined as number of moles of solute per:",
+o:["kg of solvent","litre of solution","gram of solution","litre of solvent"],
+a:1,
+topic:"Concentration"
+}
+
+],
+
+"Structure of Atom": [
+
+{
+q:"The negatively charged particle in an atom is:",
+o:["Proton","Neutron","Electron","Nucleus"],
+a:2,
+topic:"Subatomic Particles"
+},
+
+{
+q:"The maximum number of electrons in the first shell is:",
+o:["1","2","8","18"],
+a:1,
+topic:"Electronic Configuration"
+},
+
+{
+q:"The atomic number represents the number of:",
+o:["Neutrons","Protons","Nucleons","Shells"],
+a:1,
+topic:"Atomic Number"
+}
+
+],
+
+"Classification of Elements and Periodicity in Properties": [
+
+{
+q:"The modern periodic table is arranged according to increasing:",
+o:["Atomic mass","Atomic number","Mass number","Density"],
+a:1,
+topic:"Periodic Table"
+},
+
+{
+q:"Elements in the same group generally have the same number of:",
+o:["Shells","Valence electrons","Neutrons","Nucleons"],
+a:1,
+topic:"Periodic Trends"
+},
+
+{
+q:"Atomic radius generally decreases across a period from left to right because effective nuclear charge:",
+o:["Decreases","Increases","Becomes zero","Does not exist"],
+a:1,
+topic:"Atomic Radius"
+}
+
+],
+
+"Chemical Bonding and Molecular Structure": [
+
+{
+q:"A bond formed by sharing electrons is called:",
+o:["Ionic bond","Covalent bond","Metallic bond","Hydrogen bond"],
+a:1,
+topic:"Chemical Bonding"
+},
+
+{
+q:"The shape of a molecule depends strongly on:",
+o:["Electron pair arrangement","Mass only","Colour","Density"],
+a:0,
+topic:"Molecular Shape"
+},
+
+{
+q:"A sigma bond is formed by:",
+o:["Sidewise overlap","Head-on overlap","No overlap","Only ionic attraction"],
+a:1,
+topic:"Orbital Overlap"
+}
+
+]
+
+},
+
+
+biology: {
+
+"The Living World": [
+
+{
+q:"The basic unit of classification is:",
+o:["Genus","Species","Family","Order"],
+a:1,
+topic:"Taxonomy"
+},
+
+{
+q:"The scientific naming of organisms is called:",
+o:["Classification","Nomenclature","Evolution","Anatomy"],
+a:1,
+topic:"Nomenclature"
+},
+
+{
+q:"The binomial system was popularised by:",
+o:["Darwin","Linnaeus","Mendel","Watson"],
+a:1,
+topic:"Taxonomy"
+}
+
+],
+
+"Biological Classification": [
+
+{
+q:"The five kingdom classification was proposed by:",
+o:["R.H. Whittaker","Linnaeus","Darwin","Mendel"],
+a:0,
+topic:"Five Kingdom Classification"
+},
+
+{
+q:"Bacteria are placed in kingdom:",
+o:["Protista","Monera","Fungi","Plantae"],
+a:1,
+topic:"Monera"
+},
+
+{
+q:"Fungi generally have a cell wall made mainly of:",
+o:["Cellulose","Chitin","Peptidoglycan","Lignin"],
+a:1,
+topic:"Fungi"
+}
+
+],
+
+"Cell: The Unit of Life": [
+
+{
+q:"The plasma membrane is mainly composed of:",
+o:["Lipids and proteins","DNA only","Cellulose only","Starch"],
+a:0,
+topic:"Cell Membrane"
+},
+
+{
+q:"The powerhouse of the cell is:",
+o:["Nucleus","Ribosome","Mitochondrion","Golgi apparatus"],
+a:2,
+topic:"Cell Organelles"
+},
+
+{
+q:"Ribosomes are mainly involved in:",
+o:["Protein synthesis","Photosynthesis","Respiration only","DNA storage"],
+a:0,
+topic:"Ribosomes"
+}
+
+],
+
+"Biomolecules": [
+
+{
+q:"Proteins are polymers of:",
+o:["Fatty acids","Amino acids","Nucleotides","Monosaccharides"],
+a:1,
+topic:"Proteins"
+},
+
+{
+q:"DNA and RNA are examples of:",
+o:["Proteins","Lipids","Nucleic acids","Carbohydrates"],
+a:2,
+topic:"Nucleic Acids"
+},
+
+{
+q:"The most abundant biomolecule in most living organisms is:",
+o:["Carbohydrate","Protein","Vitamin","Mineral"],
+a:0,
+topic:"Biomolecules"
+}
+
+],
+
+"Cell Cycle and Cell Division": [
+
+{
+q:"DNA replication occurs during:",
+o:["G1 phase","S phase","G2 phase","M phase"],
+a:1,
+topic:"Cell Cycle"
+},
+
+{
+q:"Mitosis generally produces:",
+o:["Two daughter cells","Four daughter cells","One daughter cell","Eight daughter cells"],
+a:0,
+topic:"Mitosis"
+},
+
+{
+q:"Crossing over occurs during:",
+o:["Prophase I","Metaphase II","Anaphase II","Telophase II"],
+a:0,
+topic:"Meiosis"
+}
+
+]
+
+}
+
+};
+
+
+/*
+========================================
+USE SUBJECT-SPECIFIC QUESTIONS
+========================================
+*/
+
+function getChapterQuestions(){
+
+const subjectQuestions =
+QUESTION_BANK[currentSubject];
+
+if(
+subjectQuestions &&
+subjectQuestions[currentChapter]
+){
+
+return subjectQuestions[currentChapter];
+
+}
+
+
+/*
+If a chapter does not yet have
+specific questions, use these
+general practice questions.
+*/
+
+return createTestQuestions();
+
+}
+
+
+/*
+========================================
+REPLACE OLD TEST QUESTION CREATOR
+========================================
+*/
+
+function startRealTest(){
+
+questions =
+getChapterQuestions();
+
+questionIndex = 0;
+
+testScore = 0;
+
+testAnswers = [];
+
+
+document.getElementById(
+"testTitle"
+).textContent =
+currentChapter +
+" — Chapter Test";
+
+
+showScreen("test");
+
+renderQuestion();
+
+}
+
+
+/*
+========================================
+REAL TEST BUTTON
+========================================
+*/
+
+document.addEventListener(
+"click",
+function(event){
+
+const button =
+event.target.closest(
+'[data-action="test"]'
+);
+
+if(button){
+
+startRealTest();
+
+}
+
+});
+
+</script>
+<script>
+
+/*
+========================================
+SMART TEACHING PANEL
+========================================
+*/
+
+function smartTeach(){
+
+const chapter =
+currentChapter.toLowerCase();
+
+let html = "";
+
+
+/* PHYSICS */
+
+if(currentSubject === "physics"){
+
+html = `
+
+<div class="card">
+
+<h2>⚡ Physics Learning Path</h2>
+
+<div class="info">
+
+<h3>Step 1 — Concept</h3>
+
+<p>
+First understand what the physical
+quantity means and what is changing.
+</p>
+
+</div>
+
+<div class="hinglish">
+
+<h3>Step 2 — Hinglish Explanation</h3>
+
+<p>
+Physics mein formula yaad karne se pehle
+ye samjho ki formula kis relationship
+ko describe kar raha hai.
+</p>
+
+</div>
+
+<div class="exam">
+
+<h3>Step 3 — Formula</h3>
+
+<p>
+Formula ko symbols, units aur physical
+meaning ke saath learn karo.
+</p>
+
+</div>
+
+<div class="info">
+
+<h3>Step 4 — Graph / Diagram</h3>
+
+<p>
+Graph ya diagram ko identify karo,
+axes aur important points samjho.
+</p>
+
+</div>
+
+<div class="hinglish">
+
+<h3>Step 5 — Numerical Strategy</h3>
+
+<p>
+Given → Find → Formula →
+Substitution → Calculation → Unit →
+Final Answer
+</p>
+
+</div>
+
+</div>
+
+`;
+
+}
+
+
+/* CHEMISTRY */
+
+else if(currentSubject === "chemistry"){
+
+html = `
+
+<div class="card">
+
+<h2>⚗️ Chemistry Learning Path</h2>
+
+<div class="info">
+
+<h3>Step 1 — Concept</h3>
+
+<p>
+Understand the particles, atoms,
+molecules or reactions involved.
+</p>
+
+</div>
+
+<div class="hinglish">
+
+<h3>Step 2 — Simple Explanation</h3>
+
+<p>
+Chemistry ko microscopic level par
+imagine karo — atoms aur electrons
+actually kya kar rahe hain?
+</p>
+
+</div>
+
+<div class="exam">
+
+<h3>Step 3 — Formula / Reaction</h3>
+
+<p>
+Formula ke symbols aur units samjho.
+Chemical equation mein reactants,
+products aur coefficients identify karo.
+</p>
+
+</div>
+
+<div class="info">
+
+<h3>Step 4 — Exceptions</h3>
+
+<p>
+Periodic trends, reactions aur rules
+mein important exceptions ko separately
+mark karo.
+</p>
+
+</div>
+
+<div class="hinglish">
+
+<h3>Step 5 — Practice</h3>
+
+<p>
+Concept → Example → Numerical →
+MCQ → Revision.
+</p>
+
+</div>
+
+</div>
+
+`;
+
+}
+
+
+/* BIOLOGY */
+
+else if(currentSubject === "biology"){
+
+html = `
+
+<div class="card">
+
+<h2>🧬 Biology Learning Path</h2>
+
+<div class="info">
+
+<h3>Step 1 — NCERT Reading</h3>
+
+<p>
+Read the NCERT paragraph carefully.
+Important terms ko identify karo.
+</p>
+
+</div>
+
+<div class="hinglish">
+
+<h3>Step 2 — Understand</h3>
+
+<p>
+Paragraph ka meaning apni simple
+language mein explain karo.
+</p>
+
+</div>
+
+<div class="exam">
+
+<h3>Step 3 — Keywords</h3>
+
+<p>
+Scientific names, definitions,
+functions and examples ko highlight karo.
+</p>
+
+</div>
+
+<div class="info">
+
+<h3>Step 4 — Diagram</h3>
+
+<p>
+Important diagrams ko label karna
+aur explain karna practice karo.
+</p>
+
+</div>
+
+<div class="hinglish">
+
+<h3>Step 5 — Active Recall</h3>
+
+<p>
+NCERT band karo aur topic ko
+bina dekhe explain karo.
+</p>
+
+</div>
+
+</div>
+
+`;
+
+}
+
+
+document.getElementById(
+"teachContent"
+).innerHTML =
+html;
+
+}
+
+
+/*
+========================================
+OPEN SMART TEACHING
+========================================
+*/
+
+document.addEventListener(
+"click",
+function(event){
+
+const button =
+event.target.closest(
+'[data-action="teach"]'
+);
+
+if(button){
+
+teachStep = 0;
+
+document.getElementById(
+"teachTitle"
+).textContent =
+currentChapter;
+
+smartTeach();
+
+document.getElementById(
+"teachBar"
+).style.width =
+"100%";
+
+document.getElementById(
+"teachNext"
+).textContent =
+"BACK TO CHAPTER";
+
+showScreen("teach");
+
+}
+
+});
+
+</script>
+<script>
+
+/*
+========================================
+CHAPTER PROGRESS
+========================================
+*/
+
+function progressKey(){
+
+return "progress_" +
+currentSubject +
+"_" +
+currentChapter;
+
+}
+
+
+function getProgress(){
+
+return JSON.parse(
+
+localStorage.getItem(
+progressKey()
+)
+
+|| `{
+"learn":false,
+"ncert":false,
+"numerical":false,
+"revision":false,
+"test":false
+}`
+
+);
+
+}
+
+
+function saveProgress(type){
+
+const progress =
+getProgress();
+
+progress[type] = true;
+
+localStorage.setItem(
+progressKey(),
+JSON.stringify(progress)
+);
+
+}
+
+
+function getProgressPercent(){
+
+const progress =
+getProgress();
+
+let completed = 0;
+
+const total = 5;
+
+
+if(progress.learn)
+completed++;
+
+if(progress.ncert)
+completed++;
+
+if(progress.numerical)
+completed++;
+
+if(progress.revision)
+completed++;
+
+if(progress.test)
+completed++;
+
+
+return Math.round(
+(completed / total) * 100
+);
+
+}
+
+
+/*
+========================================
+SHOW PROGRESS ON CHAPTER PAGE
+========================================
+*/
+
+function updateChapterProgress(){
+
+const percent =
+getProgressPercent();
+
+
+let old =
+document.getElementById(
+"chapterProgress"
+);
+
+
+if(!old){
+
+old =
+document.createElement("div");
+
+old.id =
+"chapterProgress";
+
+document.querySelector(
+"#chapter .card:last-child"
+).prepend(old);
+
+}
+
+
+old.innerHTML = `
+
+<div class="info">
+
+<h3>
+📈 Chapter Progress
+</h3>
+
+<div class="progress">
+
+<div style="
+width:${percent}%;
+"></div>
+
+</div>
+
+<p>
+<b>${percent}%</b> completed
+</p>
+
+</div>
+
+`;
+
+}
+
+
+/*
+========================================
+MARK ACTIONS AS COMPLETED
+========================================
+*/
+
+document.addEventListener(
+"click",
+function(event){
+
+const button =
+event.target.closest(
+"[data-action]"
+);
+
+if(!button) return;
+
+
+const action =
+button.getAttribute(
+"data-action"
+);
+
+
+if(action === "teach"){
+
+saveProgress("learn");
+
+}
+
+
+if(action === "ncert"){
+
+saveProgress("ncert");
+
+}
+
+
+if(action === "numerical"){
+
+saveProgress("numerical");
+
+}
+
+
+if(action === "revision"){
+
+saveProgress("revision");
+
+}
+
+
+if(action === "test"){
+
+saveProgress("test");
+
+}
+
+});
+
+
+/*
+========================================
+UPDATE WHEN CHAPTER OPENS
+========================================
+*/
+
+const oldOpenChapter =
+openChapter;
+
+
+openChapter =
+function(chapterName){
+
+currentChapter =
+chapterName;
+
+document.getElementById(
+"chapterTitle"
+).textContent =
+chapterName;
+
+showScreen("chapter");
+
+updateChapterProgress();
+
+};
+
+
+/*
+========================================
+SHOW PROGRESS AFTER PAGE LOAD
+========================================
+*/
+
+setTimeout(
+function(){
+
+if(currentChapter){
+
+updateChapterProgress();
+
+}
+
+},
+300
+);
+
+</script>
+<script>
+
+/*
+========================================
+SMART HOME DASHBOARD
+========================================
+*/
+
+function buildDashboard(){
+
+const container =
+document.querySelector(
+"#home .card:nth-of-type(2)"
+);
+
+
+if(!container) return;
+
+
+let completed = 0;
+let total = 0;
+
+
+Object.keys(DATA).forEach(
+function(subject){
+
+DATA[subject].chapters.forEach(
+function(chapter){
+
+total++;
+
+const key =
+"progress_" +
+subject +
+"_" +
+chapter;
+
+
+const progress =
+JSON.parse(
+localStorage.getItem(key)
+|| "{}"
+);
+
+
+if(
+progress.test &&
+progress.learn
+){
+
+completed++;
+
+}
+
+});
+
+});
+
+
+const percentage =
+total === 0
+? 0
+: Math.round(
+(completed / total) * 100
+);
+
+
+const old =
+document.getElementById(
+"studyDashboard"
+);
+
+
+if(old) old.remove();
+
+
+const dashboard =
+document.createElement("div");
+
+
+dashboard.id =
+"studyDashboard";
+
+dashboard.className =
+"card";
+
+
+dashboard.innerHTML = `
+
+<h2>
+🎯 Study Dashboard
+</h2>
+
+<div class="progress">
+
+<div style="
+width:${percentage}%;
+"></div>
+
+</div>
+
+<p>
+
+<b>${percentage}%</b>
+of your chapters have been
+learned and tested.
+
+</p>
+
+<div class="stats">
+
+<div class="stat">
+
+<strong>
+${completed}
+</strong>
+
+Completed
+
+</div>
+
+
+<div class="stat">
+
+<strong>
+${total - completed}
+</strong>
+
+Remaining
+
+</div>
+
+
+<div class="stat">
+
+<strong>
+${total}
+</strong>
+
+Total
+
+</div>
+
+</div>
+
+<div class="hinglish">
+
+<b>Today's rule:</b>
+
+<p>
+Pehle current chapter complete karo,
+phir backlog par jao.
+</p>
+
+</div>
+
+`;
+
+
+document.querySelector(
+"#home"
+).insertBefore(
+dashboard,
+document.querySelector(
+"#home .grid"
+)
+);
+
+}
+
+
+/*
+========================================
+REFRESH DASHBOARD
+========================================
+*/
+
+document.addEventListener(
+"click",
+function(){
+
+setTimeout(
+buildDashboard,
+100
+);
+
+});
+
+
+setTimeout(
+buildDashboard,
+500
+);
+
+</script>
+<script>
+
+/*
+========================================
+CHAPTER CHECKLIST
+========================================
+*/
+
+function showChapterChecklist(){
+
+const progress =
+getProgress();
+
+
+const old =
+document.getElementById(
+"chapterChecklist"
+);
+
+
+if(old) old.remove();
+
+
+const checklist =
+document.createElement("div");
+
+
+checklist.id =
+"chapterChecklist";
+
+checklist.className =
+"card";
+
+
+checklist.innerHTML = `
+
+<h2>
+✅ Chapter Checklist
+</h2>
+
+<div class="info">
+
+<p>
+${progress.learn
+? "✅"
+: "⬜"}
+ 🧠 Learn the chapter
+</p>
+
+<p>
+${progress.ncert
+? "✅"
+: "⬜"}
+ 📖 NCERT / Textbook
+</p>
+
+<p>
+${progress.numerical
+? "✅"
+: "⬜"}
+ 🧮 Numerical Practice
+</p>
+
+<p>
+${progress.revision
+? "✅"
+: "⬜"}
+ 🔄 Quick Revision
+</p>
+
+<p>
+${progress.test
+? "✅"
+: "⬜"}
+ 📝 Chapter Test
+</p>
+
+</div>
+
+`;
+
+
+const chapterCard =
+document.querySelector(
+"#chapter .card:last-child"
+);
+
+
+chapterCard.after(
+checklist
+);
+
+}
+
+
+/*
+========================================
+UPDATE CHECKLIST
+========================================
+*/
+
+const oldUpdate =
+updateChapterProgress;
+
+
+updateChapterProgress =
+function(){
+
+oldUpdate();
+
+showChapterChecklist();
+
+};
+
+
+/*
+========================================
+REFRESH AFTER ACTION
+========================================
+*/
+
+document.addEventListener(
+"click",
+function(){
+
+setTimeout(
+function(){
+
+if(
+document.getElementById(
+"chapter"
+).classList.contains(
+"active"
+)
+){
+
+showChapterChecklist();
+
+updateChapterProgress();
+
+}
+
+},
+200
+);
+
+});
+
+</script>
+<script>
+
+/*
+========================================
+WEAK CHAPTER TRACKER
+========================================
+*/
+
+function showWeakChapters(){
+
+const results =
+JSON.parse(
+localStorage.getItem(
+"pcbTestResults"
+) || "[]"
+);
+
+
+const old =
+document.getElementById(
+"weakChapterCard"
+);
+
+
+if(old) old.remove();
+
+
+const card =
+document.createElement("div");
+
+
+card.id =
+"weakChapterCard";
+
+card.className =
+"card";
+
+
+if(results.length === 0){
+
+card.innerHTML = `
+
+<h2>
+🎯 Weak Chapter Tracker
+</h2>
+
+<div class="info">
+
+<p>
+Take some chapter tests first.
+Your weak chapters will appear here.
+</p>
+
+</div>
+
+`;
+
+document.querySelector(
+"#home"
+).appendChild(card);
+
+return;
+
+}
+
+
+/*
+GROUP RESULTS BY CHAPTER
+*/
+
+let chapterData = {};
+
+
+results.forEach(
+function(result){
+
+if(
+!chapterData[result.chapter]
+){
+
+chapterData[result.chapter] = {
+
+total:0,
+score:0,
+subject:result.subject
+
+};
+
+}
+
+
+chapterData[result.chapter].total +=
+result.total;
+
+chapterData[result.chapter].score +=
+result.score;
+
+});
+
+
+let weakHTML = "";
+
+let strongHTML = "";
+
+
+Object.keys(
+chapterData
+).forEach(
+function(chapter){
+
+const data =
+chapterData[chapter];
+
+
+const percentage =
+Math.round(
+(data.score /
+data.total) * 100
+);
+
+
+if(percentage < 70){
+
+weakHTML += `
+
+<div class="weak">
+
+<b>
+⚠️ ${chapter}
+</b>
+
+<p>
+${data.subject}
+</p>
+
+<p>
+Average:
+${percentage}%
+</p>
+
+<p>
+Recommended:
+Revise + practise + retest
+</p>
+
+</div>
+
+`;
+
+}
+
+else {
+
+strongHTML += `
+
+<div class="good">
+
+<b>
+✅ ${chapter}
+</b>
+
+<p>
+${data.subject}
+</p>
+
+<p>
+Average:
+${percentage}%
+</p>
+
+</div>
+
+`;
+
+}
+
+});
+
+
+if(weakHTML === ""){
+
+weakHTML = `
+
+<div class="good">
+
+🔥 No major weak chapter detected!
+
+<p>
+Keep revising regularly.
+</p>
+
+</div>
+
+`;
+
+}
+
+
+if(strongHTML === ""){
+
+strongHTML = `
+
+<div class="info">
+
+Keep taking tests to identify
+your strong chapters.
+
+</div>
+
+`;
+
+}
+
+
+card.innerHTML = `
+
+<h2>
+🎯 Weak Chapter Tracker
+</h2>
+
+<h3>
+⚠️ Needs Attention
+</h3>
+
+${weakHTML}
+
+
+<h3>
+💪 Doing Well
+</h3>
+
+${strongHTML}
+
+`;
+
+
+document.querySelector(
+"#home"
+).appendChild(card);
+
+}
+
+
+/*
+========================================
+UPDATE TRACKER
+========================================
+*/
+
+setTimeout(
+showWeakChapters,
+700
+);
+
+
+document.addEventListener(
+"click",
+function(){
+
+setTimeout(
+showWeakChapters,
+500
+);
+
+});
+
+</script>
+<script>
+
+/*
+========================================
+STUDY STREAK
+========================================
+*/
+
+function todayDate(){
+
+const date =
+new Date();
+
+return date.toISOString()
+.split("T")[0];
+
+}
+
+
+function loadStudyDays(){
+
+return JSON.parse(
+localStorage.getItem(
+"pcbStudyDays"
+) || "[]"
+);
+
+}
+
+
+function recordStudyDay(){
+
+const today =
+todayDate();
+
+
+let days =
+loadStudyDays();
+
+
+if(!days.includes(today)){
+
+days.push(today);
+
+}
+
+
+localStorage.setItem(
+"pcbStudyDays",
+JSON.stringify(days)
+);
+
+}
+
+
+function calculateStreak(){
+
+const days =
+loadStudyDays();
+
+
+if(days.length === 0){
+
+return 0;
+
+}
+
+
+const sorted =
+days.slice().sort()
+.reverse();
+
+
+let streak = 1;
+
+
+for(
+let i = 0;
+i < sorted.length - 1;
+i++
+){
+
+const current =
+new Date(sorted[i]);
+
+
+const previous =
+new Date(sorted[i + 1]);
+
+
+const difference =
+(
+current - previous
+) /
+(
+1000 * 60 * 60 * 24
+);
+
+
+if(
+Math.round(difference) === 1
+){
+
+streak++;
+
+}
+
+else{
+
+break;
+
+}
+
+}
+
+
+return streak;
+
+}
+
+
+/*
+========================================
+STREAK CARD
+========================================
+*/
+
+function showStreak(){
+
+recordStudyDay();
+
+
+const old =
+document.getElementById(
+"streakCard"
+);
+
+
+if(old) old.remove();
+
+
+const streak =
+calculateStreak();
+
+
+const days =
+loadStudyDays();
+
+
+const card =
+document.createElement("div");
+
+
+card.id =
+"streakCard";
+
+card.className =
+"card";
+
+
+card.innerHTML = `
+
+<h2>
+🔥 Study Streak
+</h2>
+
+<div class="big">
+${streak} 🔥
+</div>
+
+<p style="text-align:center">
+
+consecutive study day
+${streak === 1 ? "" : "s"}
+
+</p>
+
+
+<div class="info">
+
+<b>
+📅 Total study days:
+</b>
+
+${days.length}
+
+</div>
+
+
+<div class="hinglish">
+
+<p>
+Consistency > perfection.
+</p>
+
+<p>
+Roz thoda progress bhi
+long-term mein bahut powerful hota hai.
+</p>
+
+</div>
+
+`;
+
+
+document.querySelector(
+"#home"
+).appendChild(card);
+
+}
+
+
+setTimeout(
+showStreak,
+900
+);
+
+
+document.addEventListener(
+"click",
+function(){
+
+setTimeout(
+showStreak,
+500
+);
+
+});
+
+</script>
+<script>
+
+/*
+========================================
+TODAY'S STUDY PLAN
+========================================
+*/
+
+function showStudyPlan(){
+
+const old =
+document.getElementById(
+"studyPlanCard"
+);
+
+
+if(old) old.remove();
+
+
+const card =
+document.createElement("div");
+
+
+card.id =
+"studyPlanCard";
+
+card.className =
+"card";
+
+
+card.innerHTML = `
+
+<h2>
+📚 Today's Study Plan
+</h2>
+
+<div class="info">
+
+<p>
+Choose a subject and chapter to start
+your study session.
+</p>
+
+</div>
+
+<select
+id="planSubject"
+style="
+width:100%;
+padding:14px;
+border-radius:10px;
+border:1px solid #ddd;
+font-size:15px;
+">
+
+<option value="">
+Select Subject
+</option>
+
+<option value="physics">
+⚡ Physics
+</option>
+
+<option value="chemistry">
+⚗️ Chemistry
+</option>
+
+<option value="biology">
+🧬 Biology
+</option>
+
+</select>
+
+
+<select
+id="planChapter"
+style="
+width:100%;
+padding:14px;
+border-radius:10px;
+border:1px solid #ddd;
+font-size:15px;
+margin-top:10px;
+">
+
+<option>
+Select Chapter
+</option>
+
+</select>
+
+
+<button
+id="startPlan">
+
+🚀 START STUDY SESSION
+
+</button>
+
+`;
+
+
+document.querySelector(
+"#home"
+).appendChild(card);
+
+
+document.getElementById(
+"planSubject"
+).addEventListener(
+"change",
+function(){
+
+const subject =
+this.value;
+
+
+const chapterSelect =
+document.getElementById(
+"planChapter"
+);
+
+
+chapterSelect.innerHTML =
+"<option>Select Chapter</option>";
+
+
+if(!subject) return;
+
+
+DATA[subject].chapters.forEach(
+function(chapter){
+
+const option =
+document.createElement(
+"option"
+);
+
+
+option.value =
+chapter;
+
+option.textContent =
+chapter;
+
+
+chapterSelect.appendChild(
+option
+);
+
+});
+
+});
+
+
+document.getElementById(
+"startPlan"
+).addEventListener(
+"click",
+function(){
+
+const subject =
+document.getElementById(
+"planSubject"
+).value;
+
+
+const chapter =
+document.getElementById(
+"planChapter"
+).value;
+
+
+if(!subject ||
+!chapter ||
+chapter === "Select Chapter"){
+
+alert(
+"Please select a subject and chapter."
+);
+
+return;
+
+}
+
+
+currentSubject =
+subject;
+
+currentChapter =
+chapter;
+
+
+document.getElementById(
+"chapterTitle"
+).textContent =
+chapter;
+
+
+showScreen("chapter");
+
+});
+
+}
+
+
+setTimeout(
+showStudyPlan,
+1100
+);
+
+
+document.addEventListener(
+"click",
+function(){
+
+setTimeout(
+showStudyPlan,
+600
+);
+
+});
+
+</script>
+<style>
+
+/* ========================================
+   FINAL MOBILE APP DESIGN
+======================================== */
+
+body{
+background:
+linear-gradient(
+180deg,
+#f5f6ff 0%,
+#f8f9fc 45%,
+#ffffff 100%
+);
+}
+
+header{
+position:sticky;
+top:0;
+z-index:100;
+box-shadow:
+0 3px 15px rgba(0,0,0,.12);
+}
+
+main{
+padding-bottom:80px;
+}
+
+.card{
+border:1px solid #ececf5;
+box-shadow:
+0 5px 20px rgba(40,40,80,.07);
+transition:
+transform .2s,
+box-shadow .2s;
+}
+
+.card:hover{
+transform:translateY(-2px);
+box-shadow:
+0 8px 25px rgba(40,40,80,.11);
+}
+
+.grid .card{
+min-height:210px;
+display:flex;
+flex-direction:column;
+justify-content:center;
+}
+
+.subject .icon{
+font-size:52px;
+margin-bottom:5px;
+}
+
+.subject h2{
+margin:8px 0;
+}
+
+button{
+min-height:48px;
+transition:
+transform .15s,
+opacity .15s;
+}
+
+button:active{
+transform:scale(.97);
+}
+
+button:hover{
+opacity:.92;
+}
+
+button.secondary{
+border:1px solid #dddfff;
+}
+
+.badge{
+letter-spacing:.3px;
+}
+
+.progress{
+height:11px;
+background:#e4e5ef;
+}
+
+.progress div{
+background:
+linear-gradient(
+90deg,
+#5146d8,
+#756df0
+);
+}
+
+.info,
+.hinglish,
+.exam{
+margin:15px 0;
+}
+
+.info h3,
+.hinglish h3,
+.exam h3{
+margin-top:0;
+}
+
+.stats{
+margin:15px 0;
+}
+
+.stat{
+border:1px solid #e9e9f2;
+}
+
+.stat strong{
+color:#5146d8;
+}
+
+.option{
+margin:8px 0;
+background:#f1f1f5;
+border:1px solid #e1e1e7;
+}
+
+.option:hover{
+background:#e7e7f0;
+}
+
+.option.correct{
+background:#d9f4df;
+border-color:#72c487;
+}
+
+.option.wrong{
+background:#ffdede;
+border-color:#e88787;
+}
+
+.big{
+font-size:52px;
+color:#5146d8;
+}
+
+footer{
+border-top:1px solid #eee;
+margin-top:30px;
+}
+
+@media(max-width:600px){
+
+header{
+padding:18px 12px;
+}
+
+header h1{
+font-size:23px;
+}
+
+main{
+padding:10px;
+}
+
+.card{
+padding:16px;
+border-radius:16px;
+}
+
+.grid{
+grid-template-columns:1fr;
+}
+
+.grid .card{
+min-height:190px;
+}
+
+button{
+font-size:14px;
+}
+
+h1{
+font-size:24px;
+}
+
+h2{
+font-size:20px;
+}
+
+.stats{
+gap:7px;
+}
+
+.stat{
+padding:10px 5px;
+font-size:12px;
+}
+
+.stat strong{
+font-size:21px;
+}
+
+}
+
+/* Smooth screen changes */
+
+.screen{
+animation:
+fadeIn .2s ease;
+}
+
+@keyframes fadeIn{
+
+from{
+opacity:0;
+transform:translateY(5px);
+}
+
+to{
+opacity:1;
+transform:translateY(0);
+}
+
+}
+
+</style>
+<script>
+
+/* ========================================
+   CHAPTER CONTENT ENGINE
+======================================== */
+
+const CHAPTER_CONTENT = {
+
+"Motion in a Straight Line": {
+
+concept: `
+<h3>🚗 What is Motion?</h3>
+
+<p>
+An object is said to be in motion when its
+position changes with time relative to a
+reference point.
+</p>
+
+<div class="hinglish">
+
+<b>Simple idea:</b>
+
+<p>
+Agar object ki position time ke saath
+change ho rahi hai, toh object motion mein hai.
+</p>
+
+</div>
+`,
+
+keyPoints: [
+"Reference point is important.",
+"Position tells where the object is.",
+"Distance is the total path travelled.",
+"Displacement is the change in position.",
+"Speed tells how fast distance is covered.",
+"Velocity includes direction.",
+"Acceleration is the rate of change of velocity."
+],
+
+formulas: [
+"Average speed = Total distance / Total time",
+"Average velocity = Total displacement / Total time",
+"Acceleration = Change in velocity / Time taken"
+],
+
+exam: `
+<div class="exam">
+
+<h3>⭐ Exam Focus</h3>
+
+<ul>
+
+<li>Distance vs displacement</li>
+
+<li>Speed vs velocity</li>
+
+<li>Position-time graphs</li>
+
+<li>Velocity-time graphs</li>
+
+<li>Equations of motion</li>
+
+<li>Numerical problems</li>
+
+</ul>
+
+</div>
+`
+
+},
+
+
+"Some Basic Concepts of Chemistry": {
+
+concept: `
+<h3>⚗️ Mole Concept</h3>
+
+<p>
+The mole is a counting unit used to express
+a very large number of particles.
+</p>
+
+<div class="hinglish">
+
+<b>Simple idea:</b>
+
+<p>
+Jaise dozen = 12 objects,
+waise 1 mole = a very large fixed number
+of particles.
+</p>
+
+</div>
+`,
+
+keyPoints: [
+"1 mole contains Avogadro's number of particles.",
+"Molar mass is the mass of one mole.",
+"Number of moles can be calculated from mass.",
+"Molarity describes concentration.",
+"Empirical formula gives the simplest whole-number ratio."
+],
+
+formulas: [
+"Number of moles = Given mass / Molar mass",
+"Number of particles = Moles × Avogadro constant",
+"Molarity = Moles of solute / Volume of solution in litres"
+],
+
+exam: `
+<div class="exam">
+
+<h3>⭐ Exam Focus</h3>
+
+<ul>
+
+<li>Mole concept</li>
+
+<li>Molar mass</li>
+
+<li>Molarity</li>
+
+<li>Empirical formula</li>
+
+<li>Molecular formula</li>
+
+<li>Stoichiometric calculations</li>
+
+</ul>
+
+</div>
+`
+
+},
+
+
+"Structure of Atom": {
+
+concept: `
+<h3>⚛️ Structure of Atom</h3>
+
+<p>
+An atom contains a nucleus surrounded by
+electrons.
+</p>
+
+<div class="hinglish">
+
+<b>Remember:</b>
+
+<p>
+Proton → positive charge<br>
+Neutron → no charge<br>
+Electron → negative charge
+</p>
+
+</div>
+`,
+
+keyPoints: [
+"Atomic number represents number of protons.",
+"Mass number is protons + neutrons.",
+"Electrons occupy energy levels.",
+"Orbitals describe regions of high probability.",
+"Electronic configuration follows specific rules."
+],
+
+formulas: [
+"Atomic number = Number of protons",
+"Mass number = Number of protons + Number of neutrons",
+"Number of neutrons = Mass number − Atomic number"
+],
+
+exam: `
+<div class="exam">
+
+<h3>⭐ Exam Focus</h3>
+
+<ul>
+
+<li>Subatomic particles</li>
+
+<li>Atomic number and mass number</li>
+
+<li>Bohr model</li>
+
+<li>Quantum numbers</li>
+
+<li>Electronic configuration</li>
+
+</ul>
+
+</div>
+`
+
+},
+
+
+"The Living World": {
+
+concept: `
+<h3>🌱 The Living World</h3>
+
+<p>
+Biology studies living organisms and their
+interactions with the environment.
+</p>
+
+<div class="hinglish">
+
+<b>Important:</b>
+
+<p>
+Living organisms show characteristics such
+as growth, reproduction, metabolism and
+response to stimuli.
+</p>
+
+</div>
+`,
+
+keyPoints: [
+"Growth is an important characteristic of living organisms.",
+"Reproduction is not an absolute defining property of all organisms.",
+"Metabolism is a defining feature of living organisms.",
+"Living organisms respond to stimuli.",
+"Taxonomy deals with identification, nomenclature and classification."
+],
+
+formulas: [
+"No numerical formula — focus on definitions and concepts."
+],
+
+exam: `
+<div class="exam">
+
+<h3>⭐ NCERT Focus</h3>
+
+<ul>
+
+<li>Characteristics of living organisms</li>
+
+<li>Taxonomy</li>
+
+<li>Binomial nomenclature</li>
+
+<li>Taxonomic hierarchy</li>
+
+<li>Taxonomical aids</li>
+
+</ul>
+
+</div>
+`
+
+},
+
+
+"Cell: The Unit of Life": {
+
+concept: `
+<h3>🧬 Cell — Basic Unit of Life</h3>
+
+<p>
+The cell is the basic structural and functional
+unit of living organisms.
+</p>
+
+<div class="hinglish">
+
+<b>Simple idea:</b>
+
+<p>
+Jaise building bricks se banti hai,
+waise living organisms cells se bane hote hain.
+</p>
+
+</div>
+`,
+
+keyPoints: [
+"Cells may be prokaryotic or eukaryotic.",
+"Eukaryotic cells contain membrane-bound organelles.",
+"Plasma membrane controls movement of substances.",
+"Nucleus contains genetic material.",
+"Mitochondria are associated with cellular respiration.",
+"Ribosomes are involved in protein synthesis."
+],
+
+formulas: [
+"No major numerical formula — focus on structures and functions."
+],
+
+exam: `
+<div class="exam">
+
+<h3>⭐ NCERT Focus</h3>
+
+<ul>
+
+<li>Prokaryotic vs eukaryotic cells</li>
+
+<li>Cell membrane</li>
+
+<li>Nucleus</li>
+
+<li>Mitochondria</li>
+
+<li>Endoplasmic reticulum</li>
+
+<li>Golgi apparatus</li>
+
+<li>Ribosomes</li>
+
+<li>Plant vs animal cell</li>
+
+</ul>
+
+</div>
+`
+
+}
+
+};
+
+
+/* ========================================
+   RENDER CHAPTER CONTENT
+======================================== */
+
+function renderChapterContent(){
+
+const data =
+CHAPTER_CONTENT[currentChapter];
+
+if(!data){
+
+return;
+
+}
+
+
+const box =
+document.getElementById(
+"teachContent"
+);
+
+
+box.innerHTML = `
+
+${data.concept}
+
+<div class="info">
+
+<h3>📌 Key Points</h3>
+
+<ul>
+
+${data.keyPoints.map(
+point =>
+`<li>${point}</li>`
+).join("")}
+
+</ul>
+
+</div>
+
+
+<div class="exam">
+
+<h3>📝 Important Formulas / Facts</h3>
+
+<ul>
+
+${data.formulas.map(
+formula =>
+`<li>${formula}</li>`
+).join("")}
+
+</ul>
+
+</div>
+
+
+${data.exam}
+
+`;
+
+}
+
+
+/* ========================================
+   CONNECT TO TEACH BUTTON
+======================================== */
+
+document.addEventListener(
+"click",
+function(event){
+
+const button =
+event.target.closest(
+'[data-action="teach"]'
+);
+
+if(button){
+
+document.getElementById(
+"teachTitle"
+).textContent =
+currentChapter;
+
+renderChapterContent();
+
+document.getElementById(
+"teachBar"
+).style.width =
+"100%";
+
+document.getElementById(
+"teachNext"
+).textContent =
+"BACK TO CHAPTER";
+
+showScreen("teach");
+
+}
+
+});
+
+</script>
+<script>
+
+/* ========================================
+   TEST SETTINGS
+======================================== */
+
+function openTestSettings(){
+
+const old =
+document.getElementById(
+"testSettingsCard"
+);
+
+if(old) old.remove();
+
+const card =
+document.createElement("div");
+
+card.id =
+"testSettingsCard";
+
+card.className =
+"card";
+
+card.innerHTML = `
+
+<h2>📝 Test Settings</h2>
+
+<div class="info">
+
+<p>
+Choose how you want to attempt this chapter test.
+</p>
+
+</div>
+
+<h3>Difficulty</h3>
+
+<select
+id="testDifficulty"
+style="
+width:100%;
+padding:13px;
+border-radius:10px;
+border:1px solid #ddd;
+font-size:15px;
+">
+
+<option value="easy">
+🟢 Easy
+</option>
+
+<option value="medium">
+🟡 Medium
+</option>
+
+<option value="hard">
+🔴 Hard
+</option>
+
+</select>
+
+
+<h3>Questions</h3>
+
+<select
+id="testCount"
+style="
+width:100%;
+padding:13px;
+border-radius:10px;
+border:1px solid #ddd;
+font-size:15px;
+">
+
+<option value="5">
+5 Questions
+</option>
+
+<option value="10">
+10 Questions
+</option>
+
+<option value="15">
+15 Questions
+</option>
+
+</select>
+
+
+<button id="beginSelectedTest">
+
+🚀 START TEST
+
+</button>
+
+`;
+
+document.querySelector(
+"#chapter .card:last-child"
+).after(card);
+
+}
+
+
+/* ========================================
+   START SELECTED TEST
+======================================== */
+
+function beginSelectedTest(){
+
+let bank =
+getChapterQuestions();
+
+
+const count =
+parseInt(
+document.getElementById(
+"testCount"
+).value
+);
+
+
+if(bank.length > count){
+
+bank =
+bank.slice(0,count);
+
+}
+
+
+questions = bank;
+
+questionIndex = 0;
+
+testScore = 0;
+
+testAnswers = [];
+
+
+document.getElementById(
+"testTitle"
+).textContent =
+currentChapter +
+" — Test";
+
+
+showScreen("test");
+
+renderQuestion();
+
+}
+
+
+/* ========================================
+   TEST BUTTON
+======================================== */
+
+document.addEventListener(
+"click",
+function(event){
+
+const button =
+event.target.closest(
+'[data-action="test"]'
+);
+
+if(button){
+
+openTestSettings();
+
+}
+
+});
+
+
+/* ========================================
+   START BUTTON
+======================================== */
+
+document.addEventListener(
+"click",
+function(event){
+
+if(
+event.target.id ===
+"beginSelectedTest"
+){
+
+beginSelectedTest();
+
+}
+
+});
+
+</script>
+<script>
+
+/* ========================================
+   DIFFICULTY QUESTION BANK
+======================================== */
+
+const DIFFICULTY_BANK = {
+
+"Motion in a Straight Line": {
+
+easy: [
+
+{
+q:"The SI unit of velocity is:",
+o:["m","m/s","m/s²","N"],
+a:1,
+topic:"Velocity"
+},
+
+{
+q:"The slope of a position-time graph gives:",
+o:["Acceleration","Velocity","Force","Mass"],
+a:1,
+topic:"Graphs"
+},
+
+{
+q:"Acceleration is the rate of change of:",
+o:["Distance","Position","Velocity","Mass"],
+a:2,
+topic:"Acceleration"
+}
+
+],
+
+medium: [
+
+{
+q:"A body starts from rest and accelerates uniformly. Its velocity after time t is:",
+o:["at","a/t","t/a","a+t"],
+a:0,
+topic:"Equations of Motion"
+},
+
+{
+q:"For uniform motion, the velocity-time graph is:",
+o:["A horizontal straight line","A vertical line","A parabola","Always a circle"],
+a:0,
+topic:"Graphs"
+},
+
+{
+q:"If displacement is zero after a journey, the distance travelled:",
+o:["Must be zero","Can be non-zero","Must be negative","Must equal velocity"],
+a:1,
+topic:"Distance and Displacement"
+}
+
+],
+
+hard: [
+
+{
+q:"A particle has position x = 2t² + 3t + 1. Its velocity at time t is:",
+o:["2t + 3","4t + 3","4t + 1","2t² + 3"],
+a:1,
+topic:"Position Function"
+},
+
+{
+q:"The slope of a velocity-time graph represents:",
+o:["Distance","Displacement","Acceleration","Speed"],
+a:2,
+topic:"Velocity-Time Graph"
+},
+
+{
+q:"For a body moving with constant acceleration, which quantity changes uniformly with time?",
+o:["Velocity","Acceleration","Mass","Position only"],
+a:0,
+topic:"Uniform Acceleration"
+}
+
+]
+
+},
+
+
+"Some Basic Concepts of Chemistry": {
+
+easy: [
+
+{
+q:"One mole contains:",
+o:["6.022 × 10²³ particles","6.022 × 10² particles","10²³ kg","1 particle"],
+a:0,
+topic:"Mole Concept"
+},
+
+{
+q:"Molarity is moles of solute per:",
+o:["kg solvent","L solution","g solution","mol solvent"],
+a:1,
+topic:"Molarity"
+},
+
+{
+q:"The molar mass of O₂ is:",
+o:["8 g mol⁻¹","16 g mol⁻¹","32 g mol⁻¹","64 g mol⁻¹"],
+a:2,
+topic:"Molar Mass"
+}
+
+],
+
+medium: [
+
+{
+q:"How many moles are present in 18 g of water?",
+o:["0.5 mol","1 mol","2 mol","18 mol"],
+a:1,
+topic:"Mole Calculations"
+},
+
+{
+q:"The empirical formula represents:",
+o:["The actual number of atoms",
+"The simplest whole-number ratio",
+"The molecular mass",
+"The atomic number"],
+a:1,
+topic:"Empirical Formula"
+},
+
+{
+q:"If 1 mole of NaCl is dissolved to make 1 L solution, its molarity is:",
+o:["0.1 M","1 M","10 M","100 M"],
+a:1,
+topic:"Concentration"
+}
+
+],
+
+hard: [
+
+{
+q:"The number of moles in 11 g of CO₂ is approximately:",
+o:["0.25 mol","0.5 mol","1 mol","2 mol"],
+a:0,
+topic:"Mole Calculations"
+},
+
+{
+q:"A compound contains 40% carbon, 6.67% hydrogen and 53.33% oxygen. Its empirical formula is:",
+o:["CH₂O","C₂H₄O₂","CHO","CH₄O"],
+a:0,
+topic:"Empirical Formula"
+},
+
+{
+q:"The concentration of a solution changes when water is added because:",
+o:["Moles of solute increase",
+"Volume changes",
+"Molar mass changes",
+"Atomic number changes"],
+a:1,
+topic:"Molarity"
+}
+
+]
+
+},
+
+
+"Structure of Atom": {
+
+easy: [
+
+{
+q:"The charge on an electron is:",
+o:["Positive","Negative","Neutral","Variable"],
+a:1,
+topic:"Subatomic Particles"
+},
+
+{
+q:"Atomic number is equal to the number of:",
+o:["Neutrons","Protons","Nucleons","Shells"],
+a:1,
+topic:"Atomic Number"
+},
+
+{
+q:"The maximum number of electrons in the first shell is:",
+o:["1","2","8","18"],
+a:1,
+topic:"Electronic Configuration"
+}
+
+],
+
+medium: [
+
+{
+q:"The mass number of an atom is the sum of:",
+o:["Protons and electrons",
+"Protons and neutrons",
+"Electrons and neutrons",
+"Only neutrons"],
+a:1,
+topic:"Mass Number"
+},
+
+{
+q:"An orbital can accommodate a maximum of:",
+o:["1 electron","2 electrons","4 electrons","8 electrons"],
+a:1,
+topic:"Orbitals"
+},
+
+{
+q:"The principal quantum number mainly indicates:",
+o:["Spin","Energy level/shell",
+"Orbital orientation","Electron charge"],
+a:1,
+topic:"Quantum Numbers"
+}
+
+],
+
+hard: [
+
+{
+q:"Which quantum number determines the orientation of an orbital?",
+o:["n","l","mₗ","mₛ"],
+a:2,
+topic:"Quantum Numbers"
+},
+
+{
+q:"The maximum number of electrons in a shell with n = 3 is:",
+o:["2","8","18","32"],
+a:2,
+topic:"Electronic Configuration"
+},
+
+{
+q:"The number of orbitals in a subshell with azimuthal quantum number l is:",
+o:["l","2l","2l + 1","l²"],
+a:2,
+topic:"Quantum Numbers"
+}
+
+]
+
+},
+
+
+"The Living World": {
+
+easy: [
+
+{
+q:"The basic unit of classification is:",
+o:["Genus","Species","Family","Order"],
+a:1,
+topic:"Taxonomy"
+},
+
+{
+q:"Binomial nomenclature gives an organism a:",
+o:["One-word name","Two-word scientific name",
+"Three-word name","Numerical code"],
+a:1,
+topic:"Nomenclature"
+},
+
+{
+q:"Who is associated with binomial nomenclature?",
+o:["Linnaeus","Mendel","Darwin","Watson"],
+a:0,
+topic:"Taxonomy"
+}
+
+],
+
+medium: [
+
+{
+q:"Which of the following is a defining feature of living organisms?",
+o:["Metabolism","Only growth","Only movement","Only reproduction"],
+a:0,
+topic:"Characteristics of Life"
+},
+
+{
+q:"The taxonomic category immediately above species is:",
+o:["Family","Genus","Order","Class"],
+a:1,
+topic:"Taxonomic Hierarchy"
+},
+
+{
+q:"The correct sequence is:",
+o:[
+"Species → Genus → Family",
+"Family → Species → Genus",
+"Genus → Species → Family",
+"Species → Family → Genus"
+],
+a:0,
+topic:"Taxonomic Hierarchy"
+}
+
+],
+
+hard: [
+
+{
+q:"Why is reproduction not considered an absolute defining property of living organisms?",
+o:[
+"All organisms reproduce continuously",
+"Some individual organisms cannot reproduce",
+"Reproduction occurs only in plants",
+"Reproduction is not biological"
+],
+a:1,
+topic:"Characteristics of Life"
+},
+
+{
+q:"Which taxonomic aid contains preserved plant specimens mounted on sheets?",
+o:["Museum","Herbarium","Zoo","Botanical garden"],
+a:1,
+topic:"Taxonomical Aids"
+},
+
+{
+q:"The scientific name of an organism is generally written using:",
+o:[
+"Only the family name",
+"Genus and species",
+"Class and order",
+"Kingdom and phylum"
+],
+a:1,
+topic:"Binomial Nomenclature"
+}
+
+]
+
+},
+
+
+"Cell: The Unit of Life": {
+
+easy: [
+
+{
+q:"The basic structural and functional unit of life is:",
+o:["Tissue","Organ","Cell","Organ system"],
+a:2,
+topic:"Cell Basics"
+},
+
+{
+q:"The powerhouse of the cell is:",
+o:["Nucleus","Mitochondrion","Ribosome","Golgi apparatus"],
+a:1,
+topic:"Organelles"
+},
+
+{
+q:"Ribosomes are involved in:",
+o:["Protein synthesis","DNA storage",
+"Cell division only","Lipid storage"],
+a:0,
+topic:"Ribosomes"
+}
+
+],
+
+medium: [
+
+{
+q:"The plasma membrane is mainly composed of:",
+o:[
+"Carbohydrates only",
+"Lipids and proteins",
+"DNA and RNA",
+"Cellulose only"
+],
+a:1,
+topic:"Cell Membrane"
+},
+
+{
+q:"Which organelle modifies and packages proteins?",
+o:[
+"Golgi apparatus",
+"Ribosome",
+"Nucleus",
+"Mitochondrion"
+],
+a:0,
+topic:"Golgi Apparatus"
+},
+
+{
+q:"Which structure is characteristic of plant cells?",
+o:[
+"Cell wall",
+"Centrosome only",
+"Small vacuoles only",
+"None"
+],
+a:0,
+topic:"Plant Cell"
+}
+
+],
+
+hard: [
+
+{
+q:"The fluid mosaic model describes the structure of:",
+o:[
+"Cell wall",
+"Plasma membrane",
+"Nucleus",
+"Ribosome"
+],
+a:1,
+topic:"Cell Membrane"
+},
+
+{
+q:"Which organelle contains its own DNA and ribosomes?",
+o:[
+"Mitochondrion",
+"Golgi apparatus",
+"Lysosome",
+"Endoplasmic reticulum"
+],
+a:0,
+topic:"Mitochondria"
+},
+
+{
+q:"Rough endoplasmic reticulum appears rough because of the presence of:",
+o:[
+"Lysosomes",
+"Ribosomes",
+"Centrioles",
+"Vacuoles"
+],
+a:1,
+topic:"Endoplasmic Reticulum"
+}
+
+]
+
+}
+
+};
+
+
+/* ========================================
+   GET QUESTIONS BY DIFFICULTY
+======================================== */
+
+function getDifficultyQuestions(){
+
+const difficulty =
+document.getElementById(
+"testDifficulty"
+).value;
+
+
+const bank =
+DIFFICULTY_BANK[currentChapter];
+
+
+if(
+bank &&
+bank[difficulty]
+){
+
+return bank[difficulty];
+
+}
+
+
+/*
+Fallback to the normal question bank
+if this chapter does not yet have
+difficulty-specific questions.
+*/
+
+return getChapterQuestions();
+
+}
+
+
+/* ========================================
+   START SELECTED DIFFICULTY TEST
+======================================== */
+
+function beginSelectedTest(){
+
+let bank =
+getDifficultyQuestions();
+
+
+const count =
+parseInt(
+document.getElementById(
+"testCount"
+).value
+);
+
+
+/*
+Shuffle questions so the test
+is slightly different each time.
+*/
+
+bank =
+bank
+.slice()
+.sort(
+() => Math.random() - 0.5
+);
+
+
+questions =
+bank.slice(
+0,
+Math.min(count,bank.length)
+);
+
+
+questionIndex = 0;
+
+testScore = 0;
+
+testAnswers = [];
+
+
+document.getElementById(
+"testTitle"
+).textContent =
+currentChapter +
+" — Chapter Test";
+
+
+showScreen("test");
+
+renderQuestion();
+
+}
+
+</script>
+<script>
+
+/* ========================================
+   COMPLETE CLASS 11 PCB SYLLABUS
+======================================== */
+
+const COMPLETE_SYLLABUS = {
+
+physics: [
+
+"Units and Measurements",
+"Motion in a Straight Line",
+"Motion in a Plane",
+"Laws of Motion",
+"Work, Energy and Power",
+"System of Particles and Rotational Motion",
+"Gravitation",
+"Mechanical Properties of Solids",
+"Mechanical Properties of Fluids",
+"Thermal Properties of Matter",
+"Thermodynamics",
+"Kinetic Theory",
+"Oscillations",
+"Waves"
+
+],
+
+chemistry: [
+
+"Some Basic Concepts of Chemistry",
+"Structure of Atom",
+"Classification of Elements and Periodicity in Properties",
+"Chemical Bonding and Molecular Structure",
+"Thermodynamics",
+"Equilibrium",
+"Redox Reactions",
+"Organic Chemistry — Some Basic Principles and Techniques",
+"Hydrocarbons"
+
+],
+
+biology: [
+
+"The Living World",
+"Biological Classification",
+"Plant Kingdom",
+"Animal Kingdom",
+"Morphology of Flowering Plants",
+"Anatomy of Flowering Plants",
+"Structural Organisation in Animals",
+"Cell: The Unit of Life",
+"Biomolecules",
+"Cell Cycle and Cell Division",
+"Photosynthesis in Plants",
+"Respiration in Plants",
+"Plant Growth and Development",
+"Breathing and Exchange of Gases",
+"Body Fluids and Circulation",
+"Excretory Products and their Elimination",
+"Locomotion and Movement",
+"Neural Control and Coordination",
+"Chemical Coordination and Integration"
+
+]
+
+};
+
+
+/* ========================================
+   ADD MISSING CHAPTERS TO DATA
+======================================== */
+
+function addCompleteSyllabus(){
+
+Object.keys(
+COMPLETE_SYLLABUS
+).forEach(
+function(subject){
+
+if(!DATA[subject]){
+
+DATA[subject] = {
+chapters:[]
+};
+
+}
+
+
+COMPLETE_SYLLABUS[
+subject
+].forEach(
+function(chapter){
+
+if(
+!DATA[subject].chapters
+.includes(chapter)
+){
+
+DATA[subject].chapters.push(
+chapter
+);
+
+}
+
+});
+
+});
+
+}
+
+
+/* ========================================
+   REBUILD SUBJECT LIST
+======================================== */
+
+function refreshSubjectLists(){
+
+addCompleteSyllabus();
+
+
+if(
+typeof renderHome === "function"
+){
+
+renderHome();
+
+}
+
+}
+
+
+setTimeout(
+refreshSubjectLists,
+300
+);
+
+
+/* ========================================
+   SYLLABUS PROGRESS
+======================================== */
+
+function syllabusCount(subject){
+
+return COMPLETE_SYLLABUS[
+subject
+].length;
+
+}
+
+
+function completedChapterCount(subject){
+
+let completed = 0;
+
+
+COMPLETE_SYLLABUS[
+subject
+].forEach(
+function(chapter){
+
+const progress =
+JSON.parse(
+
+localStorage.getItem(
+
+"progress_" +
+subject +
+"_" +
+chapter
+
+)
+
+|| "{}"
+);
+
+
+if(
+progress.learn &&
+progress.test
+){
+
+completed++;
+
+}
+
+});
+
+
+return completed;
+
+}
+
+
+/* ========================================
+   SHOW SYLLABUS SUMMARY
+======================================== */
+
+function showSyllabusSummary(){
+
+const old =
+document.getElementById(
+"syllabusSummary"
+);
+
+if(old) old.remove();
+
+
+const card =
+document.createElement("div");
+
+card.id =
+"syllabusSummary";
+
+card.className =
+"card";
+
+
+let html =
+"<h2>📚 Class 11 PCB Syllabus</h2>";
+
+
+[
+"physics",
+"chemistry",
+"biology"
+].forEach(
+function(subject){
+
+const total =
+syllabusCount(subject);
+
+const completed =
+completedChapterCount(
+subject
+);
+
+const percent =
+Math.round(
+(completed / total) * 100
+);
+
+
+const title =
+subject === "physics"
+? "⚡ Physics"
+: subject === "chemistry"
+? "⚗️ Chemistry"
+: "🧬 Biology";
+
+
+html += `
+
+<div class="info">
+
+<h3>
+${title}
+</h3>
+
+<div class="progress">
+
+<div style="
+width:${percent}%;
+"></div>
+
+</div>
+
+<p>
+
+${completed}/${total}
+chapters completed
+
+<br>
+
+<b>${percent}%</b>
+
+</p>
+
+</div>
+
+`;
+
+});
+
+
+card.innerHTML =
+html;
+
+
+document.querySelector(
+"#home"
+).appendChild(card);
+
+}
+
+
+setTimeout(
+showSyllabusSummary,
+1200
+);
+
+</script>
+<script>
+
+/* ========================================
+   PHYSICS TEACHING CONTENT
+======================================== */
+
+const PHYSICS_CONTENT = {
+
+"Units and Measurements": {
+
+title:"📏 Units and Measurements",
+
+intro:"Physics begins with measurement. Every physical quantity is expressed using a numerical value and a unit.",
+
+hinglish:"Simple way: number batata hai kitna, aur unit batati hai kis quantity mein measure kiya gaya hai.",
+
+points:[
+"Physical quantities can be fundamental or derived.",
+"SI system is the internationally accepted system of units.",
+"Dimensions show how a physical quantity depends on fundamental quantities.",
+"Significant figures indicate the precision of a measurement.",
+"Errors are unavoidable in experimental measurements."
+],
+
+exam:[
+"SI units",
+"Dimensions",
+"Dimensional analysis",
+"Significant figures",
+"Errors in measurement"
+]
+
+},
+
+
+"Motion in a Plane": {
+
+title:"🎯 Motion in a Plane",
+
+intro:"Motion in a plane involves two dimensions. Position and velocity are often represented using vectors.",
+
+hinglish:"Agar object sirf ek straight line mein nahi, balki x aur y dono directions mein move kare, toh two-dimensional motion hota hai.",
+
+points:[
+"Vectors have magnitude and direction.",
+"Vector addition can be performed using graphical methods.",
+"Projectile motion is two-dimensional motion under gravity.",
+"Horizontal and vertical components can be analysed separately.",
+"Uniform circular motion involves motion along a circular path."
+],
+
+exam:[
+"Vector addition",
+"Resolution of vectors",
+"Projectile motion",
+"Uniform circular motion"
+]
+
+},
+
+
+"Laws of Motion": {
+
+title:"⚖️ Laws of Motion",
+
+intro:"Newton's laws explain the relationship between force and motion.",
+
+hinglish:"Force object ki motion ko change kar sakta hai. Newton ke laws force aur motion ke beech relationship explain karte hain.",
+
+points:[
+"Newton's first law explains inertia.",
+"Newton's second law relates force to rate of change of momentum.",
+"Newton's third law describes action-reaction pairs.",
+"Friction opposes relative motion or its tendency.",
+"Free-body diagrams help analyse forces."
+],
+
+exam:[
+"Newton's three laws",
+"Momentum",
+"Friction",
+"Free-body diagrams",
+"Applications of Newton's laws"
+]
+
+},
+
+
+"Work, Energy and Power": {
+
+title:"⚡ Work, Energy and Power",
+
+intro:"Work describes energy transfer by a force. Energy is the capacity to do work.",
+
+hinglish:"Force displacement karwata hai toh work done hota hai. Energy ka matlab hai work karne ki capacity.",
+
+points:[
+"Work depends on force, displacement and their relative direction.",
+"Kinetic energy is associated with motion.",
+"Potential energy depends on configuration or position.",
+"Mechanical energy can be conserved when only conservative forces act.",
+"Power describes how quickly work is done."
+],
+
+exam:[
+"Work done",
+"Kinetic energy",
+"Potential energy",
+"Work-energy theorem",
+"Conservation of mechanical energy",
+"Power"
+]
+
+},
+
+
+"System of Particles and Rotational Motion": {
+
+title:"🔄 Rotational Motion",
+
+intro:"A system of particles can translate as a whole and can also rotate about an axis.",
+
+hinglish:"Object agar axis ke around ghoom raha hai, toh rotational motion study karte hain.",
+
+points:[
+"Centre of mass represents the average position of mass distribution.",
+"Torque produces rotational effects.",
+"Angular momentum is associated with rotational motion.",
+"Moment of inertia measures resistance to angular acceleration.",
+"Rotational equilibrium requires appropriate torque balance."
+],
+
+exam:[
+"Centre of mass",
+"Torque",
+"Angular momentum",
+"Moment of inertia",
+"Rotational equilibrium"
+]
+
+},
+
+
+"Gravitation": {
+
+title:"🌍 Gravitation",
+
+intro:"Every mass attracts every other mass through gravitational interaction.",
+
+hinglish:"Har mass doosre mass ko attract karta hai. Earth humein attract karti hai, isi wajah se objects ground ki taraf fall karte hain.",
+
+points:[
+"Gravitational force is always attractive.",
+"Acceleration due to gravity depends on location.",
+"Objects have gravitational potential energy.",
+"Satellites remain in orbit because of gravitational interaction.",
+"Escape velocity is the minimum speed required to escape a body's gravitational influence."
+],
+
+exam:[
+"Universal law of gravitation",
+"Acceleration due to gravity",
+"Gravitational potential",
+"Satellites",
+"Escape velocity"
+]
+
+},
+
+
+"Thermodynamics": {
+
+title:"🔥 Thermodynamics",
+
+intro:"Thermodynamics studies heat, work and energy transformations.",
+
+hinglish:"Heat aur work ke through system ki energy change kaise hoti hai, thermodynamics ye study karta hai.",
+
+points:[
+"Internal energy is a state function.",
+"Heat and work are modes of energy transfer.",
+"The first law expresses conservation of energy.",
+"The second law introduces directionality of natural processes.",
+"Thermodynamic processes may be isothermal, adiabatic, isobaric or isochoric."
+],
+
+exam:[
+"First law",
+"Internal energy",
+"Heat and work",
+"Thermodynamic processes",
+"Second law"
+]
+
+},
+
+
+"Kinetic Theory": {
+
+title:"💨 Kinetic Theory",
+
+intro:"Kinetic theory explains macroscopic properties of gases using microscopic particle motion.",
+
+hinglish:"Gas ke particles continuously random motion mein hote hain. Unki motion ko study karke gas ke pressure aur temperature ko explain kar sakte hain.",
+
+points:[
+"Gas molecules are in continuous random motion.",
+"Collisions are treated as approximately elastic in the ideal model.",
+"Temperature is related to average kinetic energy.",
+"Gas pressure results from molecular collisions with container walls."
+],
+
+exam:[
+"Gas laws",
+"Kinetic interpretation of temperature",
+"Pressure",
+"Mean kinetic energy"
+]
+
+},
+
+
+"Oscillations": {
+
+title:"〰️ Oscillations",
+
+intro:"Oscillatory motion is repeated motion about a mean position.",
+
+hinglish:"Object mean position ke around repeatedly aage-peeche move kare toh oscillation hota hai.",
+
+points:[
+"Simple harmonic motion is a special type of oscillation.",
+"Restoring force tends to bring the particle towards equilibrium.",
+"Amplitude is maximum displacement from mean position.",
+"Time period is the time for one complete oscillation.",
+"Energy continuously changes between kinetic and potential forms."
+],
+
+exam:[
+"SHM",
+"Amplitude",
+"Time period",
+"Frequency",
+"Energy in SHM"
+]
+
+},
+
+
+"Waves": {
+
+title:"🌊 Waves",
+
+intro:"A wave is a disturbance that transfers energy from one place to another.",
+
+hinglish:"Wave energy transfer karti hai, matter ko permanently ek jagah se doosri jagah nahi le jaati.",
+
+points:[
+"Waves may be mechanical or electromagnetic.",
+"Mechanical waves require a medium.",
+"Transverse and longitudinal waves differ in particle vibration direction.",
+"Wavelength is the distance between corresponding points of successive waves.",
+"Frequency and wavelength determine wave speed."
+],
+
+exam:[
+"Wave motion",
+"Transverse waves",
+"Longitudinal waves",
+"Wave equation",
+"Superposition"
+]
+
+}
+
+};
+
+
+/* ========================================
+   SHOW PHYSICS CONTENT
+======================================== */
+
+function renderPhysicsContent(){
+
+const data =
+PHYSICS_CONTENT[
+currentChapter
+];
+
+if(!data) return;
+
+
+const box =
+document.getElementById(
+"teachContent"
+);
+
+box.innerHTML = `
+
+<h2>
+${data.title}
+</h2>
+
+<div class="info">
+
+<h3>📖 Concept</h3>
+
+<p>
+${data.intro}
+</p>
+
+</div>
+
+<div class="hinglish">
+
+<h3>🗣️ Simple Explanation</h3>
+
+<p>
+${data.hinglish}
+</p>
+
+</div>
+
+<div class="info">
+
+<h3>📌 Key Points</h3>
+
+<ul>
+
+${data.points.map(
+x => `<li>${x}</li>`
+).join("")}
+
+</ul>
+
+</div>
+
+<div class="exam">
+
+<h3>⭐ Exam Focus</h3>
+
+<ul>
+
+${data.exam.map(
+x => `<li>${x}</li>`
+).join("")}
+
+</ul>
+
+</div>
+
+`;
+
+}
+
+
+/* ========================================
+   CONNECT WITH TEACH BUTTON
+======================================== */
+
+document.addEventListener(
+"click",
+function(event){
+
+const button =
+event.target.closest(
+'[data-action="teach"]'
+);
+
+if(button &&
+currentSubject === "physics"){
+
+renderPhysicsContent();
+
+}
+
+});
+
+</script>
+<script>
+
+/* ========================================
+   CHEMISTRY TEACHING CONTENT
+======================================== */
+
+const CHEMISTRY_CONTENT = {
+
+"Some Basic Concepts of Chemistry": {
+
+title:"⚗️ Some Basic Concepts of Chemistry",
+
+intro:"Chemistry deals with the composition, structure, properties and transformations of matter.",
+
+hinglish:"Chemistry ko samajhne ke liye sabse pehle matter, atoms, molecules, moles aur chemical calculations clear hone chahiye.",
+
+points:[
+"Matter has mass and occupies space.",
+"Chemical substances may be elements or compounds.",
+"The mole is used to count microscopic particles.",
+"Molar mass is the mass of one mole of a substance.",
+"Stoichiometry connects quantities of reactants and products."
+],
+
+exam:[
+"Mole concept",
+"Molar mass",
+"Avogadro constant",
+"Molarity",
+"Molality",
+"Empirical and molecular formula",
+"Stoichiometry"
+]
+
+},
+
+
+"Structure of Atom": {
+
+title:"⚛️ Structure of Atom",
+
+intro:"The atom consists of a small nucleus containing protons and neutrons, surrounded by electrons.",
+
+hinglish:"Atom ko imagine karo: centre mein nucleus hota hai aur electrons uske around allowed energy states mein present hote hain.",
+
+points:[
+"Protons have positive charge.",
+"Electrons have negative charge.",
+"Neutrons have no electrical charge.",
+"Atomic number equals the number of protons.",
+"Electrons occupy orbitals described by quantum numbers."
+],
+
+exam:[
+"Subatomic particles",
+"Atomic number",
+"Mass number",
+"Bohr model",
+"Quantum numbers",
+"Electronic configuration"
+]
+
+},
+
+
+"Classification of Elements and Periodicity in Properties": {
+
+title:"🧪 Periodic Classification",
+
+intro:"The periodic table arranges elements according to their atomic numbers and reveals repeating patterns in their properties.",
+
+hinglish:"Elements ko atomic number ke increasing order mein arrange karne par properties mein periodic pattern dikhta hai.",
+
+points:[
+"Modern periodic law is based on atomic number.",
+"Elements in the same group often show similar chemical properties.",
+"Atomic radius generally decreases across a period.",
+"Atomic radius generally increases down a group.",
+"Ionisation enthalpy and electronegativity show periodic trends."
+],
+
+exam:[
+"Modern periodic table",
+"Groups and periods",
+"Atomic radius",
+"Ionisation enthalpy",
+"Electron gain enthalpy",
+"Electronegativity"
+]
+
+},
+
+
+"Chemical Bonding and Molecular Structure": {
+
+title:"🔗 Chemical Bonding",
+
+intro:"Chemical bonds hold atoms together and help form molecules and compounds.",
+
+hinglish:"Atoms stable configuration achieve karne ke liye electrons share, gain ya lose kar sakte hain. Isi se different types of bonds form hote hain.",
+
+points:[
+"Ionic bonding involves electron transfer and electrostatic attraction.",
+"Covalent bonding involves sharing of electron pairs.",
+"Coordinate bonding involves a shared pair donated by one atom.",
+"VSEPR theory helps predict molecular shapes.",
+"Hybridisation explains bonding geometry in many molecules."
+],
+
+exam:[
+"Ionic bond",
+"Covalent bond",
+"Lewis structures",
+"VSEPR theory",
+"Hybridisation",
+"Molecular shapes",
+"Hydrogen bonding"
+]
+
+},
+
+
+"Thermodynamics": {
+
+title:"🔥 Chemical Thermodynamics",
+
+intro:"Chemical thermodynamics studies energy changes accompanying physical and chemical processes.",
+
+hinglish:"Reaction ke during heat release ya absorb ho, work ho, internal energy change ho — ye sab thermodynamics explain karta hai.",
+
+points:[
+"System and surroundings are used to describe thermodynamic changes.",
+"Internal energy is a state function.",
+"Heat and work are methods of energy transfer.",
+"Enthalpy is useful for processes occurring at constant pressure.",
+"Exothermic processes release heat while endothermic processes absorb heat."
+],
+
+exam:[
+"System and surroundings",
+"Internal energy",
+"Enthalpy",
+"First law",
+"Exothermic and endothermic reactions",
+"Hess's law"
+]
+
+},
+
+
+"Equilibrium": {
+
+title:"⚖️ Chemical Equilibrium",
+
+intro:"Chemical equilibrium occurs when forward and reverse reaction rates become equal in a reversible reaction.",
+
+hinglish:"Equilibrium ka matlab reaction stop hona nahi hai. Forward aur backward reactions dono continue karte hain, but unki rates equal ho jaati hain.",
+
+points:[
+"Equilibrium is dynamic.",
+"At equilibrium, forward and reverse reaction rates are equal.",
+"Equilibrium can be homogeneous or heterogeneous.",
+"Le Chatelier's principle predicts the effect of changing conditions.",
+"Acid-base equilibrium involves hydrogen ion concentration."
+],
+
+exam:[
+"Dynamic equilibrium",
+"Equilibrium constant",
+"Le Chatelier's principle",
+"Acids and bases",
+"pH",
+"Ionic equilibrium"
+]
+
+},
+
+
+"Redox Reactions": {
+
+title:"🔄 Redox Reactions",
+
+intro:"Redox reactions involve oxidation and reduction occurring together.",
+
+hinglish:"Oxidation aur reduction alag-alag nahi chal sakte. Ek species electrons lose karti hai aur doosri electrons gain karti hai.",
+
+points:[
+"Oxidation involves loss of electrons in the electron-transfer view.",
+"Reduction involves gain of electrons.",
+"Oxidising agents cause oxidation and are themselves reduced.",
+"Reducing agents cause reduction and are themselves oxidised.",
+"Oxidation number helps track electron changes."
+],
+
+exam:[
+"Oxidation",
+"Reduction",
+"Oxidising agent",
+"Reducing agent",
+"Oxidation number",
+"Balancing redox reactions"
+]
+
+},
+
+
+"Organic Chemistry — Some Basic Principles and Techniques": {
+
+title:"🧬 Organic Chemistry",
+
+intro:"Organic chemistry primarily studies carbon-containing compounds and their reactions.",
+
+hinglish:"Carbon ki bonding capacity bahut high hai, isi wajah se carbon ke millions of compounds exist karte hain.",
+
+points:[
+"Carbon forms strong covalent bonds.",
+"Carbon can form chains and rings.",
+"Functional groups determine many chemical properties.",
+"Isomerism occurs when compounds have the same molecular formula but different arrangements.",
+"Organic reactions can be classified into several common types."
+],
+
+exam:[
+"Carbon bonding",
+"Functional groups",
+"Homologous series",
+"IUPAC nomenclature",
+"Isomerism",
+"Organic reaction basics"
+]
+
+},
+
+
+"Hydrocarbons": {
+
+title:"⛽ Hydrocarbons",
+
+intro:"Hydrocarbons contain only carbon and hydrogen.",
+
+hinglish:"Hydrocarbon mein sirf C aur H atoms hote hain. Single, double ya triple bonds ke according unki categories change hoti hain.",
+
+points:[
+"Alkanes contain carbon-carbon single bonds.",
+"Alkenes contain at least one carbon-carbon double bond.",
+"Alkynes contain at least one carbon-carbon triple bond.",
+"Aromatic compounds contain special cyclic conjugated systems.",
+"Hydrocarbons undergo characteristic reactions."
+],
+
+exam:[
+"Alkanes",
+"Alkenes",
+"Alkynes",
+"Aromatic hydrocarbons",
+"Nomenclature",
+"Important reactions"
+]
+
+}
+
+};
+
+
+/* ========================================
+   RENDER CHEMISTRY CONTENT
+======================================== */
+
+function renderChemistryContent(){
+
+const data =
+CHEMISTRY_CONTENT[
+currentChapter
+];
+
+if(!data) return;
+
+
+const box =
+document.getElementById(
+"teachContent"
+);
+
+box.innerHTML = `
+
+<h2>
+${data.title}
+</h2>
+
+<div class="info">
+
+<h3>📖 Concept</h3>
+
+<p>
+${data.intro}
+</p>
+
+</div>
+
+<div class="hinglish">
+
+<h3>🗣️ Simple Explanation</h3>
+
+<p>
+${data.hinglish}
+</p>
+
+</div>
+
+<div class="info">
+
+<h3>📌 Key Points</h3>
+
+<ul>
+
+${data.points.map(
+x => `<li>${x}</li>`
+).join("")}
+
+</ul>
+
+</div>
+
+<div class="exam">
+
+<h3>⭐ Exam Focus</h3>
+
+<ul>
+
+${data.exam.map(
+x => `<li>${x}</li>`
+).join("")}
+
+</ul>
+
+</div>
+
+`;
+
+}
+
+
+/* ========================================
+   CONNECT TO TEACH BUTTON
+======================================== */
+
+document.addEventListener(
+"click",
+function(event){
+
+const button =
+event.target.closest(
+'[data-action="teach"]'
+);
+
+if(
+button &&
+currentSubject === "chemistry"
+){
+
+renderChemistryContent();
+
+}
+
+});
+
+</script>
+<script>
+
+/* ========================================
+   BIOLOGY TEACHING CONTENT
+======================================== */
+
+const BIOLOGY_CONTENT = {
+
+"The Living World": {
+
+title:"🌱 The Living World",
+
+intro:"The living world includes organisms that show characteristic features such as metabolism, growth and response to stimuli.",
+
+hinglish:"Living organisms ko identify, name aur classify karne ke liye Biology mein taxonomy use hoti hai.",
+
+points:[
+"Living organisms show metabolism.",
+"Growth is commonly observed in living organisms.",
+"Living organisms respond to stimuli.",
+"Reproduction is common but is not an absolute defining property of every individual.",
+"Taxonomy deals with identification, nomenclature and classification."
+],
+
+exam:[
+"Characteristics of living organisms",
+"Taxonomy",
+"Binomial nomenclature",
+"Taxonomic hierarchy",
+"Taxonomical aids"
+]
+
+},
+
+
+"Biological Classification": {
+
+title:"🦠 Biological Classification",
+
+intro:"Organisms are classified into groups based on similarities and differences in their characteristics.",
+
+hinglish:"Different organisms ko unki similarities aur differences ke basis par groups mein arrange kiya jata hai.",
+
+points:[
+"Whittaker proposed the five-kingdom classification.",
+"Monera includes prokaryotic organisms.",
+"Protista mainly includes unicellular eukaryotic organisms.",
+"Fungi are heterotrophic and commonly have chitinous cell walls.",
+"Plantae and Animalia include multicellular eukaryotic organisms."
+],
+
+exam:[
+"Five kingdoms",
+"Monera",
+"Protista",
+"Fungi",
+"Plantae",
+"Animalia"
+]
+
+},
+
+
+"Plant Kingdom": {
+
+title:"🌿 Plant Kingdom",
+
+intro:"Plant classification is based on features such as body organisation, vascular tissues, seeds and reproductive structures.",
+
+hinglish:"Plants ko body structure, vascular tissue, seeds aur reproduction ke basis par groups mein classify karte hain.",
+
+points:[
+"Algae are simple photosynthetic organisms.",
+"Bryophytes lack true vascular tissues.",
+"Pteridophytes have vascular tissues but do not produce seeds.",
+"Gymnosperms produce naked seeds.",
+"Angiosperms produce flowers and enclosed seeds."
+],
+
+exam:[
+"Algae",
+"Bryophytes",
+"Pteridophytes",
+"Gymnosperms",
+"Angiosperms",
+"Alternation of generations"
+]
+
+},
+
+
+"Animal Kingdom": {
+
+title:"🦁 Animal Kingdom",
+
+intro:"Animals are classified according to levels of organisation, symmetry, body cavity, segmentation and other structural features.",
+
+hinglish:"Animals ki classification body organisation aur structural features ke according hoti hai.",
+
+points:[
+"Animals are multicellular eukaryotes.",
+"Levels of organisation range from cellular to organ-system level.",
+"Symmetry may be asymmetrical, radial or bilateral.",
+"Body cavity may be absent, pseudocoelomate or coelomate.",
+"Major animal phyla have characteristic structural features."
+],
+
+exam:[
+"Basis of classification",
+"Animal symmetry",
+"Coelom",
+"Segmentation",
+"Major animal phyla"
+]
+
+},
+
+
+"Morphology of Flowering Plants": {
+
+title:"🌸 Morphology of Flowering Plants",
+
+intro:"Morphology studies the external structure of plants, including roots, stems, leaves, flowers, fruits and seeds.",
+
+hinglish:"Plant ke external parts aur unki modifications ko morphology mein study karte hain.",
+
+points:[
+"Roots anchor plants and absorb water and minerals.",
+"Stems provide support and conduct materials.",
+"Leaves are major sites of photosynthesis.",
+"Flowers are reproductive structures in angiosperms.",
+"Fruits develop from flowers after fertilisation."
+],
+
+exam:[
+"Root",
+"Stem",
+"Leaf",
+"Inflorescence",
+"Flower",
+"Fruit",
+"Seed"
+]
+
+},
+
+
+"Anatomy of Flowering Plants": {
+
+title:"🔬 Anatomy of Flowering Plants",
+
+intro:"Plant anatomy studies the internal structure of plant organs.",
+
+hinglish:"Plant ke andar tissues kaise arranged hain aur unka function kya hai — ye anatomy mein study hota hai.",
+
+points:[
+"Meristematic tissues contain actively dividing cells.",
+"Permanent tissues perform specialised functions.",
+"Xylem mainly conducts water and minerals.",
+"Phloem transports organic food.",
+"Dicot and monocot plants show characteristic anatomical differences."
+],
+
+exam:[
+"Plant tissues",
+"Meristematic tissue",
+"Permanent tissue",
+"Xylem",
+"Phloem",
+"Dicot anatomy",
+"Monocot anatomy"
+]
+
+},
+
+
+"Structural Organisation in Animals": {
+
+title:"🐸 Structural Organisation in Animals",
+
+intro:"Animal bodies are organised into cells, tissues, organs and organ systems.",
+
+hinglish:"Animal body mein similar cells milkar tissues banate hain, tissues organs aur organs organ systems banate hain.",
+
+points:[
+"Epithelial tissue covers and protects surfaces.",
+"Connective tissue supports and connects body parts.",
+"Muscular tissue produces movement.",
+"Nervous tissue conducts impulses.",
+"Different tissues combine to perform organ functions."
+],
+
+exam:[
+"Animal tissues",
+"Epithelial tissue",
+"Connective tissue",
+"Muscular tissue",
+"Nervous tissue"
+]
+
+},
+
+
+"Cell: The Unit of Life": {
+
+title:"🧬 Cell: The Unit of Life",
+
+intro:"The cell is the basic structural and functional unit of life.",
+
+hinglish:"Cell ko living organism ki basic working unit samjho. Different organelles different jobs perform karte hain.",
+
+points:[
+"Cells may be prokaryotic or eukaryotic.",
+"Plasma membrane controls exchange with surroundings.",
+"Nucleus contains genetic material in eukaryotic cells.",
+"Mitochondria are involved in aerobic respiration.",
+"Ribosomes synthesise proteins.",
+"Endomembrane organelles coordinate synthesis and transport."
+],
+
+exam:[
+"Prokaryotic vs eukaryotic cells",
+"Cell membrane",
+"Nucleus",
+"Mitochondria",
+"ER",
+"Golgi apparatus",
+"Ribosomes",
+"Plant vs animal cell"
+]
+
+},
+
+
+"Biomolecules": {
+
+title:"🧪 Biomolecules",
+
+intro:"Living organisms contain several important organic molecules such as carbohydrates, proteins, lipids and nucleic acids.",
+
+hinglish:"Body ke structure aur functions ke liye different biomolecules required hote hain.",
+
+points:[
+"Carbohydrates are important energy-related molecules.",
+"Proteins are polymers of amino acids.",
+"Lipids have diverse structural and energy-storage roles.",
+"Nucleic acids store and transmit genetic information.",
+"Enzymes are biological catalysts."
+],
+
+exam:[
+"Carbohydrates",
+"Proteins",
+"Lipids",
+"Nucleic acids",
+"Enzymes",
+"Protein structure"
+]
+
+},
+
+
+"Cell Cycle and Cell Division": {
+
+title:"🔄 Cell Cycle and Cell Division",
+
+intro:"The cell cycle describes the sequence of events through which a cell grows and divides.",
+
+hinglish:"Cell pehle grow karti hai, DNA replicate karti hai aur phir division ke through daughter cells banati hai.",
+
+points:[
+"Interphase includes G1, S and G2 phases.",
+"DNA replication occurs during S phase.",
+"Mitosis produces genetically similar daughter cells in typical conditions.",
+"Meiosis reduces chromosome number and produces genetic variation.",
+"Crossing over occurs during prophase I of meiosis."
+],
+
+exam:[
+"Cell cycle",
+"Interphase",
+"Mitosis",
+"Meiosis",
+"Crossing over",
+"Mitosis vs meiosis"
+]
+
+},
+
+
+"Photosynthesis in Plants": {
+
+title:"☀️ Photosynthesis",
+
+intro:"Photosynthesis converts light energy into chemical energy and produces carbohydrates from carbon dioxide and water.",
+
+hinglish:"Plants sunlight ki energy use karke CO₂ aur water se food banate hain.",
+
+points:[
+"Chlorophyll absorbs light energy.",
+"Photosynthesis occurs mainly in chloroplasts.",
+"Light reactions involve energy capture.",
+"Carbon fixation occurs in the Calvin cycle.",
+"Photosynthesis is influenced by several environmental factors."
+],
+
+exam:[
+"Light reaction",
+"Photophosphorylation",
+"Calvin cycle",
+"Factors affecting photosynthesis",
+"C3 and C4 pathways"
+]
+
+},
+
+
+"Respiration in Plants": {
+
+title:"🌬️ Respiration in Plants",
+
+intro:"Cellular respiration releases usable energy from organic molecules.",
+
+hinglish:"Food molecules ki energy step-by-step release hoti hai aur ATP form mein usable energy milti hai.",
+
+points:[
+"Glycolysis occurs in the cytoplasm.",
+"The Krebs cycle occurs in the mitochondrial matrix.",
+"Electron transport occurs on the inner mitochondrial membrane.",
+"Anaerobic respiration can occur without oxygen.",
+"ATP is the major energy currency of cells."
+],
+
+exam:[
+"Glycolysis",
+"Krebs cycle",
+"Electron transport system",
+"Fermentation",
+"ATP"
+]
+
+},
+
+
+"Plant Growth and Development": {
+
+title:"🌱 Plant Growth and Development",
+
+intro:"Plant growth involves irreversible increase in size and is controlled by genetic and environmental factors.",
+
+hinglish:"Plant ka size increase hona growth hai, aur hormones growth aur development ko regulate karte hain.",
+
+points:[
+"Growth is generally irreversible.",
+"Meristematic regions show active cell division.",
+"Auxins influence growth responses.",
+"Gibberellins promote several growth processes.",
+"Ethylene influences fruit ripening."
+],
+
+exam:[
+"Growth phases",
+"Plant growth regulators",
+"Auxin",
+"Gibberellin",
+"Cytokinin",
+"Ethylene",
+"Abscisic acid"
+]
+
+},
+
+
+"Breathing and Exchange of Gases": {
+
+title:"🫁 Breathing and Exchange of Gases",
+
+intro:"Respiratory systems exchange oxygen and carbon dioxide between the organism and its environment.",
+
+hinglish:"Hum oxygen intake karte hain aur carbon dioxide remove karte hain. Gas exchange mainly respiratory surfaces par hota hai.",
+
+points:[
+"Air enters through the respiratory passage.",
+"Gas exchange occurs in alveoli in humans.",
+"Oxygen is transported mainly by haemoglobin.",
+"Carbon dioxide is transported in several forms.",
+"Breathing involves inspiration and expiration."
+],
+
+exam:[
+"Human respiratory system",
+"Mechanism of breathing",
+"Gas exchange",
+"Oxygen transport",
+"Carbon dioxide transport"
+]
+
+},
+
+
+"Body Fluids and Circulation": {
+
+title:"❤️ Body Fluids and Circulation",
+
+intro:"The circulatory system transports gases, nutrients, hormones and waste products throughout the body.",
+
+hinglish:"Blood ek transport system ki tarah kaam karta hai — oxygen, nutrients, hormones aur wastes ko move karta hai.",
+
+points:[
+"Blood consists of plasma and formed elements.",
+"RBCs transport oxygen.",
+"WBCs participate in defence.",
+"Platelets help in clotting.",
+"The human heart has four chambers."
+],
+
+exam:[
+"Blood composition",
+"RBC",
+"WBC",
+"Platelets",
+"Heart structure",
+"Cardiac cycle",
+"Double circulation"
+]
+
+},
+
+
+"Excretory Products and their Elimination": {
+
+title:"🚰 Excretion",
+
+intro:"Excretion removes metabolic waste products from the body.",
+
+hinglish:"Body mein metabolism se jo unwanted waste banta hai usko remove karna excretion hai.",
+
+points:[
+"Kidneys are major excretory organs in humans.",
+"Nephrons are structural and functional units of kidneys.",
+"Urine formation involves filtration, reabsorption and secretion.",
+"Water balance is regulated by hormonal mechanisms.",
+"The loop of Henle contributes to urine concentration."
+],
+
+exam:[
+"Human excretory system",
+"Nephron",
+"Urine formation",
+"Reabsorption",
+"Secretion",
+"Osmoregulation"
+]
+
+},
+
+
+"Locomotion and Movement": {
+
+title:"🏃 Locomotion and Movement",
+
+intro:"Movement involves change in position, while locomotion refers to movement that results in a change of place.",
+
+hinglish:"Movement broader term hai; locomotion mein organism ya body part ka place change hota hai.",
+
+points:[
+"Muscles generate force for movement.",
+"Human skeleton provides support and protection.",
+"Joints connect bones.",
+"Skeletal muscle contraction involves actin and myosin.",
+"ATP is required for muscle contraction."
+],
+
+exam:[
+"Types of movement",
+"Human skeleton",
+"Joints",
+"Muscle structure",
+"Sliding filament theory"
+]
+
+},
+
+
+"Neural Control and Coordination": {
+
+title:"🧠 Neural Control and Coordination",
+
+intro:"The nervous system receives information, processes it and coordinates responses.",
+
+hinglish:"Nervous system body ka fast communication network hai — information receive, process aur response generate karta hai.",
+
+points:[
+"Neurons are the basic functional units of the nervous system.",
+"Signals are transmitted through neurons.",
+"Synapses allow communication between neurons.",
+"The brain coordinates many body functions.",
+"Reflex actions can occur rapidly through reflex pathways."
+],
+
+exam:[
+"Neuron",
+"Nerve impulse",
+"Synapse",
+"Brain",
+"Spinal cord",
+"Reflex action"
+]
+
+},
+
+
+"Chemical Coordination and Integration": {
+
+title:"🧪 Chemical Coordination",
+
+intro:"Hormones provide chemical coordination between different parts of the body.",
+
+hinglish:"Hormones chemical messengers hote hain jo blood ke through target organs tak information le jaate hain.",
+
+points:[
+"Endocrine glands release hormones.",
+"Hormones act on specific target tissues.",
+"Pituitary is an important endocrine gland.",
+"Thyroid hormones influence metabolism.",
+"Pancreatic hormones help regulate blood glucose."
+],
+
+exam:[
+"Endocrine glands",
+"Pituitary",
+"Thyroid",
+"Pancreas",
+"Adrenal glands",
+"Hormone functions"
+]
+
+}
+
+};
+
+
+/* ========================================
+   RENDER BIOLOGY CONTENT
+======================================== */
+
+function renderBiologyContent(){
+
+const data =
+BIOLOGY_CONTENT[
+currentChapter
+];
+
+if(!data) return;
+
+
+const box =
+document.getElementById(
+"teachContent"
+);
+
+box.innerHTML = `
+
+<h2>
+${data.title}
+</h2>
+
+<div class="info">
+
+<h3>📖 Concept</h3>
+
+<p>
+${data.intro}
+</p>
+
+</div>
+
+<div class="hinglish">
+
+<h3>🗣️ Simple Explanation</h3>
+
+<p>
+${data.hinglish}
+</p>
+
+</div>
+
+<div class="info">
+
+<h3>📌 Key Points</h3>
+
+<ul>
+
+${data.points.map(
+x => `<li>${x}</li>`
+).join("")}
+
+</ul>
+
+</div>
+
+<div class="exam">
+
+<h3>⭐ NCERT / Exam Focus</h3>
+
+<ul>
+
+${data.exam.map(
+x => `<li>${x}</li>`
+).join("")}
+
+</ul>
+
+</div>
+
+`;
+
+}
+
+
+/* ========================================
+   CONNECT WITH TEACH BUTTON
+======================================== */
+
+document.addEventListener(
+"click",
+function(event){
+
+const button =
+event.target.closest(
+'[data-action="teach"]'
+);
+
+if(
+button &&
+currentSubject === "biology"
+){
+
+renderBiologyContent();
+
+}
+
+});
+
+</script>
+<script>
+
+/* ========================================
+   ADVANCED TEST ANALYSIS
+======================================== */
+
+function saveAdvancedResult(){
+
+const result = {
+
+subject: currentSubject,
+
+chapter: currentChapter,
+
+score: testScore,
+
+total: questions.length,
+
+percentage:
+Math.round(
+(testScore / questions.length) * 100
+),
+
+answers:
+testAnswers || [],
+
+date:
+new Date().toISOString()
+
+};
+
+
+let results =
+JSON.parse(
+localStorage.getItem(
+"pcbTestResults"
+) || "[]"
+);
+
+
+results.push(result);
+
+
+localStorage.setItem(
+"pcbTestResults",
+JSON.stringify(results)
+);
+
+}
+
+
+/* ========================================
+   TOPIC ANALYSIS
+======================================== */
+
+function analyseCurrentTest(){
+
+const topicData = {};
+
+
+questions.forEach(
+function(question,index){
+
+const topic =
+question.topic ||
+"General";
+
+
+if(!topicData[topic]){
+
+topicData[topic] = {
+
+correct:0,
+
+total:0
+
+};
+
+}
+
+
+topicData[topic].total++;
+
+
+if(
+testAnswers &&
+testAnswers[index] ===
+question.a
+){
+
+topicData[topic].correct++;
+
+}
+
+});
+
+
+return topicData;
+
+}
+
+
+/* ========================================
+   ANALYSIS SCREEN
+======================================== */
+
+function showAdvancedAnalysis(){
+
+const old =
+document.getElementById(
+"advancedAnalysis"
+);
+
+if(old) old.remove();
+
+
+const card =
+document.createElement("div");
+
+card.id =
+"advancedAnalysis";
+
+card.className =
+"card";
+
+
+const percentage =
+Math.round(
+(testScore /
+questions.length) * 100
+);
+
+
+let strong = "";
+
+let weak = "";
+
+const topicData =
+analyseCurrentTest();
+
+
+Object.keys(
+topicData
+).forEach(
+function(topic){
+
+const data =
+topicData[topic];
+
+const percent =
+Math.round(
+(data.correct /
+data.total) * 100
+);
+
+
+if(percent >= 80){
+
+strong += `
+
+<li>
+💪 ${topic} — ${percent}%
+</li>
+
+`;
+
+}
+
+else if(percent < 70){
+
+weak += `
+
+<li>
+⚠️ ${topic} — ${percent}%
+</li>
+
+`;
+
+}
+
+});
+
+
+if(!strong){
+
+strong =
+"<li>No strong topic identified yet.</li>";
+
+}
+
+
+if(!weak){
+
+weak =
+"<li>🔥 No major weak topic detected.</li>";
+
+}
+
+
+let message;
+
+
+if(percentage >= 90){
+
+message =
+"Excellent! Keep this chapter in revision mode.";
+
+}
+
+else if(percentage >= 75){
+
+message =
+"Good performance. Revise mistakes and retest.";
+
+}
+
+else if(percentage >= 50){
+
+message =
+"Needs improvement. Relearn concepts and practise.";
+
+}
+
+else{
+
+message =
+"Start with the concepts again before attempting another test.";
+
+}
+
+
+card.innerHTML = `
+
+<h2>
+📊 Test Analysis
+</h2>
+
+
+<div class="big">
+
+${percentage}%
+
+</div>
+
+<p style="text-align:center">
+
+${testScore}
+/
+${questions.length}
+correct
+
+</p>
+
+
+<div class="info">
+
+<h3>
+🎯 Result
+</h3>
+
+<p>
+${message}
+</p>
+
+</div>
+
+
+<div class="good">
+
+<h3>
+💪 Strong Topics
+</h3>
+
+<ul>
+
+${strong}
+
+</ul>
+
+</div>
+
+
+<div class="weak">
+
+<h3>
+⚠️ Topics to Revise
+</h3>
+
+<ul>
+
+${weak}
+
+</ul>
+
+</div>
+
+
+<button
+id="retestButton">
+
+🔄 RETAKE TEST
+
+</button>
+
+
+<button
+id="backChapterButton"
+class="secondary">
+
+← BACK TO CHAPTER
+
+</button>
+
+`;
+
+
+document.querySelector(
+"#test"
+).appendChild(card);
+
+}
+
+
+/* ========================================
+   FINISH TEST
+======================================== */
+
+function finishTest(){
+
+saveAdvancedResult();
+
+saveProgress("test");
+
+showScreen("test");
+
+showAdvancedAnalysis();
+
+}
+
+
+/* ========================================
+   RETEST
+======================================== */
+
+document.addEventListener(
+"click",
+function(event){
+
+if(
+event.target.id ===
+"retestButton"
+){
+
+beginSelectedTest();
+
+}
+
+});
+
+
+/* ========================================
+   BACK TO CHAPTER
+======================================== */
+
+document.addEventListener(
+"click",
+function(event){
+
+if(
+event.target.id ===
+"backChapterButton"
+){
+
+showScreen("chapter");
+
+updateChapterProgress();
+
+}
+
+});
+
+
+/* ========================================
+   TRY TO CONNECT TO EXISTING
+   FINISH BUTTON
+======================================== */
+
+document.addEventListener(
+"click",
+function(event){
+
+const button =
+event.target.closest(
+"#finishTest"
+);
+
+if(button){
+
+setTimeout(
+function(){
+
+showAdvancedAnalysis();
+
+},
+200
+);
+
+}
+
+});
+
+</script>
+<script>
+
+/* ========================================
+   PCB PROGRESS DASHBOARD
+======================================== */
+
+function getAllResults(){
+
+return JSON.parse(
+localStorage.getItem(
+"pcbTestResults"
+) || "[]"
+);
+
+}
+
+
+/* ========================================
+   CALCULATE DASHBOARD DATA
+======================================== */
+
+function getDashboardData(){
+
+const results =
+getAllResults();
+
+let tests = results.length;
+
+let totalScore = 0;
+
+let totalQuestions = 0;
+
+
+results.forEach(
+function(result){
+
+totalScore +=
+result.score || 0;
+
+totalQuestions +=
+result.total || 0;
+
+});
+
+
+const average =
+totalQuestions
+?
+Math.round(
+(totalScore /
+totalQuestions) *
+100
+)
+: 0;
+
+
+let studied = 0;
+
+let totalChapters = 0;
+
+
+Object.keys(
+COMPLETE_SYLLABUS
+).forEach(
+function(subject){
+
+totalChapters +=
+COMPLETE_SYLLABUS[
+subject
+].length;
+
+
+COMPLETE_SYLLABUS[
+subject
+].forEach(
+function(chapter){
+
+const progress =
+JSON.parse(
+
+localStorage.getItem(
+
+"progress_" +
+subject +
+"_" +
+chapter
+
+)
+
+|| "{}"
+);
+
+
+if(progress.learn){
+
+studied++;
+
+}
+
+});
+
+});
+
+
+return {
+
+tests,
+
+average,
+
+studied,
+
+totalChapters,
+
+progress:
+totalChapters
+?
+Math.round(
+(studied /
+totalChapters) *
+100
+)
+: 0
+
+};
+
+}
+
+
+/* ========================================
+   CREATE DASHBOARD
+======================================== */
+
+function renderDashboard(){
+
+const old =
+document.getElementById(
+"pcbDashboard"
+);
+
+if(old) old.remove();
+
+
+const data =
+getDashboardData();
+
+
+const card =
+document.createElement(
+"div"
+);
+
+card.id =
+"pcbDashboard";
+
+card.className =
+"card";
+
+
+card.innerHTML = `
+
+<h2>
+📊 My Study Dashboard
+</h2>
+
+
+<div class="stats">
+
+<div class="stat">
+
+<div class="statNumber">
+${data.progress}%
+</div>
+
+<div>
+Syllabus Progress
+</div>
+
+</div>
+
+
+<div class="stat">
+
+<div class="statNumber">
+${data.studied}
+</div>
+
+<div>
+Chapters Studied
+</div>
+
+</div>
+
+
+<div class="stat">
+
+<div class="statNumber">
+${data.tests}
+</div>
+
+<div>
+Tests Attempted
+</div>
+
+</div>
+
+
+<div class="stat">
+
+<div class="statNumber">
+${data.average}%
+</div>
+
+<div>
+Average Test Score
+</div>
+
+</div>
+
+</div>
+
+
+<div class="info">
+
+<h3>
+🎯 What should you do?
+</h3>
+
+<p id="dashboardAdvice">
+Loading advice...
+</p>
+
+</div>
+
+`;
+
+
+document.querySelector(
+"#home"
+).appendChild(card);
+
+
+const advice =
+document.getElementById(
+"dashboardAdvice"
+);
+
+
+if(data.average >= 85){
+
+advice.innerHTML =
+"🔥 Excellent! Focus on revision and difficult questions.";
+
+}
+
+else if(data.average >= 70){
+
+advice.innerHTML =
+"👍 Good progress. Revise your weak topics regularly.";
+
+}
+
+else if(data.tests > 0){
+
+advice.innerHTML =
+"📚 Spend more time learning concepts before retesting.";
+
+}
+
+else{
+
+advice.innerHTML =
+"🚀 Start your first chapter and attempt a test.";
+
+}
+
+}
+
+
+/* ========================================
+   REFRESH DASHBOARD AFTER TEST
+======================================== */
+
+function refreshDashboard(){
+
+renderDashboard();
+
+}
+
+
+/* ========================================
+   INITIAL LOAD
+======================================== */
+
+setTimeout(
+function(){
+
+if(
+document.getElementById("home")
+){
+
+renderDashboard();
+
+}
+
+},
+1500
+);
+
+
+/* ========================================
+   REFRESH WHEN RETURNING HOME
+======================================== */
+
+document.addEventListener(
+"click",
+function(event){
+
+const homeButton =
+event.target.closest(
+'[data-action="home"]'
+);
+
+if(homeButton){
+
+setTimeout(
+renderDashboard,
+200
+);
+
+}
+
+});
+
+
+</script>
+<script>
+
+/* ========================================
+   APP STARTUP CHECK
+======================================== */
+
+function runAppCheck(){
+
+const checks = [];
+
+
+/* DATA */
+
+checks.push({
+
+name:"Subject data",
+
+ok:
+typeof DATA !== "undefined"
+
+});
+
+
+/* SCREENS */
+
+checks.push({
+
+name:"Home screen",
+
+ok:
+!!document.getElementById("home")
+
+});
+
+
+checks.push({
+
+name:"Chapter screen",
+
+ok:
+!!document.getElementById("chapter")
+
+});
+
+
+checks.push({
+
+name:"Test screen",
+
+ok:
+!!document.getElementById("test")
+
+});
+
+
+/* TEACHING */
+
+checks.push({
+
+name:"Teaching area",
+
+ok:
+!!document.getElementById(
+"teachContent"
+)
+
+});
+
+
+/* SHOW ONLY IF SOMETHING IS BROKEN */
+
+const failed =
+checks.filter(
+x => !x.ok
+);
+
+
+const old =
+document.getElementById(
+"appCheck"
+);
+
+if(old) old.remove();
+
+
+if(failed.length === 0){
+
+console.log(
+"✅ PCB Mystery Coach: all main systems loaded."
+);
+
+return;
+
+}
+
+
+/* ========================================
+   ERROR CARD
+======================================== */
+
+const card =
+document.createElement(
+"div"
+);
+
+card.id =
+"appCheck";
+
+card.className =
+"card";
+
+
+card.innerHTML = `
+
+<h2>
+⚠️ App Check
+</h2>
+
+<p>
+Some parts of the app could not be found.
+</p>
+
+<ul>
+
+${failed.map(
+x =>
+`<li>❌ ${x.name}</li>`
+).join("")}
+
+</ul>
+
+<p>
+Please refresh the page once.
+If the problem remains, send me a screenshot
+of this message.
+</p>
+
+`;
+
+
+document.body.prepend(card);
+
+}
+
+
+setTimeout(
+runAppCheck,
+2000
+);
+
+</script>
