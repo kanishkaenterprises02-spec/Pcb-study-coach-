@@ -8915,3 +8915,718 @@ startRealTeaching();
 });
 
  </script>
+<script>
+
+/* ========================================
+   TEACH FROM MY PAGE
+   PART 29 — PAGE UPLOAD + OCR
+======================================== */
+
+function openPageTeacher(){
+
+    let old =
+    document.getElementById("pageTeacher");
+
+    if(old) old.remove();
+
+    const box =
+    document.createElement("div");
+
+    box.id = "pageTeacher";
+
+    box.className = "card";
+
+    box.innerHTML = `
+
+    <h2>📖 Teach Me From My Page</h2>
+
+    <p>
+    Upload or photograph an NCERT page.
+    The app will read the page and prepare it
+    for line-by-line teaching.
+    </p>
+
+    <input
+        id="ncPageInput"
+        type="file"
+        accept="image/*"
+        capture="environment"
+    >
+
+    <div
+        id="pagePreview"
+        style="margin-top:15px;">
+    </div>
+
+    <button
+        id="readNCERTPage"
+        style="display:none;">
+        🔍 READ THIS PAGE
+    </button>
+
+    <div
+        id="ocrStatus"
+        style="margin-top:15px;">
+    </div>
+
+    <div
+        id="pageText"
+        style="margin-top:15px;">
+    </div>
+
+    `;
+
+    document.body.appendChild(box);
+
+    const input =
+    document.getElementById(
+        "ncPageInput"
+    );
+
+    input.addEventListener(
+        "change",
+        function(){
+
+            const file =
+            input.files[0];
+
+            if(!file) return;
+
+            const reader =
+            new FileReader();
+
+            reader.onload =
+            function(e){
+
+                document.getElementById(
+                    "pagePreview"
+                ).innerHTML = `
+
+                <img
+                    src="${e.target.result}"
+                    style="
+                    max-width:100%;
+                    max-height:500px;
+                    border-radius:12px;
+                    margin-bottom:15px;
+                    "
+                >
+
+                `;
+
+                document.getElementById(
+                    "readNCERTPage"
+                ).style.display =
+                "block";
+
+            };
+
+            reader.readAsDataURL(file);
+
+        }
+    );
+
+}
+
+
+/* ========================================
+   READ PAGE
+======================================== */
+
+document.addEventListener(
+"click",
+async function(event){
+
+    if(
+        event.target.id !==
+        "readNCERTPage"
+    ) return;
+
+
+    const input =
+    document.getElementById(
+        "ncPageInput"
+    );
+
+    const file =
+    input.files[0];
+
+    if(!file) return;
+
+
+    const status =
+    document.getElementById(
+        "ocrStatus"
+    );
+
+    const output =
+    document.getElementById(
+        "pageText"
+    );
+
+
+    status.innerHTML =
+    "⏳ Reading your page...";
+
+
+    output.innerHTML = "";
+
+
+    /* Load OCR library */
+
+    if(
+        typeof Tesseract ===
+        "undefined"
+    ){
+
+        await loadOCR();
+
+    }
+
+
+    try{
+
+        const result =
+        await Tesseract.recognize(
+            file,
+            "eng",
+            {
+
+                logger:
+                function(info){
+
+                    if(
+                        info.status ===
+                        "recognizing text"
+                    ){
+
+                        status.innerHTML =
+                        "🔍 Reading page... " +
+                        Math.round(
+                            info.progress * 100
+                        ) +
+                        "%";
+
+                    }
+
+                }
+
+            }
+        );
+
+
+        const text =
+        result.data.text.trim();
+
+
+        if(!text){
+
+            status.innerHTML =
+            "❌ I couldn't read this page. Try a clearer photo.";
+
+            return;
+
+        }
+
+
+        window.currentNCERTText =
+        text;
+
+
+        status.innerHTML =
+        "✅ Page read successfully!";
+
+
+        output.innerHTML = `
+
+        <div class="info">
+
+        <h3>📄 Page Text</h3>
+
+        <p>
+        ${escapePageText(text)}
+        </p>
+
+        </div>
+
+        <button
+            id="startLineTeaching">
+
+            🎓 TEACH THIS PAGE
+
+        </button>
+
+        `;
+
+
+    }
+
+    catch(error){
+
+        console.error(error);
+
+        status.innerHTML =
+        "❌ Couldn't read the page. Please try again with a clearer image.";
+
+    }
+
+});
+
+
+/* ========================================
+   LOAD TESSERACT
+======================================== */
+
+function loadOCR(){
+
+    return new Promise(
+    function(resolve,reject){
+
+        const script =
+        document.createElement(
+            "script"
+        );
+
+        script.src =
+        "https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js";
+
+        script.onload =
+        resolve;
+
+        script.onerror =
+        reject;
+
+        document.head.appendChild(
+            script
+        );
+
+    });
+
+}
+
+
+/* ========================================
+   SAFE TEXT DISPLAY
+======================================== */
+
+function escapePageText(text){
+
+    return text
+        .replace(/&/g,"&amp;")
+        .replace(/</g,"&lt;")
+        .replace(/>/g,"&gt;")
+        .replace(/\n/g,"<br>");
+
+}
+
+
+/* ========================================
+   OPEN PAGE TEACHER BUTTON
+======================================== */
+
+document.addEventListener(
+"click",
+function(event){
+
+    const button =
+    event.target.closest(
+        '[data-action="page-teacher"]'
+    );
+
+    if(button){
+
+        openPageTeacher();
+
+    }
+
+});
+
+
+</script>
+<script>
+
+/* ========================================
+   PART 30 — LINE BY LINE PAGE TEACHER
+======================================== */
+
+let pageLines = [];
+let currentPageLine = 0;
+
+
+/* ========================================
+   START TEACHING THE PAGE
+======================================== */
+
+document.addEventListener(
+"click",
+function(event){
+
+    if(
+        event.target.id !==
+        "startLineTeaching"
+    ) return;
+
+
+    const text =
+    window.currentNCERTText || "";
+
+
+    pageLines =
+    text
+    .split(/\n+/)
+    .map(
+        line => line.trim()
+    )
+    .filter(
+        line => line.length > 8
+    );
+
+
+    if(!pageLines.length){
+
+        alert(
+            "No readable lines were found."
+        );
+
+        return;
+
+    }
+
+
+    currentPageLine = 0;
+
+    showLineLesson();
+
+});
+
+
+/* ========================================
+   SHOW CURRENT LINE
+======================================== */
+
+function showLineLesson(){
+
+    const old =
+    document.getElementById(
+        "lineTeacher"
+    );
+
+    if(old) old.remove();
+
+
+    const line =
+    pageLines[
+        currentPageLine
+    ];
+
+
+    const total =
+    pageLines.length;
+
+
+    const percent =
+    Math.round(
+        ((currentPageLine + 1) /
+        total) * 100
+    );
+
+
+    const card =
+    document.createElement(
+        "div"
+    );
+
+    card.id =
+    "lineTeacher";
+
+    card.className =
+    "card";
+
+
+    card.innerHTML = `
+
+    <h2>
+        🎓 Line-by-Line Teacher
+    </h2>
+
+
+    <p>
+        Line ${currentPageLine + 1}
+        of ${total}
+    </p>
+
+
+    <div class="progress">
+
+        <div
+            style="
+            width:${percent}%;
+            ">
+        </div>
+
+    </div>
+
+
+    <div class="info">
+
+        <h3>
+            📖 Your NCERT Line
+        </h3>
+
+        <p>
+            ${escapePageText(line)}
+        </p>
+
+    </div>
+
+
+    <div class="hinglish">
+
+        <h3>
+            🧑‍🏫 What does this mean?
+        </h3>
+
+        <p>
+            Let's understand this line
+            in simple language.
+        </p>
+
+        <p>
+            <b>
+            Read the line carefully first.
+            </b>
+        </p>
+
+    </div>
+
+
+    <button
+        id="explainThisLine">
+
+        🧑‍🏫 EXPLAIN THIS LINE
+
+    </button>
+
+
+    <div
+        id="lineExplanation"
+        style="display:none;">
+
+        <div class="info">
+
+            <h3>
+                🗣️ Simple Explanation
+            </h3>
+
+            <p id="simpleLineExplanation">
+            </p>
+
+        </div>
+
+
+        <div class="hinglish">
+
+            <h3>
+                🇮🇳 Hinglish Explanation
+            </h3>
+
+            <p id="hinglishLineExplanation">
+            </p>
+
+        </div>
+
+
+        <div class="exam">
+
+            <h3>
+                ⭐ What to Remember
+            </h3>
+
+            <p id="importantLinePoint">
+            </p>
+
+        </div>
+
+
+        <button
+            id="nextPageLine">
+
+            ${
+                currentPageLine === total - 1
+                ? "✅ FINISH PAGE"
+                : "➡️ NEXT LINE"
+            }
+
+        </button>
+
+    </div>
+
+    `;
+
+
+    document.body.appendChild(
+        card
+    );
+
+}
+
+
+/* ========================================
+   EXPLAIN LINE
+======================================== */
+
+document.addEventListener(
+"click",
+function(event){
+
+    if(
+        event.target.id !==
+        "explainThisLine"
+    ) return;
+
+
+    const line =
+    pageLines[
+        currentPageLine
+    ];
+
+
+    const simple =
+    generateSimpleExplanation(
+        line
+    );
+
+
+    const hinglish =
+    generateHinglishExplanation(
+        line
+    );
+
+
+    const important =
+    generateImportantPoint(
+        line
+    );
+
+
+    document.getElementById(
+        "simpleLineExplanation"
+    ).textContent =
+    simple;
+
+
+    document.getElementById(
+        "hinglishLineExplanation"
+    ).textContent =
+    hinglish;
+
+
+    document.getElementById(
+        "importantLinePoint"
+    ).textContent =
+    important;
+
+
+    document.getElementById(
+        "lineExplanation"
+    ).style.display =
+    "block";
+
+
+    event.target.style.display =
+    "none";
+
+});
+
+
+/* ========================================
+   NEXT LINE
+======================================== */
+
+document.addEventListener(
+"click",
+function(event){
+
+    if(
+        event.target.id !==
+        "nextPageLine"
+    ) return;
+
+
+    if(
+        currentPageLine <
+        pageLines.length - 1
+    ){
+
+        currentPageLine++;
+
+        showLineLesson();
+
+    }
+
+    else{
+
+        alert(
+            "🎉 This page is complete!"
+        );
+
+        const teacher =
+        document.getElementById(
+            "lineTeacher"
+        );
+
+        if(teacher)
+            teacher.remove();
+
+    }
+
+});
+
+
+/* ========================================
+   SIMPLE EXPLANATION
+======================================== */
+
+function generateSimpleExplanation(
+    line
+){
+
+    return (
+        "This line is explaining: " +
+        line +
+        ". Read the sentence carefully and focus on the main scientific idea being described. The important part is to understand what the statement means rather than memorising the words."
+    );
+
+}
+
+
+/* ========================================
+   HINGLISH EXPLANATION
+======================================== */
+
+function generateHinglishExplanation(
+    line
+){
+
+    return (
+        "Simple Hinglish mein: is line ka main idea samjho aur dekho ki author kis scientific concept ko explain kar raha hai. Pehle meaning samjho, phir terminology yaad karo."
+    );
+
+}
+
+
+/* ========================================
+   IMPORTANT POINT
+======================================== */
+
+function generateImportantPoint(
+    line
+){
+
+    return (
+        "⭐ Is line ko ratne ke bajay iska meaning samjho. Important scientific terms ko identify karo."
+    );
+
+}
+
+</script>
