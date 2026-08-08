@@ -9630,3 +9630,105 @@ function generateImportantPoint(
 }
 
 </script>
+<script>
+
+/* ========================================
+   PART 31 — SHOW "TEACH FROM MY PAGE"
+======================================== */
+
+function addPageTeacherButton(){
+
+    if(
+        document.getElementById(
+            "teachFromPageButton"
+        )
+    ){
+        return;
+    }
+
+
+    const button =
+    document.createElement("button");
+
+
+    button.id =
+    "teachFromPageButton";
+
+
+    button.innerHTML =
+    "📸 TEACH ME FROM MY NCERT PAGE";
+
+
+    button.setAttribute(
+        "data-action",
+        "page-teacher"
+    );
+
+
+    button.style.cssText = `
+        width:100%;
+        margin-top:12px;
+        padding:14px;
+        border-radius:12px;
+        border:none;
+        font-size:16px;
+        font-weight:bold;
+        cursor:pointer;
+    `;
+
+
+    /* Try to place it inside chapter area */
+
+    const chapter =
+    document.getElementById(
+        "chapter"
+    );
+
+
+    if(chapter){
+
+        chapter.appendChild(
+            button
+        );
+
+        return;
+
+    }
+
+
+    /* Fallback */
+
+    document.body.appendChild(
+        button
+    );
+
+}
+
+
+/* ========================================
+   ADD BUTTON AFTER PAGE LOAD
+======================================== */
+
+setTimeout(
+    addPageTeacherButton,
+    1500
+);
+
+
+/* ========================================
+   ADD AGAIN WHEN CHAPTER OPENS
+======================================== */
+
+document.addEventListener(
+    "click",
+    function(){
+
+        setTimeout(
+            addPageTeacherButton,
+            300
+        );
+
+    }
+);
+
+</script>
