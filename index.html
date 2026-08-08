@@ -9732,3 +9732,251 @@ document.addEventListener(
 );
 
 </script>
+<script>
+
+/* ========================================
+   PART 32 — MOBILE NCERT PHOTO UPLOAD FIX
+======================================== */
+
+function createMobilePageUploader(){
+
+    const old =
+    document.getElementById(
+        "mobileNCERTUploader"
+    );
+
+    if(old) old.remove();
+
+
+    const box =
+    document.createElement("div");
+
+    box.id =
+    "mobileNCERTUploader";
+
+    box.className =
+    "card";
+
+
+    box.innerHTML = `
+
+        <h2>📸 Upload NCERT Page</h2>
+
+        <p>
+        Take a clear photo of one NCERT page
+        or choose an existing image.
+        </p>
+
+
+        <button id="takeNCERTPhoto">
+            📷 TAKE PHOTO
+        </button>
+
+
+        <button id="chooseNCERTPhoto">
+            🖼️ CHOOSE FROM GALLERY
+        </button>
+
+
+        <input
+            id="cameraInput"
+            type="file"
+            accept="image/*"
+            capture="environment"
+            style="display:none;"
+        >
+
+
+        <input
+            id="galleryInput"
+            type="file"
+            accept="image/*"
+            style="display:none;"
+        >
+
+
+        <div id="mobilePhotoPreview"
+             style="margin-top:15px;">
+        </div>
+
+
+        <button
+            id="useNCERTPhoto"
+            style="display:none;">
+
+            ✅ USE THIS PAGE
+
+        </button>
+
+    `;
+
+
+    document.body.appendChild(box);
+
+
+    const camera =
+    document.getElementById(
+        "cameraInput"
+    );
+
+
+    const gallery =
+    document.getElementById(
+        "galleryInput"
+    );
+
+
+    document.getElementById(
+        "takeNCERTPhoto"
+    ).onclick =
+    function(){
+
+        camera.click();
+
+    };
+
+
+    document.getElementById(
+        "chooseNCERTPhoto"
+    ).onclick =
+    function(){
+
+        gallery.click();
+
+    };
+
+
+    camera.addEventListener(
+        "change",
+        function(){
+
+            showSelectedPhoto(
+                camera.files[0]
+            );
+
+        }
+    );
+
+
+    gallery.addEventListener(
+        "change",
+        function(){
+
+            showSelectedPhoto(
+                gallery.files[0]
+            );
+
+        }
+    );
+
+}
+
+
+/* ========================================
+   SHOW SELECTED PHOTO
+======================================== */
+
+function showSelectedPhoto(file){
+
+    if(!file) return;
+
+
+    const reader =
+    new FileReader();
+
+
+    reader.onload =
+    function(event){
+
+        window.selectedNCERTImage =
+        event.target.result;
+
+
+        document.getElementById(
+            "mobilePhotoPreview"
+        ).innerHTML = `
+
+            <img
+                src="${event.target.result}"
+                style="
+                width:100%;
+                max-height:550px;
+                object-fit:contain;
+                border-radius:12px;
+                "
+            >
+
+        `;
+
+
+        document.getElementById(
+            "useNCERTPhoto"
+        ).style.display =
+        "block";
+
+    };
+
+
+    reader.readAsDataURL(file);
+
+}
+
+
+/* ========================================
+   USE PHOTO
+======================================== */
+
+document.addEventListener(
+    "click",
+    function(event){
+
+        if(
+            event.target.id !==
+            "useNCERTPhoto"
+        ) return;
+
+
+        if(
+            !window.selectedNCERTImage
+        ){
+
+            alert(
+                "Please select a photo first."
+            );
+
+            return;
+
+        }
+
+
+        alert(
+            "✅ Page photo selected. Ready for reading."
+        );
+
+    }
+);
+
+
+/* ========================================
+   OPEN UPLOADER FROM OUR BUTTON
+======================================== */
+
+document.addEventListener(
+    "click",
+    function(event){
+
+        const button =
+        event.target.closest(
+            '[data-action="page-teacher"]'
+        );
+
+
+        if(!button) return;
+
+
+        createMobilePageUploader();
+
+    }
+);
+
+</script>
