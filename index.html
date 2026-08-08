@@ -3,41 +3,177 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="theme-color" content="#5b5bd6">
+<meta name="theme-color" content="#5b55d9">
 <title>PCB Mystery Coach</title>
 
 <style>
 *{box-sizing:border-box}
-body{margin:0;font-family:Arial,sans-serif;background:#f5f6fb;color:#202124}
-header{background:#5b5bd6;color:white;padding:22px 15px;text-align:center}
-header h1{margin:0;font-size:27px}
-.container{max-width:900px;margin:auto;padding:15px}
-.screen{display:none}
-.active{display:block}
-.card{background:white;padding:18px;margin:14px 0;border-radius:18px;box-shadow:0 3px 12px #0001}
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px}
+body{
+ margin:0;
+ font-family:Arial,sans-serif;
+ background:#f5f6fb;
+ color:#202124
+}
+header{
+ background:linear-gradient(135deg,#5b55d9,#756ff0);
+ color:white;
+ padding:25px 16px;
+ text-align:center
+}
+header h1{margin:0;font-size:28px}
+header p{margin:7px 0 0}
+main{max-width:900px;margin:auto;padding:15px}
+.page{display:none}
+.page.active{display:block}
+.card{
+ background:white;
+ border-radius:18px;
+ padding:18px;
+ margin:14px 0;
+ box-shadow:0 4px 15px #00000012
+}
+.grid{
+ display:grid;
+ grid-template-columns:repeat(auto-fit,minmax(170px,1fr));
+ gap:14px
+}
 .subject{text-align:center}
-.icon{font-size:45px}
-button{width:100%;border:0;border-radius:12px;padding:14px;margin:6px 0;background:#5b5bd6;color:white;font-weight:bold;font-size:15px}
-.gray{background:#777}
-.light{background:#eeeeff;color:#34349a}
-.green{background:#2d934b}
-.badge{display:inline-block;background:#eeeeff;color:#4444a5;padding:6px 10px;border-radius:20px;font-size:12px;font-weight:bold}
-.note{background:#f0f1ff;border-left:5px solid #5b5bd6;padding:15px;margin:12px 0;border-radius:8px}
-.hinglish{background:#fff7df;border-left:5px solid #e0a400;padding:15px;margin:12px 0;border-radius:8px}
-.exam{background:#eaf7ed;border-left:5px solid #29964b;padding:15px;margin:12px 0;border-radius:8px}
-.warning{background:#fff0f0;border-left:5px solid #d94d4d;padding:15px;margin:12px 0;border-radius:8px}
-.progress{height:9px;background:#ddd;border-radius:20px;overflow:hidden;margin:12px 0}
-.bar{height:100%;width:0;background:#5b5bd6;transition:.3s}
-.option{background:#eee;color:#222;text-align:left}
-.correct{background:#d5f3dc!important;color:#145b25!important}
-.wrong{background:#ffdada!important;color:#7b1717!important}
-.stat{background:#fafaff;padding:16px;border-radius:14px;text-align:center}
-.stat h2{margin:5px 0;font-size:27px}
-.bigScore{font-size:45px;font-weight:bold;text-align:center;margin:10px}
-.weak{background:#fff0f0;padding:12px;border-radius:10px;margin:7px 0}
-.strong{background:#eaf7ed;padding:12px;border-radius:10px;margin:7px 0}
-footer{text-align:center;padding:25px;color:#777;font-size:13px}
+.icon{font-size:48px}
+button{
+ width:100%;
+ border:0;
+ border-radius:12px;
+ padding:14px;
+ margin:6px 0;
+ background:#5b55d9;
+ color:white;
+ font-weight:bold;
+ font-size:15px;
+ cursor:pointer
+}
+button.secondary{
+ background:#eeeeff;
+ color:#4440a8
+}
+button.back{background:#777}
+button.success{background:#298c4b}
+button.danger{background:#c94343}
+button:disabled{opacity:.7}
+.badge{
+ display:inline-block;
+ padding:6px 10px;
+ border-radius:20px;
+ background:#eeeeff;
+ color:#4843a7;
+ font-size:12px;
+ font-weight:bold
+}
+.info{
+ background:#f0f1ff;
+ border-left:5px solid #5b55d9;
+ padding:14px;
+ border-radius:8px;
+ margin:12px 0
+}
+.hinglish{
+ background:#fff7df;
+ border-left:5px solid #e2a900;
+ padding:14px;
+ border-radius:8px;
+ margin:12px 0
+}
+.exam{
+ background:#eaf7ed;
+ border-left:5px solid #29914a;
+ padding:14px;
+ border-radius:8px;
+ margin:12px 0
+}
+.warning{
+ background:#fff0f0;
+ border-left:5px solid #d94d4d;
+ padding:14px;
+ border-radius:8px;
+ margin:12px 0
+}
+.progress{
+ height:9px;
+ background:#ddd;
+ border-radius:20px;
+ overflow:hidden;
+ margin:15px 0
+}
+.progress div{
+ height:100%;
+ width:0;
+ background:#5b55d9;
+ transition:.3s
+}
+.stats{
+ display:grid;
+ grid-template-columns:repeat(3,1fr);
+ gap:10px
+}
+.stat{
+ background:#f7f7ff;
+ border-radius:14px;
+ text-align:center;
+ padding:14px
+}
+.stat strong{
+ display:block;
+ font-size:25px
+}
+.option{
+ background:#eee;
+ color:#222;
+ text-align:left
+}
+.option.correct{
+ background:#ccefd5!important;
+ color:#155c27!important
+}
+.option.wrong{
+ background:#ffd5d5!important;
+ color:#7b1515!important
+}
+.big{
+ text-align:center;
+ font-size:48px;
+ font-weight:bold
+}
+.barline{
+ display:flex;
+ justify-content:space-between;
+ padding:10px 0;
+ border-bottom:1px solid #eee
+}
+.good{color:#18843e}
+.bad{color:#c33131}
+textarea{
+ width:100%;
+ min-height:110px;
+ border:1px solid #ccc;
+ border-radius:10px;
+ padding:12px;
+ font-family:inherit
+}
+input[type=file]{
+ width:100%;
+ padding:12px;
+ border:1px solid #ddd;
+ border-radius:10px
+}
+img.preview{
+ max-width:100%;
+ margin-top:12px;
+ border-radius:12px
+}
+footer{
+ text-align:center;
+ padding:25px;
+ color:#777
+}
 </style>
 </head>
 
@@ -48,17 +184,18 @@ footer{text-align:center;padding:25px;color:#777;font-size:13px}
 <p>Class 11 • CBSE • NEET</p>
 </header>
 
-<div class="container">
+<main>
 
-<section id="home" class="screen active">
+<!-- HOME -->
+<section id="home" class="page active">
 
 <div class="card">
 <h2>Welcome 👋</h2>
-<p>Your Physics, Chemistry and Biology study coach.</p>
+<p>Your personal Physics, Chemistry and Biology study coach.</p>
 
-<div class="note">
+<div class="info">
 <b>Study Cycle</b><br>
-Understand → Practice → Test → Analyse → Revise
+Learn → Understand → Practice → Test → Analyse → Revise
 </div>
 </div>
 
@@ -67,95 +204,102 @@ Understand → Practice → Test → Analyse → Revise
 <div class="card subject">
 <div class="icon">⚡</div>
 <h2>Physics</h2>
+<p>Concepts • Derivations • Numericals</p>
 <button onclick="openSubject('physics')">OPEN PHYSICS</button>
 </div>
 
 <div class="card subject">
 <div class="icon">⚗️</div>
 <h2>Chemistry</h2>
+<p>Concepts • Reactions • Numericals</p>
 <button onclick="openSubject('chemistry')">OPEN CHEMISTRY</button>
 </div>
 
 <div class="card subject">
 <div class="icon">🧬</div>
 <h2>Biology</h2>
+<p>NCERT • Diagrams • Concepts</p>
 <button onclick="openSubject('biology')">OPEN BIOLOGY</button>
 </div>
 
 </div>
 
 <div class="card">
-<h2>📊 My Test Performance</h2>
+<h2>📊 Overall Performance</h2>
 
-<div class="grid">
-
+<div class="stats">
 <div class="stat">
-<h2 id="testsDone">0</h2>
-<p>Tests</p>
-</div>
-
-<div class="stat">
-<h2 id="questionsDone">0</h2>
-<p>Questions</p>
+<strong id="statTests">0</strong>
+Tests
 </div>
 
 <div class="stat">
-<h2 id="average">0%</h2>
-<p>Average</p>
+<strong id="statQuestions">0</strong>
+Questions
 </div>
 
+<div class="stat">
+<strong id="statAverage">0%</strong>
+Average
+</div>
 </div>
 
-<button onclick="openAnalysis()">
-📊 OPEN TEST ANALYSIS
+<button onclick="showAnalysis()">
+📊 TEST ANALYSIS
 </button>
 
+<button class="secondary" onclick="openPhoto()">
+📷 STUDY FROM PHOTO
+</button>
 </div>
+
 </section>
 
 
-<section id="subject" class="screen">
+<!-- SUBJECT -->
+<section id="subject" class="page">
 
-<button class="gray" onclick="show('home')">← HOME</button>
+<button class="back" onclick="goHome()">← HOME</button>
 
 <div class="card">
 <span id="subjectBadge" class="badge"></span>
-<h1 id="subjectName"></h1>
+<h1 id="subjectTitle"></h1>
 <p id="subjectDescription"></p>
 </div>
 
 <div class="card">
 <h2>📚 Chapters</h2>
-<div id="chapterList"></div>
+<div id="chapterButtons"></div>
 </div>
 
 </section>
 
 
-<section id="chapter" class="screen">
+<!-- CHAPTER -->
+<section id="chapter" class="page">
 
-<button class="gray" onclick="backSubject()">← SUBJECT</button>
+<button class="back" onclick="openSubject(currentSubject)">← SUBJECT</button>
 
 <div class="card">
-<span class="badge">CHAPTER</span>
-<h1 id="chapterName"></h1>
+<span class="badge">CURRENT CHAPTER</span>
+<h1 id="chapterTitle"></h1>
 </div>
 
 <div class="card">
 
-<button class="light" onclick="teach()">
+<button class="secondary" onclick="openTeach()">
 🧠 TEACH ME FROM ZERO
 </button>
 
-<button class="light" onclick="ncert()">
+<button class="secondary" onclick="openNCERT()">
 📖 NCERT / TEXTBOOK MODE
 </button>
 
-<button class="light" onclick="numerical()">
+<button class="secondary" onclick="openNumericals()">
 🧮 NUMERICAL PRACTICE
 </button>
 
-<button class="light" onclick="revision()">
+<button class="secondary" onclick="openRevision()">
 🔄 QUICK REVISION
 </button>
 
@@ -163,7 +307,7 @@ Understand → Practice → Test → Analyse → Revise
 📝 TAKE CHAPTER TEST
 </button>
 
-<button class="light" onclick="chapterAnalysis()">
+<button class="secondary" onclick="chapterAnalysis()">
 📊 THIS CHAPTER'S ANALYSIS
 </button>
 
@@ -172,202 +316,255 @@ Understand → Practice → Test → Analyse → Revise
 </section>
 
 
-<section id="teach" class="screen">
+<!-- TEACH -->
+<section id="teach" class="page">
 
-<button class="gray" onclick="backChapter()">← CHAPTER</button>
+<button class="back" onclick="openChapter(currentChapter)">← CHAPTER</button>
 
 <div class="card">
-
 <span class="badge">🧠 TEACHING MODE</span>
-
 <h1 id="teachTitle"></h1>
 
 <div class="progress">
-<div id="teachBar" class="bar"></div>
+<div id="teachProgress"></div>
 </div>
 
-<div id="lesson"></div>
+<div id="teachContent"></div>
 
-<button id="nextLesson" onclick="nextLesson()">
+<button id="teachNext" onclick="nextTeach()">
 CONTINUE →
 </button>
-
 </div>
+
 </section>
 
 
-<section id="ncert" class="screen">
+<!-- NCERT -->
+<section id="ncert" class="page">
 
-<button class="gray" onclick="backChapter()">← CHAPTER</button>
+<button class="back" onclick="openChapter(currentChapter)">← CHAPTER</button>
 
 <div class="card">
-
 <span class="badge">📖 NCERT MODE</span>
-
 <h1 id="ncertTitle"></h1>
 
-<div class="note">
-<h2>Read</h2>
-<p>Read the textbook paragraph carefully.</p>
+<div class="info">
+<h3>① Read</h3>
+<p>Read the corresponding NCERT paragraph carefully.</p>
 </div>
 
 <div class="hinglish">
-<h2>Hinglish Explanation</h2>
-<p>Technical terms English mein rakho aur meaning simple Hinglish mein samjho.</p>
+<h3>② Understand in Hinglish</h3>
+<p>Technical terms English mein rakho, lekin concept ka meaning simple Hinglish mein samjho.</p>
 </div>
 
-<div class="note">
-<h2>Margin Notes ✏️</h2>
+<div class="info">
+<h3>③ Margin Notes ✏️</h3>
 <ul>
 <li>Definition</li>
-<li>Keyword</li>
-<li>Formula</li>
-<li>Exception</li>
+<li>Keywords</li>
+<li>Formula / relation</li>
+<li>Cause and effect</li>
 <li>Example</li>
+<li>Exception</li>
 </ul>
 </div>
 
 <div class="exam">
-<h2>Exam Points ⭐</h2>
-<p>Definitions, diagrams, graphs, formulas and important exceptions.</p>
+<h3>④ Exam Points ⭐</h3>
+<p>Focus on definitions, diagrams, graphs, formulas, examples and exceptions.</p>
 </div>
 
+<div class="warning">
+<b>Important:</b>
+<p>This mode does not reproduce the NCERT textbook. Use it alongside your own NCERT book.</p>
 </div>
+</div>
+
 </section>
 
 
-<section id="numerical" class="screen">
+<!-- NUMERICAL -->
+<section id="numerical" class="page">
 
-<button class="gray" onclick="backChapter()">← CHAPTER</button>
+<button class="back" onclick="openChapter(currentChapter)">← CHAPTER</button>
 
 <div class="card">
+<span class="badge">🧮 NUMERICAL MODE</span>
+<h1 id="numericalTitle"></h1>
 
-<span class="badge">🧮 NUMERICAL PRACTICE</span>
-
-<h1 id="numTitle"></h1>
-
-<div class="note">
-
+<div class="info">
 <h3>1. GIVEN</h3>
-<p>Write all known values with units.</p>
+<p>Write every known value with its unit.</p>
 
 <h3>2. FIND</h3>
-<p>Write what the question asks.</p>
+<p>Write exactly what the question asks.</p>
 
 <h3>3. FORMULA</h3>
-<p>Select the correct formula.</p>
+<p>Choose the appropriate formula.</p>
 
 <h3>4. SUBSTITUTION</h3>
 <p>Put the values into the formula.</p>
 
 <h3>5. CALCULATION</h3>
-<p>Solve step-by-step.</p>
+<p>Solve carefully and keep units.</p>
 
-<h3>6. UNIT CHECK</h3>
-<p>Check the final unit.</p>
+<h3>6. CHECK</h3>
+<p>Check signs, units and reasonable magnitude.</p>
 
 <h3>7. FINAL ANSWER</h3>
-<p>Clearly state the answer.</p>
+<p>Write the final answer clearly.</p>
+</div>
+</div>
 
-</div>
-</div>
 </section>
 
 
-<section id="revision" class="screen">
+<!-- REVISION -->
+<section id="revision" class="page">
 
-<button class="gray" onclick="backChapter()">← CHAPTER</button>
+<button class="back" onclick="openChapter(currentChapter)">← CHAPTER</button>
 
 <div class="card">
-
 <span class="badge">🔄 QUICK REVISION</span>
-
 <h1 id="revisionTitle"></h1>
 
-<div class="note">
-
-<h2>Recall Checklist</h2>
-
+<div class="info">
+<h3>Recall without the book</h3>
 <ul>
-<li>Definition?</li>
-<li>Main concept?</li>
-<li>Formula?</li>
+<li>What is the main concept?</li>
+<li>Important definitions?</li>
+<li>Important formulas?</li>
 <li>Units?</li>
-<li>Diagram?</li>
-<li>Graph?</li>
+<li>Diagrams?</li>
+<li>Graphs?</li>
 <li>Exceptions?</li>
 <li>Applications?</li>
 </ul>
-
 </div>
 
 <div class="hinglish">
 <b>Active Recall:</b>
-Close the book and explain the chapter in your own words.
+<p>Book band karo aur chapter ko apne words mein explain karo.</p>
+</div>
 </div>
 
-</div>
 </section>
 
 
-<section id="test" class="screen">
+<!-- TEST -->
+<section id="test" class="page">
 
-<button class="gray" onclick="backChapter()">← CHAPTER</button>
+<button class="back" onclick="openChapter(currentChapter)">← CHAPTER</button>
 
 <div class="card">
-
 <span class="badge">📝 CHAPTER TEST</span>
-
 <h1 id="testTitle"></h1>
 
 <div class="progress">
-<div id="testBar" class="bar"></div>
+<div id="testProgress"></div>
 </div>
 
-<div id="questionBox"></div>
-
+<div id="questionArea"></div>
 </div>
+
 </section>
 
 
-<section id="result" class="screen">
+<!-- RESULT -->
+<section id="result" class="page">
 
 <div class="card">
-
 <span class="badge">🎉 TEST COMPLETE</span>
-
 <h1>Test Result</h1>
 
-<div id="resultBox"></div>
+<div id="resultContent"></div>
 
-<button onclick="showCurrentAnalysis()">
+<button onclick="showCurrentTestAnalysis()">
 📊 VIEW TEST ANALYSIS
 </button>
 
-<button class="light" onclick="backChapter()">
+<button class="secondary" onclick="openChapter(currentChapter)">
 ← BACK TO CHAPTER
 </button>
-
 </div>
+
 </section>
 
 
-<section id="analysis" class="screen">
+<!-- ANALYSIS -->
+<section id="analysis" class="page">
 
-<button class="gray" onclick="show('home')">← HOME</button>
+<button class="back" onclick="goHome()">← HOME</button>
+
+<div class="card">
+<span class="badge">📊 TEST ANALYSIS</span>
+<h1>Performance Analysis</h1>
+
+<div id="analysisContent"></div>
+</div>
+
+</section>
+
+
+<!-- PHOTO -->
+<section id="photo" class="page">
+
+<button class="back" onclick="goHome()">← HOME</button>
 
 <div class="card">
 
-<span class="badge">📊 TEST ANALYSIS</span>
+<span class="badge">📷 PHOTO STUDY</span>
+<h1>Study From a Photo</h1>
 
-<h1>Performance Analysis</h1>
+<p>Upload a page, diagram, graph or numerical.</p>
 
-<div id="analysisBox"></div>
+<input type="file" accept="image/*" onchange="previewPhoto(event)">
+
+<img id="photoPreview" class="preview" style="display:none">
+
+<div id="photoTools" style="display:none">
+
+<h2>Choose what you want to do</h2>
+
+<button class="secondary" onclick="photoHelp('Explain the whole page')">
+🧠 Explain Whole Page
+</button>
+
+<button class="secondary" onclick="photoHelp('Explain line by line')">
+📖 Line-by-Line Explanation
+</button>
+
+<button class="secondary" onclick="photoHelp('Explain in Hinglish')">
+🇮🇳 Hinglish Explanation
+</button>
+
+<button class="secondary" onclick="photoHelp('Make margin notes')">
+✏️ Margin Notes
+</button>
+
+<button class="secondary" onclick="photoHelp('Explain diagram')">
+🧬 Explain Diagram
+</button>
+
+<button class="secondary" onclick="photoHelp('Solve numerical')">
+🧮 Solve Numerical
+</button>
+
+<div id="photoResponse"></div>
 
 </div>
+
+<div class="warning">
+<b>Photo note:</b>
+<p>The browser can preview your image, but automatic AI reading of the image requires an AI service connection. This single-file version does not pretend that it can read the image when it cannot.</p>
+</div>
+
+</div>
+
 </section>
 
-</div>
+</main>
 
 <footer>
 PCB Mystery Coach • Class 11 • CBSE • NEET
@@ -376,11 +573,15 @@ PCB Mystery Coach • Class 11 • CBSE • NEET
 
 <script>
 
-const data={
+/* =========================
+   COMPLETE APP DATA
+========================= */
+
+const APP={
 
 physics:{
 name:"⚡ Physics",
-description:"Concepts, graphs, derivations and numericals.",
+description:"Class 11 Physics — concepts, derivations, graphs and numericals.",
 chapters:[
 "Units and Measurements",
 "Motion in a Straight Line",
@@ -396,11 +597,12 @@ chapters:[
 "Kinetic Theory",
 "Oscillations",
 "Waves"
-]},
+]
+},
 
 chemistry:{
 name:"⚗️ Chemistry",
-description:"Concepts, calculations and NCERT.",
+description:"Class 11 Chemistry — concepts, calculations, bonding and reactions.",
 chapters:[
 "Some Basic Concepts of Chemistry",
 "Structure of Atom",
@@ -411,11 +613,12 @@ chapters:[
 "Redox Reactions",
 "Organic Chemistry – Some Basic Principles and Techniques",
 "Hydrocarbons"
-]},
+]
+},
 
 biology:{
 name:"🧬 Biology",
-description:"NCERT concepts, diagrams and NEET preparation.",
+description:"Class 11 Biology — NCERT concepts, diagrams and NEET preparation.",
 chapters:[
 "The Living World",
 "Biological Classification",
@@ -436,285 +639,393 @@ chapters:[
 "Locomotion and Movement",
 "Neural Control and Coordination",
 "Chemical Coordination and Integration"
-]};
+]
+}
 
-let subject="";
-let chapter="";
-let lessonStep=0;
-
-let currentQuestions=[];
-let currentQuestion=0;
-let currentScore=0;
-let currentAnswers=[];
+};
 
 
-/* NAVIGATION */
+/* =========================
+   APP STATE
+========================= */
 
-function show(id){
+let currentSubject="";
+let currentChapter="";
 
-document.querySelectorAll(".screen")
-.forEach(x=>x.classList.remove("active"));
+let teachIndex=0;
 
-document.getElementById(id).classList.add("active");
+let testQuestions=[];
+let testIndex=0;
+let testScore=0;
+let testAnswers=[];
+
+
+/* =========================
+   PAGE SYSTEM
+========================= */
+
+function page(id){
+
+document.querySelectorAll(".page").forEach(function(p){
+p.classList.remove("active");
+});
+
+const target=document.getElementById(id);
+
+if(target){
+target.classList.add("active");
+}
 
 window.scrollTo(0,0);
 
-updateStats();
+updateDashboard();
 }
 
 
-function openSubject(s){
+function goHome(){
+page("home");
+}
 
-subject=s;
 
-document.getElementById("subjectBadge").innerText=data[s].name;
-document.getElementById("subjectName").innerText=data[s].name;
-document.getElementById("subjectDescription").innerText=data[s].description;
+/* =========================
+   SUBJECTS
+========================= */
 
-let list=document.getElementById("chapterList");
+function openSubject(subject){
 
-list.innerHTML="";
+currentSubject=subject;
 
-data[s].chapters.forEach((c,i)=>{
+const d=APP[subject];
 
-let b=document.createElement("button");
+document.getElementById("subjectBadge").textContent=d.name;
+document.getElementById("subjectTitle").textContent=d.name;
+document.getElementById("subjectDescription").textContent=d.description;
 
-b.className="light";
-b.innerText=(i+1)+". "+c;
+const box=document.getElementById("chapterButtons");
 
-b.onclick=()=>openChapter(c);
+box.innerHTML="";
 
-list.appendChild(b);
+d.chapters.forEach(function(chapter,index){
+
+const button=document.createElement("button");
+
+button.className="secondary";
+button.textContent=(index+1)+". "+chapter;
+
+button.addEventListener("click",function(){
+openChapter(chapter);
+});
+
+box.appendChild(button);
 
 });
 
-show("subject");
+page("subject");
 }
 
 
-function openChapter(c){
+function openChapter(chapter){
 
-chapter=c;
+currentChapter=chapter;
 
-document.getElementById("chapterName").innerText=c;
+document.getElementById("chapterTitle").textContent=chapter;
 
-show("chapter");
+page("chapter");
 }
 
 
-function backSubject(){
-openSubject(subject);
+/* =========================
+   TEACHING MODE
+========================= */
+
+function openTeach(){
+
+teachIndex=0;
+
+document.getElementById("teachTitle").textContent=currentChapter;
+
+renderTeach();
+
+page("teach");
 }
 
 
-function backChapter(){
-openChapter(chapter);
-}
+function renderTeach(){
 
+const lessons=[
 
-/* TEACHING */
-
-function teach(){
-
-lessonStep=0;
-
-document.getElementById("teachTitle").innerText=chapter;
-
-renderLesson();
-
-show("teach");
-}
-
-
-function renderLesson(){
-
-let lessons=[
-
-`
-<h2>1️⃣ Start From Zero</h2>
+{
+title:"Start From Zero",
+html:`
 <div class="hinglish">
-<p>First understand what <b>${chapter}</b> is about.</p>
-<p>Ask: What? Why? How?</p>
-</div>`,
+<h3>🇮🇳 Basic Idea</h3>
+<p>First understand what <b>${currentChapter}</b> is about.</p>
+<p>Start with three questions:</p>
+<ol>
+<li>What is it?</li>
+<li>Why is it important?</li>
+<li>How is it used?</li>
+</ol>
+</div>`
+},
 
-`
-<h2>2️⃣ Break the Concept</h2>
-<div class="note">
+{
+title:"Break the Concept",
+html:`
+<div class="info">
+<h3>Concept Breakdown</h3>
+<p>Don't try to memorise the whole chapter at once.</p>
 <ul>
-<li>What is happening?</li>
-<li>Why is it happening?</li>
-<li>What causes it?</li>
-<li>What changes?</li>
+<li>Identify the main idea.</li>
+<li>Break it into smaller concepts.</li>
+<li>Connect each concept to the previous one.</li>
 </ul>
-</div>`,
+</div>`
+},
 
-`
-<h2>3️⃣ Hinglish Explanation 🇮🇳</h2>
+{
+title:"Hinglish Explanation",
+html:`
 <div class="hinglish">
-<p>Technical terms English mein rakho, but concept ko simple Hinglish mein samjho.</p>
-</div>`,
+<h3>Simple Hinglish</h3>
+<p>Technical words ko English mein exactly learn karo, but unka meaning simple Hinglish mein samjho.</p>
+</div>`
+},
 
-`
-<h2>4️⃣ Application</h2>
-<div class="note">
-<p>Think about how this concept can appear in an exam question, numerical, graph or diagram.</p>
-</div>`,
+{
+title:"Application",
+html:`
+<div class="info">
+<h3>Apply It</h3>
+<p>Ask yourself how the concept can appear in:</p>
+<ul>
+<li>MCQ</li>
+<li>Numerical</li>
+<li>Diagram</li>
+<li>Graph</li>
+<li>Assertion-reason question</li>
+</ul>
+</div>`
+},
 
-`
-<h2>5️⃣ Notebook Notes ✏️</h2>
-<div class="note">
+{
+title:"Notebook Notes",
+html:`
+<div class="info">
+<h3>✏️ Write These</h3>
 <ul>
 <li>Definition</li>
-<li>Key terms</li>
+<li>Keywords</li>
 <li>Formula / relation</li>
 <li>Units</li>
-<li>Examples</li>
-<li>Exceptions</li>
+<li>Important example</li>
+<li>Exception</li>
 </ul>
-</div>`,
-
-`
-<h2>6️⃣ Margin Notes</h2>
-<div class="note">
-<p>Write short recall points in the margin of your textbook.</p>
-</div>`,
-
-`
-<h2>7️⃣ Exam Check ⭐</h2>
-<div class="exam">
-<ul>
-<li>Can I define it?</li>
-<li>Can I explain it?</li>
-<li>Can I apply it?</li>
-<li>Can I solve a question?</li>
-</ul>
-</div>`,
-
-`
-<h2>8️⃣ Active Recall 🔄</h2>
-<div class="hinglish">
-<p><b>Book band karo.</b></p>
-<p>Now explain the concept without looking.</p>
 </div>`
+},
+
+{
+title:"Margin Notes",
+html:`
+<div class="hinglish">
+<h3>Margin Recall</h3>
+<p>Book ke margin mein short trigger words likho jo poora concept yaad dila saken.</p>
+</div>`
+},
+
+{
+title:"Exam Check",
+html:`
+<div class="exam">
+<h3>⭐ Can you do these?</h3>
+<ul>
+<li>Define the concept?</li>
+<li>Explain it?</li>
+<li>Apply it?</li>
+<li>Solve a question?</li>
+<li>Draw the relevant diagram/graph?</li>
+</ul>
+</div>`
+},
+
+{
+title:"Active Recall",
+html:`
+<div class="hinglish">
+<h3>🔄 Final Recall</h3>
+<p><b>Book band karo.</b></p>
+<p>Ab ${currentChapter} ko apne words mein explain karo.</p>
+</div>`
+}
+
 ];
 
-document.getElementById("lesson").innerHTML=lessons[lessonStep];
+const lesson=lessons[teachIndex];
 
-document.getElementById("teachBar").style.width=
-((lessonStep+1)/lessons.length*100)+"%";
+document.getElementById("teachContent").innerHTML=
+"<h2>"+lesson.title+"</h2>"+lesson.html;
 
-document.getElementById("nextLesson").innerText=
-lessonStep===lessons.length-1?"FINISH ✓":"CONTINUE →";
+document.getElementById("teachProgress").style.width=
+((teachIndex+1)/lessons.length*100)+"%";
+
+document.getElementById("teachNext").textContent=
+teachIndex===lessons.length-1
+?"FINISH ✓"
+:"CONTINUE →";
 }
 
 
-function nextLesson(){
+function nextTeach(){
 
-if(lessonStep<7){
+if(teachIndex<7){
 
-lessonStep++;
-
-renderLesson();
+teachIndex++;
+renderTeach();
 
 }else{
 
-backChapter();
+openChapter(currentChapter);
 
 }
 
 }
 
 
-/* MODES */
+/* =========================
+   OTHER MODES
+========================= */
 
-function ncert(){
+function openNCERT(){
 
-document.getElementById("ncertTitle").innerText=chapter;
+document.getElementById("ncertTitle").textContent=currentChapter;
 
-show("ncert");
+page("ncert");
 }
 
 
-function numerical(){
+function openNumericals(){
 
-document.getElementById("numTitle").innerText=chapter;
+document.getElementById("numericalTitle").textContent=currentChapter;
 
-show("numerical");
+page("numerical");
 }
 
 
-function revision(){
+function openRevision(){
 
-document.getElementById("revisionTitle").innerText=chapter;
+document.getElementById("revisionTitle").textContent=currentChapter;
 
-show("revision");
+page("revision");
 }
 
 
-/* TEST */
+/* =========================
+   TEST QUESTION BANK
+========================= */
 
-function createQuestions(){
+/*
+ These are original practice questions.
+ They are deliberately not labelled as official PYQs.
+*/
+
+function buildTest(){
 
 return [
 
 {
-q:"What is the main purpose of studying a chapter?",
-o:[
-"Only memorising text",
-"Understanding and applying concepts",
-"Skipping examples",
-"Reading without thinking"
+question:"What is the best first step when learning a new chapter?",
+options:[
+"Memorise every line immediately",
+"Understand the main concept",
+"Skip difficult parts",
+"Only solve the hardest questions"
 ],
-a:1,
+answer:1,
 topic:"Concept Understanding"
 },
 
 {
-q:"Which method is best for checking whether you actually remember a concept?",
-o:[
+question:"Which method is most useful for checking whether you actually remember something?",
+options:[
 "Active recall",
 "Only highlighting",
-"Reading repeatedly",
-"Looking at the answer"
+"Reading the same page repeatedly",
+"Looking at the answer while studying"
 ],
-a:0,
+answer:0,
 topic:"Active Recall"
 },
 
 {
-q:"After solving a numerical, what should you check?",
-o:[
-"Page number",
-"Final unit and answer",
-"Book colour",
-"Nothing"
+question:"When solving a numerical, what should normally be written first?",
+options:[
+"Final answer",
+"Given information",
+"Random formula",
+"Only the unit"
 ],
-a:1,
+answer:1,
 topic:"Problem Solving"
 },
 
 {
-q:"Which is most useful for quick revision?",
-o:[
-"Copying every paragraph",
-"Short recall points",
-"Reading randomly",
-"Skipping formulas"
+question:"Which is most useful for quick revision?",
+options:[
+"Copying the entire chapter",
+"Short recall points and formulas",
+"Reading without recalling",
+"Skipping mistakes"
 ],
-a:1,
+answer:1,
 topic:"Revision"
 },
 
 {
-q:"What should you do after making mistakes in a test?",
-o:[
-"Ignore them",
-"Memorise the score",
-"Analyse the mistake and revise the concept",
-"Stop practising"
+question:"What should you do after getting a question wrong?",
+options:[
+"Ignore it",
+"Memorise the option",
+"Find the concept causing the mistake",
+"Stop attempting questions"
 ],
-a:2,
-topic:"Test Analysis"
+answer:2,
+topic:"Mistake Analysis"
+},
+
+{
+question:"What is the purpose of a chapter test?",
+options:[
+"Only to get a score",
+"To identify understanding and weak areas",
+"To replace studying",
+"To avoid revision"
+],
+answer:1,
+topic:"Testing"
+},
+
+{
+question:"Which strategy gives stronger long-term learning?",
+options:[
+"Passive rereading only",
+"Understanding + active recall + practice",
+"Memorising answers without concepts",
+"Skipping revision"
+],
+answer:1,
+topic:"Learning Strategy"
+},
+
+{
+question:"If your test accuracy is low in one topic, what should you do?",
+options:[
+"Ignore the topic",
+"Revise that concept and practise it",
+"Only study strong topics",
+"Delete the result"
+],
+answer:1,
+topic:"Improvement"
 }
 
 ];
@@ -722,18 +1033,22 @@ topic:"Test Analysis"
 }
 
 
+/* =========================
+   TEST ENGINE
+========================= */
+
 function startTest(){
 
-currentQuestions=createQuestions();
+testQuestions=buildTest();
 
-currentQuestion=0;
-currentScore=0;
-currentAnswers=[];
+testIndex=0;
+testScore=0;
+testAnswers=[];
 
-document.getElementById("testTitle").innerText=
-chapter+" — Chapter Test";
+document.getElementById("testTitle").textContent=
+currentChapter+" — Chapter Test";
 
-show("test");
+page("test");
 
 renderQuestion();
 }
@@ -741,458 +1056,63 @@ renderQuestion();
 
 function renderQuestion(){
 
-let q=currentQuestions[currentQuestion];
+const q=testQuestions[testIndex];
 
-document.getElementById("testBar").style.width=
-(currentQuestion/currentQuestions.length*100)+"%";
+document.getElementById("testProgress").style.width=
+(testIndex/testQuestions.length*100)+"%";
 
-let html=`
+let html="";
 
-<h2>Question ${currentQuestion+1} of ${currentQuestions.length}</h2>
+html+=
+"<h2>Question "+
+(testIndex+1)+
+" of "+
+testQuestions.length+
+"</h2>";
 
-<h3>${q.q}</h3>
-`;
+html+="<h3>"+q.question+"</h3>";
 
-q.o.forEach((x,i)=>{
+q.options.forEach(function(option,index){
 
 html+=`
-
 <button class="option"
-onclick="answer(${i})">
-
-${String.fromCharCode(65+i)}. ${x}
-
+onclick="selectAnswer(${index})">
+${String.fromCharCode(65+index)}. ${option}
 </button>
-
 `;
 
 });
 
-document.getElementById("questionBox").innerHTML=html;
+document.getElementById("questionArea").innerHTML=html;
 }
 
 
-function answer(choice){
+function selectAnswer(selected){
 
-let q=currentQuestions[currentQuestion];
+const q=testQuestions[testIndex];
 
-let buttons=document.querySelectorAll(".option");
+const buttons=document.querySelectorAll("#questionArea .option");
 
-buttons.forEach(b=>b.disabled=true);
+buttons.forEach(function(button){
+button.disabled=true;
+});
 
-let correct=choice===q.a;
+const correct=selected===q.answer;
 
 if(correct){
 
-currentScore++;
+testScore++;
 
-buttons[choice].classList.add("correct");
+buttons[selected].classList.add("correct");
 
 }else{
 
-buttons[choice].classList.add("wrong");
-
-buttons[q.a].classList.add("correct");
+buttons[selected].classList.add("wrong");
+buttons[q.answer].classList.add("correct");
 
 }
 
-currentAnswers.push({
-
-question:q.q,
+testAnswers.push({
+question:q.question,
 topic:q.topic,
-correct:correct
-
-});
-
-setTimeout(()=>{
-
-currentQuestion++;
-
-if(currentQuestion<currentQuestions.length){
-
-renderQuestion();
-
-}else{
-
-finishTest();
-
-}
-
-},700);
-
-}
-
-
-/* RESULT */
-
-function finishTest(){
-
-let percent=Math.round(
-currentScore/currentQuestions.length*100
-);
-
-saveResult();
-
-document.getElementById("resultBox").innerHTML=`
-
-<div class="bigScore">
-
-${currentScore}/${currentQuestions.length}
-
-</div>
-
-<div class="exam">
-
-<h2>${percent}%</h2>
-
-<p>${message(percent)}</p>
-
-</div>
-`;
-
-show("result");
-}
-
-
-function message(p){
-
-if(p>=90)
-return"🔥 Excellent! Very strong performance.";
-
-if(p>=75)
-return"🌟 Good job! Revise the mistakes.";
-
-if(p>=50)
-return"📚 Decent start. More practice is needed.";
-
-return"💪 Don't worry. Analyse your mistakes and try again.";
-}
-
-
-/* SAVE RESULTS */
-
-function saveResult(){
-
-let history=
-JSON.parse(localStorage.getItem("pcbTestResults")||"[]");
-
-history.push({
-
-subject:subject,
-chapter:chapter,
-score:currentScore,
-total:currentQuestions.length,
-percent:Math.round(currentScore/currentQuestions.length*100),
-answers:currentAnswers,
-date:new Date().toLocaleDateString()
-
-});
-
-localStorage.setItem(
-"pcbTestResults",
-JSON.stringify(history)
-);
-
-}
-
-
-/* ANALYSIS */
-
-function showCurrentAnalysis(){
-
-analyse(
-currentAnswers,
-currentScore,
-currentQuestions.length,
-chapter
-);
-
-show("analysis");
-}
-
-
-function chapterAnalysis(){
-
-let history=
-JSON.parse(localStorage.getItem("pcbTestResults")||"[]");
-
-let tests=history.filter(x=>
-x.subject===subject &&
-x.chapter===chapter
-);
-
-if(!tests.length){
-
-document.getElementById("analysisBox").innerHTML=`
-
-<div class="note">
-
-<h2>📊 No Analysis Yet</h2>
-
-<p>
-Take the chapter test first. Your analysis will appear here.
-</p>
-
-</div>
-`;
-
-show("analysis");
-
-return;
-}
-
-let latest=tests[tests.length-1];
-
-analyse(
-latest.answers,
-latest.score,
-latest.total,
-latest.chapter
-);
-
-show("analysis");
-}
-
-
-function openAnalysis(){
-
-let history=
-JSON.parse(localStorage.getItem("pcbTestResults")||"[]");
-
-if(!history.length){
-
-document.getElementById("analysisBox").innerHTML=`
-
-<div class="note">
-
-<h2>📊 No Test Data Yet</h2>
-
-<p>
-Take a chapter test and your analysis will appear here.
-</p>
-
-</div>
-`;
-
-show("analysis");
-
-return;
-}
-
-let latest=history[history.length-1];
-
-analyse(
-latest.answers,
-latest.score,
-latest.total,
-latest.chapter
-);
-
-show("analysis");
-}
-
-
-function analyse(answers,score,total,ch){
-
-let percent=Math.round(score/total*100);
-
-let correct=answers.filter(x=>x.correct).length;
-
-let wrong=answers.filter(x=>!x.correct).length;
-
-let topics={};
-
-answers.forEach(x=>{
-
-if(!topics[x.topic])
-topics[x.topic]={correct:0,total:0};
-
-topics[x.topic].total++;
-
-if(x.correct)
-topics[x.topic].correct++;
-
-});
-
-let topicHTML="";
-
-Object.keys(topics).forEach(topic=>{
-
-let p=Math.round(
-topics[topic].correct/
-topics[topic].total*100
-);
-
-let cls=p>=80?"strong":"weak";
-
-topicHTML+=`
-
-<div class="${cls}">
-
-<b>${topic}</b>
-
-<p>
-Accuracy:
-${p}%
-</p>
-
-</div>
-
-`;
-
-});
-
-
-let mistakes=answers.filter(x=>!x.correct);
-
-let mistakeHTML="";
-
-if(!mistakes.length){
-
-mistakeHTML=`
-
-<div class="strong">
-
-🔥 Perfect!
-
-No mistakes in this test.
-
-</div>
-`;
-
-}else{
-
-mistakes.forEach((m,i)=>{
-
-mistakeHTML+=`
-
-<div class="warning">
-
-<b>Mistake ${i+1}</b>
-
-<p>${m.question}</p>
-
-<p>
-👉 Revise this concept and practise similar questions.
-</p>
-
-</div>
-
-`;
-
-});
-
-}
-
-
-document.getElementById("analysisBox").innerHTML=`
-
-<div class="bigScore">
-
-${score}/${total}
-
-</div>
-
-<div class="exam">
-
-<h2>${percent}%</h2>
-
-<p>${message(percent)}</p>
-
-</div>
-
-<div class="grid">
-
-<div class="stat">
-
-<h2>${correct}</h2>
-
-<p>Correct</p>
-
-</div>
-
-<div class="stat">
-
-<h2>${wrong}</h2>
-
-<p>Wrong</p>
-
-</div>
-
-<div class="stat">
-
-<h2>${total}</h2>
-
-<p>Total</p>
-
-</div>
-
-</div>
-
-<h2>📚 Chapter</h2>
-
-<div class="note">
-
-<b>${ch}</b>
-
-</div>
-
-<h2>📈 Topic Performance</h2>
-
-${topicHTML}
-
-<h2>❌ Mistake Analysis</h2>
-
-${mistakeHTML}
-
-<h2>🎯 Next Step</h2>
-
-<div class="hinglish">
-
-<p><b>1.</b> Revise weak areas.</p>
-
-<p><b>2.</b> Practise questions.</p>
-
-<p><b>3.</b> Retake the chapter test later.</p>
-
-<p><b>4.</b> Try to improve your previous score.</p>
-
-</div>
-
-`;
-}
-
-
-/* DASHBOARD */
-
-function updateStats(){
-
-let h=
-JSON.parse(localStorage.getItem("pcbTestResults")||"[]");
-
-document.getElementById("testsDone").innerText=h.length;
-
-document.getElementById("questionsDone").innerText=
-h.reduce((a,x)=>a+x.total,0);
-
-let average=0;
-
-if(h.length){
-
-average=Math.round(
-h.reduce((a,x)=>a+x.percent,0)/h.length
-);
-
-}
-
-document.getElementById("average").innerText=
-average+"%";
-
-}
-
-updateStats();
-
-</script>
-
-</body>
-  </html>
+corr
