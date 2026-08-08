@@ -10123,3 +10123,83 @@ document.addEventListener(
 );
 
 </script>
+<script>
+
+/* ========================================
+   PART 34 — FREE CHATGPT TEACHER
+======================================== */
+
+document.addEventListener(
+    "click",
+    function(event){
+
+        if(
+            event.target.id !==
+            "explainThisLine"
+        ) return;
+
+
+        const line =
+            pageLines[currentPageLine];
+
+
+        if(!line){
+
+            alert(
+                "No NCERT line is available."
+            );
+
+            return;
+
+        }
+
+
+        const prompt = `
+
+You are my Class 11 PCB teacher.
+
+I am studying directly from NCERT.
+
+Teach me the following NCERT line exactly like
+a teacher explaining it to me.
+
+NCERT LINE:
+"${line}"
+
+Follow this format:
+
+1. 📖 Explain the line completely in simple language.
+2. 🗣️ Explain it again in easy Hinglish.
+3. 💡 Give a simple real-life or scientific example.
+4. ⭐ Tell me the important exam point.
+5. 📐 Explain any formula, term, graph or concept
+   appearing in the line.
+6. 🧠 Ask me one short question to check whether
+   I understood it.
+7. Do NOT skip the meaning of any important term.
+8. Do NOT explain the entire chapter.
+9. Explain ONLY this line.
+
+`;
+
+
+        const encoded =
+            encodeURIComponent(
+                prompt
+            );
+
+
+        const chatGPTURL =
+            "https://chatgpt.com/?q=" +
+            encoded;
+
+
+        window.open(
+            chatGPTURL,
+            "_blank"
+        );
+
+    }
+);
+
+</script>
